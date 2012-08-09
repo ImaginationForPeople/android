@@ -8,10 +8,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.widget.ArrayAdapter;
 
-public class ProjectsListHandler extends BaseHandler implements OnClickListener {
+public class ProjectsListHandler extends BaseHandler implements OnClickListener, OnCancelListener {
 	private Activity activity;
 	private ArrayAdapter<I4pProjectTranslation> adapter;
 	
@@ -26,6 +27,8 @@ public class ProjectsListHandler extends BaseHandler implements OnClickListener 
 	protected void onStart(int arg, Object obj) {
 		progress = new ProgressDialog(activity);
 		progress.setMessage("Loading projects list");
+		progress.setOnCancelListener(this);
+		progress.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", this);
 		progress.show();
 	}
 	
@@ -63,11 +66,15 @@ public class ProjectsListHandler extends BaseHandler implements OnClickListener 
 			alert.setMessage("An unhandled error has occured. Please make a bug report :)");
 			break;
 		}
-		alert.setButton(AlertDialog.BUTTON_NEUTRAL, "Close", this);
+		alert.setButton(DialogInterface.BUTTON_NEUTRAL, "Close", this);
 		alert.show();
 	}
 
 	public void onClick(DialogInterface arg0, int arg1) {
+		activity.finish();
+	}
+
+	public void onCancel(DialogInterface arg0) {
 		activity.finish();
 	}
 }
