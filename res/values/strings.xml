@@ -1,3 +1,18 @@
 <resources>
+    <!-- General keys -->
     <string name="app_name">Imagination for People</string>
+    <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
+    
+    <!-- ProjectsList keys -->
+    <string name="projectslist_loading">Loading projects…</string>
+    
+    <!-- Error keys -->
+    <string name="error_server">Problem with the server</string>
+    <string name="error_server_timeout">The server doesn\'t respond in time.</string>
+    <string name="error_server_badanswer">We cannot understand server\'s answer.</string>
+    <string name="error_json">JSON error</string>
+    <string name="error_json_badanswer">It seems the server\'s answer is malformed because we cannot understand the JSON.</string>
+    <string name="error_unknown">Unknown error</string>
+    <string name="error_unknown_message">An unhandled error has occured. Please make a bug report :)</string>
 </resources>
