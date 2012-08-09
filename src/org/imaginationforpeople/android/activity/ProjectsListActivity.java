@@ -11,23 +11,34 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class ProjectsListActivity extends Activity {
-	private ProjectsListThread thread;
+	private static ProjectsListThread thread;
+	private ArrayAdapter<I4pProjectTranslation> adapter;
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.projectslist);
 		
-		ArrayAdapter<I4pProjectTranslation> adapter = new ArrayAdapter<I4pProjectTranslation>(this, android.R.layout.simple_list_item_1);
+		adapter = (ArrayAdapter<I4pProjectTranslation>) getLastNonConfigurationInstance();
+		if(adapter == null)
+			adapter = new ArrayAdapter<I4pProjectTranslation>(this, android.R.layout.simple_list_item_1);
 		ListView list = (ListView) findViewById(R.id.projectslist);
 		list.setAdapter(adapter);
 		
-		ProjectsListHandler handler = new ProjectsListHandler(this, adapter);
-		thread = new ProjectsListThread(handler);
-		
-		thread.start();
+		if(adapter.getCount() == 0) {
+			ProjectsListHandler handler = new ProjectsListHandler(this, adapter);
+			thread = new ProjectsListThread(handler);
+			
+			thread.start();
+		}
 	}
 	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		return adapter;
+	}
+
 	@Override
 	protected void onStop() {
 		super.onStop();
