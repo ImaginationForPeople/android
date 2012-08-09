@@ -1,7 +1,10 @@
 package org.imaginationforpeople.android.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Video {
 	private int id;
+	@JsonProperty("video_url")
 	private String videoUrl;
 	
 	public int getId() {

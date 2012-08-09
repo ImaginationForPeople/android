@@ -1,10 +1,15 @@
 package org.imaginationforpeople.android.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class I4pProjectTranslation {
 	private int id;
+	@JsonProperty("about_section")
 	private String aboutSection;
 	private String baseline;
+	@JsonProperty("callto_section")
 	private String calltoSection;
+	@JsonProperty("partners_section")
 	private String partnersSection;
 	private I4pProject project;
 	private String themes;

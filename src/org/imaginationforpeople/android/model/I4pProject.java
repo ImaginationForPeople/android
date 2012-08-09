@@ -2,8 +2,11 @@ package org.imaginationforpeople.android.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class I4pProject {
 	private int id;
+	@JsonProperty("best_of")
 	private boolean bestOf;
 	private Location location;
 	private List<User> members;
