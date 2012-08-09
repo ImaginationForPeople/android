@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.imaginationforpeople.android.handler.ProjectsListHandler;
+import org.imaginationforpeople.android.helper.UriHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,8 +19,7 @@ public class ProjectsListThread extends BaseGetJson {
 	public ProjectsListThread(ProjectsListHandler h) {
 		handler = h;
 		
-		//TODO: generate requestUri from a common parameter
-		requestUri = "http://10.0.0.9:8000/api/project/";
+		requestUri = UriHelper.getProjectsListUri();
 	}
 	
 	@Override
