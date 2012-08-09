@@ -63,4 +63,10 @@ public class I4pProjectTranslation {
 	public void setTitle(String title) {
 		this.title = title;
 	}
+	
+	//TODO: Overriding toString() method is a bad thing.
+	@Override
+	public String toString() {
+		return title;
+	}
 }
