@@ -21,9 +21,15 @@ import android.os.Message;
 import android.util.Log;
 
 public abstract class BaseGetJson extends Thread {
+	private boolean stop = false;
+	
 	protected BaseHandler handler;
 	protected String requestUri;
-
+	
+	public void requestStop() {
+		stop = true;
+	}
+	
 	@Override
 	public void run() {
 		Message msg;
@@ -34,9 +40,14 @@ public abstract class BaseGetJson extends Thread {
 		String json;
 		try {
 			json = sendRequest();
+			if(stop)
+				return;
+			Object parsedJson = parseJson(json);
+			if(stop)
+				return;
 			msg = handler.obtainMessage();
 			msg.arg1 = BaseHandler.STATUS_SUCCESS;
-			msg.obj = parseJson(json);
+			msg.obj = parsedJson;
 			handler.sendMessage(msg);
 		} catch (HttpHostConnectException e) {
 			sendError(BaseHandler.ERROR_HTTP);
@@ -75,6 +86,8 @@ public abstract class BaseGetJson extends Thread {
 			throws JSONException, JsonParseException, IOException;
 	
 	protected void sendError(int errorCode) {
+		if(stop)
+			return;
 		Message msg = handler.obtainMessage();
 		msg.arg1 = BaseHandler.STATUS_ERROR;
 		msg.arg2 = errorCode;

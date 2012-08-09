@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class ProjectsListActivity extends Activity {
+	ProjectsListThread thread;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -21,8 +23,14 @@ public class ProjectsListActivity extends Activity {
 		list.setAdapter(adapter);
 		
 		ProjectsListHandler handler = new ProjectsListHandler(this, adapter);
-		ProjectsListThread thread = new ProjectsListThread(handler);
+		thread = new ProjectsListThread(handler);
 		
 		thread.start();
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		thread.requestStop();
 	}
 }
