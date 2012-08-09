@@ -45,9 +45,25 @@ public class ProjectsListHandler extends BaseHandler implements OnClickListener 
 		progress.dismiss();
 		
 		AlertDialog alert = new AlertDialog.Builder(activity).create();
-		alert.setTitle("Error");
-		alert.setMessage("An error has occured");
-		alert.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", this);
+		switch(arg) {
+		case ERROR_TIMEOUT:
+			alert.setTitle("Problem with the server");
+			alert.setMessage("The server doesn't respond in time.");
+			break;
+		case ERROR_HTTP:
+			alert.setTitle("Problem with the server");
+			alert.setMessage("We cannot understand server's answer.");
+			break;
+		case ERROR_JSON:
+			alert.setTitle("JSON error");
+			alert.setMessage("It seems the server's answer is malformed because we cannot understand the JSON.");
+			break;
+		case ERROR_UNKNOWN:
+			alert.setTitle("Unknown error");
+			alert.setMessage("An unhandled error has occured. Please make a bug report :)");
+			break;
+		}
+		alert.setButton(AlertDialog.BUTTON_NEUTRAL, "Close", this);
 		alert.show();
 	}
 
