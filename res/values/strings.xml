@@ -5,6 +5,7 @@
     <string name="close">Close</string>
     
     <!-- ProjectsList keys -->
+    <string name="projectslist_menu_language">Choose language</string>
     <string name="projectslist_loading">Loading projects…</string>
     
     <!-- Error keys -->

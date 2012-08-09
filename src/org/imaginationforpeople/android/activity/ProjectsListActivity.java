@@ -7,12 +7,21 @@ import org.imaginationforpeople.android.thread.ProjectsListThread;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class ProjectsListActivity extends Activity {
 	private static ProjectsListThread thread;
 	private ArrayAdapter<I4pProjectTranslation> adapter;
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.projectslist, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
