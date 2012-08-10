@@ -25,6 +25,7 @@ public class ProjectsListActivity extends Activity implements OnClickListener {
 	private ArrayAdapter<I4pProjectTranslation> adapter;
 	private AlertDialog languagesDialog;
 	private SharedPreferences preferences;
+	private ProjectsListHandler handler;
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -60,13 +61,10 @@ public class ProjectsListActivity extends Activity implements OnClickListener {
 			adapter = new ArrayAdapter<I4pProjectTranslation>(this, android.R.layout.simple_list_item_1);
 		ListView list = (ListView) findViewById(R.id.projectslist);
 		list.setAdapter(adapter);
+		handler = new ProjectsListHandler(this, adapter);
 		
-		if(adapter.getCount() == 0) {
-			ProjectsListHandler handler = new ProjectsListHandler(this, adapter);
-			thread = new ProjectsListThread(handler);
-			
-			thread.start();
-		}
+		if(adapter.getCount() == 0)
+			loadProjects();
 		
 		// -- Initializing language chooser UI
 		int selectedLanguage = LanguageHelper.getPreferredLanguageInt();
@@ -95,5 +93,11 @@ public class ProjectsListActivity extends Activity implements OnClickListener {
 		editor.putInt("language", which);
 		editor.commit();
 		dialog.dismiss();
+		loadProjects();
+	}
+	
+	private void loadProjects() {
+		thread = new ProjectsListThread(handler);
+		thread.start();
 	}
 }

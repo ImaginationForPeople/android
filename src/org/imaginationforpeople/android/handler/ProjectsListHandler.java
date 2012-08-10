@@ -31,6 +31,7 @@ public class ProjectsListHandler extends BaseHandler implements OnClickListener,
 		progress.setOnCancelListener(this);
 		progress.setButton(DialogInterface.BUTTON_NEGATIVE, activity.getResources().getText(R.string.cancel), this);
 		progress.show();
+		adapter.clear();
 	}
 	
 	@SuppressWarnings("unchecked")
