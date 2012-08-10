@@ -5,6 +5,7 @@
     <string name="close">Close</string>
     
     <!-- ProjectsList keys -->
+    <string name="projectslist_menu_reload">Reload projects</string>
     <string name="projectslist_menu_language">Change language</string>
     <string name="projectslist_spinner_prompt">Choose a language</string>
     <string-array name="projectslist_spinner_languages">

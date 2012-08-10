@@ -40,6 +40,9 @@ public class ProjectsListActivity extends Activity implements OnClickListener {
 		case R.id.projectslist_lang:
 			languagesDialog.show();
 			break;
+		case R.id.projectslist_reload:
+			loadProjects();
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
