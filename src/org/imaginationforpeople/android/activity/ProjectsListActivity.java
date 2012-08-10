@@ -1,11 +1,8 @@
 package org.imaginationforpeople.android.activity;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-
 import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.handler.ProjectsListHandler;
+import org.imaginationforpeople.android.helper.LanguageHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.imaginationforpeople.android.thread.ProjectsListThread;
 
@@ -52,8 +49,10 @@ public class ProjectsListActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.projectslist);
 		
-		// -- Initializing preferences
+		// -- Initializing application
 		preferences = getPreferences(Context.MODE_PRIVATE);
+		LanguageHelper.setSharedPreferences(preferences);
+		LanguageHelper.setResources(getResources());
 		
 		// -- Initializing projects list
 		adapter = (ArrayAdapter<I4pProjectTranslation>) getLastNonConfigurationInstance();
@@ -70,17 +69,7 @@ public class ProjectsListActivity extends Activity implements OnClickListener {
 		}
 		
 		// -- Initializing language chooser UI
-		
-		// Verifying if the user has selected a preferred language
-		int selectedLanguage = preferences.getInt("language", -1);
-		if(selectedLanguage == -1) {
-			// Getting system language as default selected language
-			List<String> languagesCodes = Arrays.asList(getResources().getStringArray(R.array.projectslist_spinner_keys));
-			selectedLanguage = languagesCodes.indexOf(Locale.getDefault().getLanguage());
-			if(selectedLanguage == -1)
-				// System language isn't used by I4P, setting default language to English
-				selectedLanguage = 1;
-		}
+		int selectedLanguage = LanguageHelper.getPreferredLanguageInt();
 		
 		AlertDialog.Builder languagesBuilder = new AlertDialog.Builder(this);
 		languagesBuilder.setTitle(R.string.projectslist_spinner_prompt);
