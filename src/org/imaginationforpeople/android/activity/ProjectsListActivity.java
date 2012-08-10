@@ -89,11 +89,13 @@ public class ProjectsListActivity extends Activity implements OnClickListener {
 	}
 	
 	public void onClick(DialogInterface dialog, int which) {
-		Editor editor = preferences.edit();
-		editor.putInt("language", which);
-		editor.commit();
+		if(which != LanguageHelper.getPreferredLanguageInt()) {
+			Editor editor = preferences.edit();
+			editor.putInt("language", which);
+			editor.commit();
+			loadProjects();
+		}
 		dialog.dismiss();
-		loadProjects();
 	}
 	
 	private void loadProjects() {
