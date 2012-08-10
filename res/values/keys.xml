@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="projectslist_spinner_keys">
+        <item>zh</item>
+        <item>en</item>
+        <item>fr</item>
+        <item>de</item>
+        <item>el</item>
+        <item>it</item>
+        <item>pt</item>
+        <item>ru</item>
+        <item>es</item>
+    </string-array>
+</resources>

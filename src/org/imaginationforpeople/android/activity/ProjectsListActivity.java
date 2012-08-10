@@ -1,5 +1,9 @@
 package org.imaginationforpeople.android.activity;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+
 import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.handler.ProjectsListHandler;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
@@ -58,9 +62,17 @@ public class ProjectsListActivity extends Activity implements OnClickListener {
 		}
 		
 		// -- Initializing language chooser UI
+		
+		// Getting system language as default selected language
+		List<String> languagesCodes = Arrays.asList(getResources().getStringArray(R.array.projectslist_spinner_keys));
+		int systemLanguage = languagesCodes.indexOf(Locale.getDefault().getLanguage());
+		if(systemLanguage == -1)
+			// System language isn't used by I4P, setting default language to English
+			systemLanguage = 1;
+		
 		AlertDialog.Builder languagesBuilder = new AlertDialog.Builder(this);
 		languagesBuilder.setTitle(R.string.projectslist_spinner_prompt);
-		languagesBuilder.setSingleChoiceItems(R.array.projectslist_spinner_languages, 1, this);
+		languagesBuilder.setSingleChoiceItems(R.array.projectslist_spinner_languages, systemLanguage, this);
 		languagesDialog = languagesBuilder.create();
 	}
 	
