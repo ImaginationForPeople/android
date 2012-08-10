@@ -46,4 +46,19 @@ public class LanguageHelper {
 		
 		return intLanguage;
 	}
+	
+	public static String getPreferredLanguageCode() {
+		String languageCode;
+		
+		int intLanguage = preferences.getInt("language", -1);
+		if(intLanguage == -1) {
+			if(getAllLanguagesCodes().contains(Locale.getDefault().getLanguage()))
+				languageCode = Locale.getDefault().getLanguage();
+			else
+				languageCode = "en";
+		} else
+			languageCode = getAllLanguagesCodes().get(intLanguage);
+		
+		return languageCode;
+	}
 }
