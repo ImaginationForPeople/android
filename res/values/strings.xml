@@ -5,7 +5,19 @@
     <string name="close">Close</string>
     
     <!-- ProjectsList keys -->
-    <string name="projectslist_menu_language">Choose language</string>
+    <string name="projectslist_menu_language">Change language</string>
+    <string name="projectslist_spinner_prompt">Choose a language</string>
+    <string-array name="projectslist_spinner_languages">
+        <item>Chinese</item>
+        <item>English</item>
+        <item>French</item>
+        <item>German</item>
+        <item>Greek</item>
+        <item>Italian</item>
+        <item>Portuguese</item>
+        <item>Russian</item>
+        <item>Spanish</item>
+    </string-array>
     <string name="projectslist_loading">Loading projects…</string>
     
     <!-- Error keys -->
