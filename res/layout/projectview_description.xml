@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:id="@+id/projectview_description_baseline_text" />
+    <LinearLayout 
+        android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal">
+	    <TextView 
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Status" />
+	    <ProgressBar
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        style="?android:attr/progressBarStyleHorizontal"
+	        android:paddingLeft="5dp"
+	        android:paddingRight="20dp"
+	        android:max="4"
+	        android:id="@+id/projectview_description_status_progress" />
+	</LinearLayout>
+    <LinearLayout 
+        android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:id="@+id/projectview_description_website_container">
+	    <TextView 
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="Website" />
+	    <TextView 
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="5dp"
+	        android:autoLink="web"
+	        android:id="@+id/projectview_description_website_text" />
+	</LinearLayout>
+    <LinearLayout 
+        android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:id="@+id/projectview_description_about_container">
+	    <TextView 
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="About project" />
+	    <TextView 
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="10dp"
+	        android:id="@+id/projectview_description_about_text" />
+	</LinearLayout>
+	<LinearLayout 
+        android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:id="@+id/projectview_description_callto_container">
+	    <TextView 
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="Take action" />
+	    <TextView 
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="10dp"
+	        android:id="@+id/projectview_description_callto_text" />
+	</LinearLayout>
+    <LinearLayout 
+        android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:id="@+id/projectview_description_questions_container"/>
+
+</LinearLayout>

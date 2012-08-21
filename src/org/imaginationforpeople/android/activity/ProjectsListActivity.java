@@ -11,16 +11,20 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class ProjectsListActivity extends Activity implements OnClickListener {
+public class ProjectsListActivity extends Activity implements OnClickListener, OnItemClickListener {
 	private static ProjectsListThread thread;
 	private ArrayAdapter<I4pProjectTranslation> adapter;
 	private AlertDialog languagesDialog;
@@ -64,6 +68,7 @@ public class ProjectsListActivity extends Activity implements OnClickListener {
 			adapter = new ArrayAdapter<I4pProjectTranslation>(this, android.R.layout.simple_list_item_1);
 		ListView list = (ListView) findViewById(R.id.projectslist);
 		list.setAdapter(adapter);
+		list.setOnItemClickListener(this);
 		handler = new ProjectsListHandler(this, adapter);
 		
 		if(adapter.getCount() == 0)
@@ -104,5 +109,15 @@ public class ProjectsListActivity extends Activity implements OnClickListener {
 	private void loadProjects() {
 		thread = new ProjectsListThread(handler);
 		thread.start();
+	}
+
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		I4pProjectTranslation project = adapter.getItem(position);
+		
+		Intent intent = new Intent(this, ProjectViewActivity.class);
+		intent.putExtra("project_id", project.getId());
+		intent.putExtra("project_title", project.getTitle());
+		
+		startActivity(intent);
 	}
 }
