@@ -23,7 +23,8 @@ public class ProjectViewHandler extends BaseHandler implements OnClickListener, 
 	@Override
 	protected void onSuccess(int arg, Object obj) {
 		I4pProjectTranslation project = (I4pProjectTranslation) obj;
-		activity.displayProject(project);
+		activity.setProject(project);
+		activity.displayProject();
 	}
 	
 	@Override

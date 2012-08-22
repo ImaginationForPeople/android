@@ -22,18 +22,31 @@ public class ProjectViewActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.loading);
 		
-		Bundle extras = getIntent().getExtras();
-		
-		setTitle(extras.getString("project_title"));
-		
-		ProjectViewHandler handler = new ProjectViewHandler(this);
-		ProjectViewThread thread = new ProjectViewThread(handler, extras.getInt("project_id"));
-		
-		thread.start();
+		project = (I4pProjectTranslation) getLastNonConfigurationInstance();
+		if(project != null)
+			displayProject();
+		else {
+			Bundle extras = getIntent().getExtras();
+			
+			setTitle(extras.getString("project_title"));
+			
+			ProjectViewHandler handler = new ProjectViewHandler(this);
+			ProjectViewThread thread = new ProjectViewThread(handler, extras.getInt("project_id"));
+			
+			thread.start();
+		}
 	}
-
-	public void displayProject(I4pProjectTranslation p) {
+	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		return project;
+	}
+	
+	public void setProject(I4pProjectTranslation p) {
 		project = p;
+	}
+	
+	public void displayProject() {
 		setContentView(R.layout.projectview_description);
 		
 		TextView baseline = (TextView) findViewById(R.id.projectview_description_baseline_text);
