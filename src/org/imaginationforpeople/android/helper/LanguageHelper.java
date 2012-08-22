@@ -21,7 +21,7 @@ public class LanguageHelper extends BaseHelper {
 	
 	private static List<String> getAllLanguagesCodes() {
 		if(languagesCodes == null)
-			languagesCodes = Arrays.asList(resources.getStringArray(R.array.projectslist_spinner_keys));
+			languagesCodes = Arrays.asList(resources.getStringArray(R.array.homepage_spinner_keys));
 		
 		return languagesCodes;
 	}

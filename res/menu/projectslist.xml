@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
-        android:id="@+id/projectslist_reload"
-        android:title="@string/projectslist_menu_reload"
+        android:id="@+id/homepage_reload"
+        android:title="@string/homepage_menu_reload"
         android:icon="@drawable/ic_menu_refresh"
         android:showAsAction="ifRoom" />
     <item
-        android:id="@+id/projectslist_lang"
-        android:title="@string/projectslist_menu_language"
+        android:id="@+id/homepage_lang"
+        android:title="@string/homepage_menu_language"
         android:icon="@android:drawable/ic_menu_mapmode"
         android:showAsAction="ifRoom"/>
 </menu>
