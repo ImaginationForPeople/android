@@ -75,14 +75,14 @@ public class HomepageActivity extends Activity implements OnClickListener {
 		}
 		
 		ProjectsTabFragment bestFragment = new ProjectsTabFragment();
-		bestFragment.setAdapter(adapters.get(DataHelper.BEST_PROJECTS_KEY));
+		bestFragment.setListAdapter(adapters.get(DataHelper.BEST_PROJECTS_KEY));
 		ActionBar.Tab bestProjectsTab = getActionBar().newTab();
 		bestProjectsTab.setText(R.string.homepage_tab_bestof);
 		bestProjectsTab.setTabListener(new ProjectsTabListener(bestFragment));
 		getActionBar().addTab(bestProjectsTab);
 		
 		ProjectsTabFragment latestFragment = new ProjectsTabFragment();
-		latestFragment.setAdapter(adapters.get(DataHelper.LATEST_PROJECTS_KEY));
+		latestFragment.setListAdapter(adapters.get(DataHelper.LATEST_PROJECTS_KEY));
 		ActionBar.Tab latestProjectsTab = getActionBar().newTab();
 		latestProjectsTab.setText(R.string.homepage_tab_latest);
 		latestProjectsTab.setTabListener(new ProjectsTabListener(latestFragment));
