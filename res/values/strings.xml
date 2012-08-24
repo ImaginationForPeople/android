@@ -24,6 +24,7 @@
     
     <!-- ProjectsList keys -->
     <string name="projectslist_loading">Loading projects…</string>
+    <string name="projectslist_item_image_description">Project image</string>
     
     <!-- Error keys -->
     <string name="error_server">Problem with the server</string>

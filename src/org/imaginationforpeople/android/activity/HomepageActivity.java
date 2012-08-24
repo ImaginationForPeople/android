@@ -1,6 +1,9 @@
 package org.imaginationforpeople.android.activity;
 
+import java.util.ArrayList;
+
 import org.imaginationforpeople.android.R;
+import org.imaginationforpeople.android.adapter.ProjectsGridAdapter;
 import org.imaginationforpeople.android.fragment.ProjectsTabFragment;
 import org.imaginationforpeople.android.handler.ProjectsListHandler;
 import org.imaginationforpeople.android.helper.DataHelper;
@@ -23,12 +26,11 @@ import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 
 @TargetApi(11)
 public class HomepageActivity extends Activity implements OnClickListener {
 	private static ProjectsListThread thread;
-	private SparseArray<ArrayAdapter<I4pProjectTranslation>> adapters;
+	private SparseArray<ProjectsGridAdapter> adapters;
 	private AlertDialog languagesDialog;
 	private SharedPreferences preferences;
 	private ProjectsListHandler handler;
@@ -67,22 +69,22 @@ public class HomepageActivity extends Activity implements OnClickListener {
 		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		
 		// -- Initializing projects list
-		adapters = (SparseArray<ArrayAdapter<I4pProjectTranslation>>) getLastNonConfigurationInstance();
+		adapters = (SparseArray<ProjectsGridAdapter>) getLastNonConfigurationInstance();
 		if(adapters == null) {
-			adapters = new SparseArray<ArrayAdapter<I4pProjectTranslation>>(); 
-			adapters.append(DataHelper.BEST_PROJECTS_KEY, new ArrayAdapter<I4pProjectTranslation>(this, android.R.layout.simple_list_item_1));
-			adapters.append(DataHelper.LATEST_PROJECTS_KEY, new ArrayAdapter<I4pProjectTranslation>(this, android.R.layout.simple_list_item_1));
+			adapters = new SparseArray<ProjectsGridAdapter>(); 
+			adapters.append(DataHelper.BEST_PROJECTS_KEY, new ProjectsGridAdapter(this, new ArrayList<I4pProjectTranslation>()));
+			adapters.append(DataHelper.LATEST_PROJECTS_KEY, new ProjectsGridAdapter(this, new ArrayList<I4pProjectTranslation>()));
 		}
 		
 		ProjectsTabFragment bestFragment = new ProjectsTabFragment();
-		bestFragment.setListAdapter(adapters.get(DataHelper.BEST_PROJECTS_KEY));
+		bestFragment.setAdapter(adapters.get(DataHelper.BEST_PROJECTS_KEY));
 		ActionBar.Tab bestProjectsTab = getActionBar().newTab();
 		bestProjectsTab.setText(R.string.homepage_tab_bestof);
 		bestProjectsTab.setTabListener(new ProjectsTabListener(bestFragment));
 		getActionBar().addTab(bestProjectsTab);
 		
 		ProjectsTabFragment latestFragment = new ProjectsTabFragment();
-		latestFragment.setListAdapter(adapters.get(DataHelper.LATEST_PROJECTS_KEY));
+		latestFragment.setAdapter(adapters.get(DataHelper.LATEST_PROJECTS_KEY));
 		ActionBar.Tab latestProjectsTab = getActionBar().newTab();
 		latestProjectsTab.setText(R.string.homepage_tab_latest);
 		latestProjectsTab.setTabListener(new ProjectsTabListener(latestFragment));
