@@ -1,5 +1,9 @@
 package org.imaginationforpeople.android.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import android.graphics.Bitmap;
+
 public class Picture {
 	private int id;
 	private String author;
@@ -7,8 +11,12 @@ public class Picture {
 	private String desc;
 	private String license;
 	private String source;
-	private String thumb;
-	private String url;
+	@JsonProperty("thumb")
+	private String thumbUrl;
+	private Bitmap thumbBitmap;
+	@JsonProperty("url")
+	private String imageUrl;
+	private Bitmap imageBitmap;
 	
 	public int getId() {
 		return id;
@@ -46,16 +54,28 @@ public class Picture {
 	public void setSource(String source) {
 		this.source = source;
 	}
-	public String getThumb() {
-		return thumb;
+	public String getThumbUrl() {
+		return thumbUrl;
 	}
-	public void setThumb(String thumb) {
-		this.thumb = thumb;
+	public void setThumbUrl(String thumbUrl) {
+		this.thumbUrl = thumbUrl;
 	}
-	public String getUrl() {
-		return url;
+	public Bitmap getThumbBitmap() {
+		return thumbBitmap;
 	}
-	public void setUrl(String url) {
-		this.url = url;
+	public void setThumbBitmap(Bitmap thumbBitmap) {
+		this.thumbBitmap = thumbBitmap;
+	}
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+	public Bitmap getImageBitmap() {
+		return imageBitmap;
+	}
+	public void setImageBitmap(Bitmap imageBitmap) {
+		this.imageBitmap = imageBitmap;
 	}
 }

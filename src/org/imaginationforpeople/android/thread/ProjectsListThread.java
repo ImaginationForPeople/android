@@ -1,6 +1,8 @@
 package org.imaginationforpeople.android.thread;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.graphics.BitmapFactory;
 import android.util.SparseArray;
 
 import com.fasterxml.jackson.core.JsonFactory;
@@ -42,6 +45,11 @@ public class ProjectsListThread extends BaseGetJson {
 		for(int i = 0; i < jsonLength; i++) {
 			JsonParser parser = factory.createJsonParser(jsonBestProjects.getString(i));
 			I4pProjectTranslation project = mapper.readValue(parser, I4pProjectTranslation.class);
+			if(project.getProject().getPictures().size() > 0) {
+				String thumbUrl = project.getProject().getPictures().get(0).getThumbUrl();
+				InputStream URLcontent = (InputStream) new URL(thumbUrl).getContent();
+				project.getProject().getPictures().get(0).setThumbBitmap(BitmapFactory.decodeStream(URLcontent));
+			}
 			bestProjects.add(project);
 		}
 		
@@ -50,6 +58,11 @@ public class ProjectsListThread extends BaseGetJson {
 		for(int i = 0; i < jsonLength; i++) {
 			JsonParser parser = factory.createJsonParser(jsonLatestProjects.getString(i));
 			I4pProjectTranslation project = mapper.readValue(parser, I4pProjectTranslation.class);
+			if(project.getProject().getPictures().size() > 0) {
+				String thumbUrl = project.getProject().getPictures().get(0).getThumbUrl();
+				InputStream URLcontent = (InputStream) new URL(thumbUrl).getContent();
+				project.getProject().getPictures().get(0).setThumbBitmap(BitmapFactory.decodeStream(URLcontent));
+			}
 			latestProjects.add(project);
 		}
 		

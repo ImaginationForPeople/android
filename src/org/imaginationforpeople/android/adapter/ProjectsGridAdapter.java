@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
+import org.imaginationforpeople.android.model.Picture;
 
 import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ProjectsGridAdapter extends BaseAdapter {
@@ -48,8 +50,12 @@ public class ProjectsGridAdapter extends BaseAdapter {
 		
 		I4pProjectTranslation project = getItem(position);
 		TextView projectTitle = (TextView) convertView.findViewById(R.id.projectslist_item_text);
+		ImageView projectImage = (ImageView) convertView.findViewById(R.id.projectslist_item_image);
 		projectTitle.setText(project.getTitle());
-		projectTitle.getBackground().setAlpha(127); 
+		projectTitle.getBackground().setAlpha(127);
+		List<Picture> projectPictures = project.getProject().getPictures();
+		if(projectPictures.size() > 0)
+			projectImage.setImageBitmap (projectPictures.get(0).getThumbBitmap());
 		
 		return convertView;
 	}
