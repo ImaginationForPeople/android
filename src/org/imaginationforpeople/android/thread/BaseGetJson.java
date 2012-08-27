@@ -58,12 +58,15 @@ public abstract class BaseGetJson extends Thread {
 		} catch (JSONException e) {
 			sendError(BaseHandler.ERROR_JSON);
 			Log.e("error", "Error when analyzing the JSON", e);
+			Log.e("error", "Request URL: " + requestUri, e);
 		} catch (JsonParseException e) {
 			sendError(BaseHandler.ERROR_JSON);
 			Log.e("error", "Error with Jackson library", e);
+			Log.e("error", "Request URL: " + requestUri, e);
 		} catch (Exception e) {
 			sendError(BaseHandler.ERROR_UNKNOWN);
 			Log.e("error", "An unknown error has occured", e);
+			e.printStackTrace();
 		}
 	}
 	
