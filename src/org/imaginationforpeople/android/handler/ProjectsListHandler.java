@@ -79,6 +79,7 @@ public class ProjectsListHandler extends BaseHandler implements OnClickListener,
 			alert.setMessage(activity.getResources().getText(R.string.error_unknown_message));
 			break;
 		}
+		alert.setOnCancelListener(this);
 		alert.setButton(DialogInterface.BUTTON_NEUTRAL, activity.getResources().getText(R.string.close), this);
 		alert.show();
 	}
