@@ -13,7 +13,6 @@ import org.imaginationforpeople.android.homepage.TabHelperHoneycomb;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.imaginationforpeople.android.thread.ProjectsListThread;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -28,7 +27,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-@TargetApi(11)
 public class HomepageActivity extends Activity implements OnClickListener {
 	private static ProjectsListThread thread;
 	private SparseArray<ProjectsGridAdapter> adapters;
