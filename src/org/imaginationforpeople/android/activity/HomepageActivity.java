@@ -35,6 +35,7 @@ public class HomepageActivity extends Activity implements OnClickListener {
 	private AlertDialog languagesDialog;
 	private SharedPreferences preferences;
 	private ProjectsListHandler handler;
+	private TabHelper tabHelper;
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -75,19 +76,18 @@ public class HomepageActivity extends Activity implements OnClickListener {
 			adapters.append(DataHelper.LATEST_PROJECTS_KEY, new ProjectsGridAdapter(this, new ArrayList<I4pProjectTranslation>()));
 		}
 		
-		TabHelper helper = null;
 		if(Build.VERSION.SDK_INT >= 11)
-			helper = new TabHelperHoneycomb();
+			tabHelper = new TabHelperHoneycomb();
 		else
-			helper = new TabHelperEclair();
+			tabHelper = new TabHelperEclair();
 		
-		helper.setActivity(this);
-		helper.setBestProjectsAdapter(adapters.get(DataHelper.BEST_PROJECTS_KEY));
-		helper.setLatestProjectsAdapter(adapters.get(DataHelper.LATEST_PROJECTS_KEY));
-		helper.init();
+		tabHelper.setActivity(this);
+		tabHelper.setBestProjectsAdapter(adapters.get(DataHelper.BEST_PROJECTS_KEY));
+		tabHelper.setLatestProjectsAdapter(adapters.get(DataHelper.LATEST_PROJECTS_KEY));
+		tabHelper.init();
 		
-		if(Build.VERSION.SDK_INT >= 11 && savedInstanceState != null && savedInstanceState.containsKey("selected_tab"))
-			getActionBar().setSelectedNavigationItem(savedInstanceState.getInt("selected_tab"));
+		if(savedInstanceState != null && savedInstanceState.containsKey(TabHelper.STATE_KEY))
+			tabHelper.restoreCurrentTab(savedInstanceState.getInt(TabHelper.STATE_KEY));
 		
 		handler = new ProjectsListHandler(this, adapters.get(DataHelper.BEST_PROJECTS_KEY), adapters.get(DataHelper.LATEST_PROJECTS_KEY));
 		
@@ -105,8 +105,7 @@ public class HomepageActivity extends Activity implements OnClickListener {
 	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		if(Build.VERSION.SDK_INT >= 11)
-			outState.putInt("selected_tab", getActionBar().getSelectedTab().getPosition());
+		tabHelper.saveCurrentTab(outState);
 		super.onSaveInstanceState(outState);
 	}
 

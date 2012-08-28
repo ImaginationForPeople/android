@@ -3,15 +3,17 @@ package org.imaginationforpeople.android.homepage;
 import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.helper.DisplayHelper;
 
+import android.os.Bundle;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 
 public class TabHelperEclair extends TabHelper {
 	public final static int tabHeight = DisplayHelper.dpToPx(50);
+	private TabHost mTabHost;
 
 	@Override
 	public void init() {
-		TabHost mTabHost = (TabHost) activity.findViewById(android.R.id.tabhost);
+		mTabHost = (TabHost) activity.findViewById(android.R.id.tabhost);
 		mTabHost.setup();
 		
 		ProjectsTabEclair bestTab = new ProjectsTabEclair(activity);
@@ -30,5 +32,15 @@ public class TabHelperEclair extends TabHelper {
 		
 		mTabHost.getTabWidget().getChildAt(0).getLayoutParams().height = tabHeight;
 		mTabHost.getTabWidget().getChildAt(1).getLayoutParams().height = tabHeight;
+	}
+
+	@Override
+	public void saveCurrentTab(Bundle outState) {
+		outState.putInt(STATE_KEY, mTabHost.getCurrentTab());
+	}
+
+	@Override
+	public void restoreCurrentTab(int position) {
+		mTabHost.setCurrentTab(position);
 	}
 }

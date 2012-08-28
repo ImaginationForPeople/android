@@ -4,6 +4,7 @@ import org.imaginationforpeople.android.R;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.os.Bundle;
 
 @TargetApi(11)
 public class TabHelperHoneycomb extends TabHelper {	
@@ -24,5 +25,15 @@ public class TabHelperHoneycomb extends TabHelper {
 		latestProjectsTab.setText(R.string.homepage_tab_latest);
 		latestProjectsTab.setTabListener(new ProjectsTabListenerHoneycomb(latestFragment));
 		activity.getActionBar().addTab(latestProjectsTab);
+	}
+
+	@Override
+	public void saveCurrentTab(Bundle outState) {
+		outState.putInt(STATE_KEY, activity.getActionBar().getSelectedTab().getPosition());
+	}
+
+	@Override
+	public void restoreCurrentTab(int position) {
+		activity.getActionBar().setSelectedNavigationItem(position);
 	}
 }
