@@ -4,16 +4,16 @@ import java.util.ArrayList;
 
 import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.adapter.ProjectsGridAdapter;
-import org.imaginationforpeople.android.fragment.ProjectsTabFragment;
 import org.imaginationforpeople.android.handler.ProjectsListHandler;
 import org.imaginationforpeople.android.helper.DataHelper;
 import org.imaginationforpeople.android.helper.LanguageHelper;
-import org.imaginationforpeople.android.listener.ProjectsTabListener;
+import org.imaginationforpeople.android.homepage.TabHelper;
+import org.imaginationforpeople.android.homepage.TabHelperEclair;
+import org.imaginationforpeople.android.homepage.TabHelperHoneycomb;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.imaginationforpeople.android.thread.ProjectsListThread;
 
 import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -21,6 +21,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.Menu;
@@ -66,8 +67,6 @@ public class HomepageActivity extends Activity implements OnClickListener {
 		LanguageHelper.setSharedPreferences(preferences);
 		LanguageHelper.setResources(getResources());
 		
-		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		
 		// -- Initializing projects list
 		adapters = (SparseArray<ProjectsGridAdapter>) getLastNonConfigurationInstance();
 		if(adapters == null) {
@@ -76,21 +75,18 @@ public class HomepageActivity extends Activity implements OnClickListener {
 			adapters.append(DataHelper.LATEST_PROJECTS_KEY, new ProjectsGridAdapter(this, new ArrayList<I4pProjectTranslation>()));
 		}
 		
-		ProjectsTabFragment bestFragment = new ProjectsTabFragment();
-		bestFragment.setAdapter(adapters.get(DataHelper.BEST_PROJECTS_KEY));
-		ActionBar.Tab bestProjectsTab = getActionBar().newTab();
-		bestProjectsTab.setText(R.string.homepage_tab_bestof);
-		bestProjectsTab.setTabListener(new ProjectsTabListener(bestFragment));
-		getActionBar().addTab(bestProjectsTab);
+		TabHelper helper = null;
+		if(Build.VERSION.SDK_INT >= 11)
+			helper = new TabHelperHoneycomb();
+		else
+			helper = new TabHelperEclair();
 		
-		ProjectsTabFragment latestFragment = new ProjectsTabFragment();
-		latestFragment.setAdapter(adapters.get(DataHelper.LATEST_PROJECTS_KEY));
-		ActionBar.Tab latestProjectsTab = getActionBar().newTab();
-		latestProjectsTab.setText(R.string.homepage_tab_latest);
-		latestProjectsTab.setTabListener(new ProjectsTabListener(latestFragment));
-		getActionBar().addTab(latestProjectsTab);
+		helper.setActivity(this);
+		helper.setBestProjectsAdapter(adapters.get(DataHelper.BEST_PROJECTS_KEY));
+		helper.setLatestProjectsAdapter(adapters.get(DataHelper.LATEST_PROJECTS_KEY));
+		helper.init();
 		
-		if(savedInstanceState != null && savedInstanceState.containsKey("selected_tab"))
+		if(Build.VERSION.SDK_INT >= 11 && savedInstanceState != null && savedInstanceState.containsKey("selected_tab"))
 			getActionBar().setSelectedNavigationItem(savedInstanceState.getInt("selected_tab"));
 		
 		handler = new ProjectsListHandler(this, adapters.get(DataHelper.BEST_PROJECTS_KEY), adapters.get(DataHelper.LATEST_PROJECTS_KEY));
@@ -109,7 +105,8 @@ public class HomepageActivity extends Activity implements OnClickListener {
 	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		outState.putInt("selected_tab", getActionBar().getSelectedTab().getPosition());
+		if(Build.VERSION.SDK_INT >= 11)
+			outState.putInt("selected_tab", getActionBar().getSelectedTab().getPosition());
 		super.onSaveInstanceState(outState);
 	}
 

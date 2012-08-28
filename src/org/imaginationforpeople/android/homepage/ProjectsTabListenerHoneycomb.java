@@ -1,4 +1,4 @@
-package org.imaginationforpeople.android.listener;
+package org.imaginationforpeople.android.homepage;
 
 import org.imaginationforpeople.android.R;
 
@@ -9,10 +9,10 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 
 @TargetApi(11)
-public class ProjectsTabListener implements TabListener {
+public class ProjectsTabListenerHoneycomb implements TabListener {
 	private Fragment fragment;
 	
-	public ProjectsTabListener(Fragment f) {
+	public ProjectsTabListenerHoneycomb(Fragment f) {
 		fragment = f;
 	}
 	

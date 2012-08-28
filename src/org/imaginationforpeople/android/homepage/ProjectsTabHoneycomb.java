@@ -1,4 +1,4 @@
-package org.imaginationforpeople.android.fragment;
+package org.imaginationforpeople.android.homepage;
 
 import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.activity.ProjectViewActivity;
@@ -17,7 +17,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
 @TargetApi(11)
-public class ProjectsTabFragment extends Fragment implements OnItemClickListener {
+public class ProjectsTabHoneycomb extends Fragment implements ProjectsTab, OnItemClickListener {
 	private ProjectsGridAdapter adapter;
 	
 	public void setAdapter(ProjectsGridAdapter projectsGridAdapter) {
