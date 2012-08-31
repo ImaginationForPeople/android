@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.adapter.ProjectsGridAdapter;
+import org.imaginationforpeople.android.handler.AboutHandler;
 import org.imaginationforpeople.android.handler.ProjectsListHandler;
 import org.imaginationforpeople.android.helper.DataHelper;
 import org.imaginationforpeople.android.helper.LanguageHelper;
@@ -11,12 +12,15 @@ import org.imaginationforpeople.android.homepage.TabHelper;
 import org.imaginationforpeople.android.homepage.TabHelperEclair;
 import org.imaginationforpeople.android.homepage.TabHelperHoneycomb;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
+import org.imaginationforpeople.android.thread.AboutThread;
 import org.imaginationforpeople.android.thread.ProjectsListThread;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -27,9 +31,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-public class HomepageActivity extends Activity implements OnClickListener {
+public class HomepageActivity extends Activity implements OnClickListener, OnCancelListener {
 	private static ProjectsListThread thread;
+	private static AboutThread aboutThread;
 	private SparseArray<ProjectsGridAdapter> adapters;
+	private static ProgressDialog progress;
 	private AlertDialog languagesDialog;
 	private SharedPreferences preferences;
 	private ProjectsListHandler handler;
@@ -87,10 +93,17 @@ public class HomepageActivity extends Activity implements OnClickListener {
 		if(savedInstanceState != null && savedInstanceState.containsKey(TabHelper.STATE_KEY))
 			tabHelper.restoreCurrentTab(savedInstanceState.getInt(TabHelper.STATE_KEY));
 		
-		handler = new ProjectsListHandler(this, adapters.get(DataHelper.BEST_PROJECTS_KEY), adapters.get(DataHelper.LATEST_PROJECTS_KEY));
+		progress = new ProgressDialog(this);
+		progress.setOnCancelListener(this);
+		progress.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getText(R.string.cancel), this);
 		
-		if(adapters.get(DataHelper.BEST_PROJECTS_KEY).getCount() == 0 || adapters.get(DataHelper.LATEST_PROJECTS_KEY).getCount() == 0)
-			loadProjects();
+		handler = new ProjectsListHandler(this, progress, adapters.get(DataHelper.LATEST_PROJECTS_KEY), adapters.get(DataHelper.BEST_PROJECTS_KEY));
+		
+		if(adapters.get(DataHelper.BEST_PROJECTS_KEY).getCount() == 0 || adapters.get(DataHelper.LATEST_PROJECTS_KEY).getCount() == 0) {
+			AboutHandler aboutHandler = new AboutHandler(this, progress);
+			aboutThread = new AboutThread(aboutHandler);
+			aboutThread.start();
+		}
 		
 		// -- Initializing language chooser UI
 		int selectedLanguage = LanguageHelper.getPreferredLanguageInt();
@@ -115,13 +128,19 @@ public class HomepageActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onStop() {
 		super.onStop();
-		thread.requestStop();
+		if(aboutThread != null)
+			aboutThread.requestStop();
+		if(thread != null)
+			thread.requestStop();
 		if(languagesDialog.isShowing())
 			languagesDialog.cancel();
+		progress.dismiss();
 	}
 	
 	public void onClick(DialogInterface dialog, int which) {
-		if(which != LanguageHelper.getPreferredLanguageInt()) {
+		if(which == DialogInterface.BUTTON_NEGATIVE) {
+			finish();
+		} else if(which != LanguageHelper.getPreferredLanguageInt()) {
 			Editor editor = preferences.edit();
 			editor.putInt("language", which);
 			editor.commit();
@@ -130,7 +149,11 @@ public class HomepageActivity extends Activity implements OnClickListener {
 		dialog.dismiss();
 	}
 	
-	private void loadProjects() {
+	public void onCancel(DialogInterface arg0) {
+		finish();
+	}
+	
+	public void loadProjects() {
 		thread = new ProjectsListThread(handler);
 		thread.start();
 	}

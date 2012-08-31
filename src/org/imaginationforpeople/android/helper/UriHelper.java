@@ -12,4 +12,8 @@ public class UriHelper extends BaseHelper {
 	public static String getProjectViewUri(int projectId) {
 		return "http://10.0.0.9:8000/api/project/" + String.valueOf(projectId);
 	}
+	
+	public static String getAboutUri() {
+		return "http://10.0.0.9:8000/api/about/";
+	}
 }

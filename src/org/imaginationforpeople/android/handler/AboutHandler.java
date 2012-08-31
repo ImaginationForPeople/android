@@ -1,57 +1,43 @@
 package org.imaginationforpeople.android.handler;
 
-import java.util.List;
-
 import org.imaginationforpeople.android.R;
-import org.imaginationforpeople.android.adapter.ProjectsGridAdapter;
-import org.imaginationforpeople.android.helper.DataHelper;
-import org.imaginationforpeople.android.model.I4pProjectTranslation;
+import org.imaginationforpeople.android.activity.HomepageActivity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
-import android.util.SparseArray;
 
-public class ProjectsListHandler extends BaseHandler implements OnClickListener, OnCancelListener {
-	private Activity activity;
-	private ProgressDialog progress;
-	private ProjectsGridAdapter bestAdapter;
-	private ProjectsGridAdapter latestAdapter;
+public class AboutHandler extends BaseHandler implements OnCancelListener, OnClickListener {
+	private HomepageActivity activity;
 	
-	public ProjectsListHandler(Activity ac, ProgressDialog pd, ProjectsGridAdapter ba, ProjectsGridAdapter la) {
-		activity = ac;
-		progress = pd;
-		bestAdapter = ba;
-		latestAdapter = la;
+	private ProgressDialog progress;
+	
+	public AboutHandler(HomepageActivity a, ProgressDialog p) {
+		activity = a;
+		progress = p;
 	}
 	
 	@Override
 	protected void onStart(int arg, Object obj) {
-		progress.setMessage(activity.getResources().getText(R.string.projectslist_loading));
-		if(!progress.isShowing())
-			progress.show();
-		bestAdapter.clearProjects();
-		latestAdapter.clearProjects();
+		progress.setMessage(activity.getResources().getText(R.string.projectslist_api_verify));
+		progress.show();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void onSuccess(int arg, Object obj) {
-		SparseArray<List<I4pProjectTranslation>> projects = (SparseArray<List<I4pProjectTranslation>>) obj;
-		List<I4pProjectTranslation> bestProjects = projects.get(DataHelper.BEST_PROJECTS_KEY);
-		for(I4pProjectTranslation project : bestProjects) {
-			bestAdapter.addProject(project);
+		if((Boolean) obj) {
+			progress.dismiss();
+			AlertDialog alert = new AlertDialog.Builder(activity).create();
+			alert.setTitle(R.string.error_server);
+			alert.setMessage(activity.getResources().getString(R.string.error_api));
+			alert.setOnCancelListener(this);
+			alert.setButton(DialogInterface.BUTTON_NEUTRAL, activity.getResources().getText(R.string.close), this);
+			alert.show();
+		} else {
+			activity.loadProjects();
 		}
-		
-		List<I4pProjectTranslation> latestProjects = projects.get(DataHelper.LATEST_PROJECTS_KEY);
-		for(I4pProjectTranslation project : latestProjects) {
-			latestAdapter.addProject(project);
-		}
-		
-		progress.dismiss();
 	}
 	
 	@Override
