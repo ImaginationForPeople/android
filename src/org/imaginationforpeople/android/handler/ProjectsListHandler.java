@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.adapter.ProjectsGridAdapter;
-import org.imaginationforpeople.android.helper.DataHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 
 import android.app.Activity;
@@ -13,9 +12,13 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
-import android.util.SparseArray;
 
 public class ProjectsListHandler extends BaseHandler implements OnClickListener, OnCancelListener {
+	public final static int BEST_PROJECTS = 1001;
+	public final static int LATEST_PROJECTS = 1002;
+	
+	private int count = 0;
+	
 	private Activity activity;
 	private ProgressDialog progress;
 	private ProjectsGridAdapter bestAdapter;
@@ -33,25 +36,34 @@ public class ProjectsListHandler extends BaseHandler implements OnClickListener,
 		progress.setMessage(activity.getResources().getText(R.string.projectslist_loading));
 		if(!progress.isShowing())
 			progress.show();
-		bestAdapter.clearProjects();
-		latestAdapter.clearProjects();
+		
+		switch(arg) {
+		case BEST_PROJECTS:
+			bestAdapter.clearProjects();
+			break;
+		case LATEST_PROJECTS:
+			latestAdapter.clearProjects();
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onSuccess(int arg, Object obj) {
-		SparseArray<List<I4pProjectTranslation>> projects = (SparseArray<List<I4pProjectTranslation>>) obj;
-		List<I4pProjectTranslation> bestProjects = projects.get(DataHelper.BEST_PROJECTS_KEY);
-		for(I4pProjectTranslation project : bestProjects) {
-			bestAdapter.addProject(project);
+		List<I4pProjectTranslation> projects = (List<I4pProjectTranslation>) obj;
+		ProjectsGridAdapter adapter = null;
+		switch(arg) {
+		case BEST_PROJECTS:
+			adapter = bestAdapter;
+			break;
+		case LATEST_PROJECTS:
+			adapter = latestAdapter;
+		}
+		for(I4pProjectTranslation project : projects) {
+			adapter.addProject(project);
 		}
 		
-		List<I4pProjectTranslation> latestProjects = projects.get(DataHelper.LATEST_PROJECTS_KEY);
-		for(I4pProjectTranslation project : latestProjects) {
-			latestAdapter.addProject(project);
-		}
-		
-		progress.dismiss();
+		if(++count >= 2)
+			progress.dismiss();
 	}
 	
 	@Override

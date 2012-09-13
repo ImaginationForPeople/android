@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.adapter.ProjectsGridAdapter;
-import org.imaginationforpeople.android.handler.AboutHandler;
 import org.imaginationforpeople.android.handler.ProjectsListHandler;
 import org.imaginationforpeople.android.helper.DataHelper;
 import org.imaginationforpeople.android.helper.LanguageHelper;
@@ -12,7 +11,6 @@ import org.imaginationforpeople.android.homepage.TabHelper;
 import org.imaginationforpeople.android.homepage.TabHelperEclair;
 import org.imaginationforpeople.android.homepage.TabHelperHoneycomb;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
-import org.imaginationforpeople.android.thread.AboutThread;
 import org.imaginationforpeople.android.thread.ProjectsListThread;
 
 import android.app.Activity;
@@ -32,8 +30,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 public class HomepageActivity extends Activity implements OnClickListener, OnCancelListener {
-	private static ProjectsListThread thread;
-	private static AboutThread aboutThread;
+	private static ProjectsListThread bestThread;
+	private static ProjectsListThread latestThread;
 	private SparseArray<ProjectsGridAdapter> adapters;
 	private static ProgressDialog progress;
 	private AlertDialog languagesDialog;
@@ -100,9 +98,7 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 		handler = new ProjectsListHandler(this, progress, adapters.get(DataHelper.LATEST_PROJECTS_KEY), adapters.get(DataHelper.BEST_PROJECTS_KEY));
 		
 		if(adapters.get(DataHelper.BEST_PROJECTS_KEY).getCount() == 0 || adapters.get(DataHelper.LATEST_PROJECTS_KEY).getCount() == 0) {
-			AboutHandler aboutHandler = new AboutHandler(this, progress);
-			aboutThread = new AboutThread(aboutHandler);
-			aboutThread.start();
+			loadProjects();
 		}
 		
 		// -- Initializing language chooser UI
@@ -128,10 +124,7 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 	@Override
 	protected void onStop() {
 		super.onStop();
-		if(aboutThread != null)
-			aboutThread.requestStop();
-		if(thread != null)
-			thread.requestStop();
+		requestStopThreads();
 		if(languagesDialog.isShowing())
 			languagesDialog.cancel();
 		progress.dismiss();
@@ -154,7 +147,16 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 	}
 	
 	public void loadProjects() {
-		thread = new ProjectsListThread(handler);
-		thread.start();
+		bestThread = new ProjectsListThread(handler, ProjectsListHandler.BEST_PROJECTS);
+		latestThread = new ProjectsListThread(handler, ProjectsListHandler.LATEST_PROJECTS);
+		bestThread.start();
+		latestThread.start();
+	}
+	
+	public void requestStopThreads() {
+		if(bestThread != null)
+			bestThread.requestStop();
+		if(latestThread != null)
+			latestThread.requestStop();
 	}
 }

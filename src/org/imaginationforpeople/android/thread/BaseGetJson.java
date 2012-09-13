@@ -25,6 +25,7 @@ public abstract class BaseGetJson extends Thread {
 	
 	protected BaseHandler handler;
 	protected String requestUri;
+	protected int arg;
 	
 	public void requestStop() {
 		stop = true;
@@ -35,6 +36,7 @@ public abstract class BaseGetJson extends Thread {
 		Message msg;
 		msg = handler.obtainMessage();
 		msg.arg1 = BaseHandler.STATUS_START;
+		msg.arg2 = arg;
 		handler.sendMessage(msg);
 		
 		String json;
@@ -47,6 +49,7 @@ public abstract class BaseGetJson extends Thread {
 				return;
 			msg = handler.obtainMessage();
 			msg.arg1 = BaseHandler.STATUS_SUCCESS;
+			msg.arg2 = arg;
 			msg.obj = parsedJson;
 			handler.sendMessage(msg);
 		} catch (HttpHostConnectException e) {

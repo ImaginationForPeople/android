@@ -4,6 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class I4pProjectTranslation {
 	private int id;
+	@JsonProperty("resource_uri")
+	private String resourceUri;
+	private String slug;
+	@JsonProperty("language_code")
+	private String languageCode;
 	@JsonProperty("about_section")
 	private String aboutSection;
 	private String baseline;
@@ -20,6 +25,24 @@ public class I4pProjectTranslation {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	public String getResourceUri() {
+		return resourceUri;
+	}
+	public void setResourceUri(String resourceUri) {
+		this.resourceUri = resourceUri;
+	}
+	public String getSlug() {
+		return slug;
+	}
+	public void setSlug(String slug) {
+		this.slug = slug;
+	}
+	public String getLanguageCode() {
+		return languageCode;
+	}
+	public void setLanguageCode(String languageCode) {
+		this.languageCode = languageCode;
 	}
 	public String getAboutSection() {
 		return aboutSection;
