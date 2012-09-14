@@ -99,7 +99,7 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 		progress.setOnCancelListener(this);
 		progress.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getText(R.string.cancel), this);
 		
-		handler = new ProjectsListHandler(this, progress, adapters.get(DataHelper.LATEST_PROJECTS_KEY), adapters.get(DataHelper.BEST_PROJECTS_KEY));
+		handler = new ProjectsListHandler(this, progress, adapters.get(DataHelper.BEST_PROJECTS_KEY), adapters.get(DataHelper.LATEST_PROJECTS_KEY));
 		
 		if(adapters.get(DataHelper.BEST_PROJECTS_KEY).getCount() == 0 || adapters.get(DataHelper.LATEST_PROJECTS_KEY).getCount() == 0) {
 			loadProjects();
