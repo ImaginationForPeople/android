@@ -37,7 +37,8 @@ public class ProjectsTabHoneycomb extends Fragment implements ProjectsTab, OnIte
 		I4pProjectTranslation project = adapter.getItem(position);
 		
 		Intent intent = new Intent(getActivity(), ProjectViewActivity.class);
-		intent.putExtra("project_id", project.getId());
+		intent.putExtra("project_lang", project.getLanguageCode());
+		intent.putExtra("project_slug", project.getSlug());
 		intent.putExtra("project_title", project.getTitle());
 		startActivity(intent);
 	}

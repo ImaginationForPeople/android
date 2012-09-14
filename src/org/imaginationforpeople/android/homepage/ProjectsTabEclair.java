@@ -38,7 +38,8 @@ public class ProjectsTabEclair implements TabContentFactory, ProjectsTab, OnItem
 		I4pProjectTranslation project = adapter.getItem(position);
 		
 		Intent intent = new Intent(activity, ProjectViewActivity.class);
-		intent.putExtra("project_id", project.getId());
+		intent.putExtra("project_lang", project.getLanguageCode());
+		intent.putExtra("project_slug", project.getSlug());
 		intent.putExtra("project_title", project.getTitle());
 		activity.startActivity(intent);
 	}
