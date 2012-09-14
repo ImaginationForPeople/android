@@ -16,4 +16,8 @@ public class UriHelper extends BaseHelper {
 	public static String getProjectViewUri(int projectId) {
 		return "http://10.0.0.9:8000/api/v1/project/" + String.valueOf(projectId);
 	}
+	
+	public static String getRandomProjectViewUri() {
+		return "http://10.0.0.9:8000/api/v1/project/random/?format=json&lang=" + LanguageHelper.getPreferredLanguageCode();
+	}
 }

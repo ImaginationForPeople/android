@@ -3,6 +3,7 @@ package org.imaginationforpeople.android.thread;
 import java.io.IOException;
 
 import org.imaginationforpeople.android.handler.ProjectViewHandler;
+import org.imaginationforpeople.android.helper.DataHelper;
 import org.imaginationforpeople.android.helper.UriHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.json.JSONException;
@@ -16,7 +17,10 @@ public class ProjectViewThread extends BaseGetJson {
 	public ProjectViewThread(ProjectViewHandler h, int p) {
 		handler = h;
 		
-		requestUri = UriHelper.getProjectViewUri(p);
+		if(p == DataHelper.PROJECT_RANDOM)
+			requestUri = UriHelper.getRandomProjectViewUri();
+		else
+			requestUri = UriHelper.getProjectViewUri(p);
 	}
 	
 	@Override

@@ -11,6 +11,8 @@ import org.imaginationforpeople.android.homepage.TabHelper;
 import org.imaginationforpeople.android.homepage.TabHelperEclair;
 import org.imaginationforpeople.android.homepage.TabHelperHoneycomb;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
+import org.imaginationforpeople.android.shake.ShakeEventListener;
+import org.imaginationforpeople.android.shake.ShakeListener;
 import org.imaginationforpeople.android.thread.ProjectsListThread;
 
 import android.app.Activity;
@@ -18,6 +20,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
@@ -29,7 +32,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-public class HomepageActivity extends Activity implements OnClickListener, OnCancelListener {
+public class HomepageActivity extends Activity implements OnClickListener, OnCancelListener, ShakeListener {
 	private static ProjectsListThread bestThread;
 	private static ProjectsListThread latestThread;
 	private SparseArray<ProjectsGridAdapter> adapters;
@@ -38,6 +41,7 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 	private SharedPreferences preferences;
 	private ProjectsListHandler handler;
 	private TabHelper tabHelper;
+	private ShakeEventListener shaker;
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -108,6 +112,9 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 		languagesBuilder.setTitle(R.string.homepage_spinner_prompt);
 		languagesBuilder.setSingleChoiceItems(R.array.homepage_spinner_languages, selectedLanguage, this);
 		languagesDialog = languagesBuilder.create();
+		
+		// -- Initializing shaker
+		shaker = new ShakeEventListener(this);
 	}
 	
 	@Override
@@ -119,6 +126,18 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		return adapters;
+	}
+
+	@Override
+	protected void onPause() {
+		shaker.unregisterListener();
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		shaker.registerListener();
 	}
 
 	@Override
@@ -158,5 +177,11 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 			bestThread.requestStop();
 		if(latestThread != null)
 			latestThread.requestStop();
+	}
+
+	public void onShake() {
+		Intent intent = new Intent(this, ProjectViewActivity.class);
+		intent.putExtra("project_id", DataHelper.PROJECT_RANDOM);
+		startActivity(intent);
 	}
 }

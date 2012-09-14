@@ -28,7 +28,10 @@ public class ProjectViewActivity extends Activity {
 		else {
 			Bundle extras = getIntent().getExtras();
 			
-			setTitle(extras.getString("project_title"));
+			if(extras.containsKey("project_title"))
+				setTitle(extras.getString("project_title"));
+			else
+				setTitle("");
 			
 			ProjectViewHandler handler = new ProjectViewHandler(this);
 			ProjectViewThread thread = new ProjectViewThread(handler, extras.getInt("project_id"));
@@ -48,6 +51,9 @@ public class ProjectViewActivity extends Activity {
 	
 	public void displayProject() {
 		setContentView(R.layout.projectview_description);
+		
+		if("".equals(getTitle()))
+			setTitle(project.getTitle());
 		
 		TextView baseline = (TextView) findViewById(R.id.projectview_description_baseline_text);
 		baseline.setText(project.getBaseline());
