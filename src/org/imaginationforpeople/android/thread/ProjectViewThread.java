@@ -8,6 +8,8 @@ import org.imaginationforpeople.android.helper.UriHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.json.JSONException;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
@@ -20,7 +22,14 @@ public class ProjectViewThread extends BaseGetJson {
 		if(p == DataHelper.PROJECT_RANDOM)
 			requestUri = UriHelper.getRandomProjectViewUri();
 		else
-			requestUri = UriHelper.getProjectViewUri(p);
+			requestUri = UriHelper.getProjectViewUriById(p);
+	}
+	
+	public ProjectViewThread(ProjectViewHandler h, String lc, String s) {
+		handler = h;
+		
+		requestUri = UriHelper.getProjectViewUriBySlug(lc, s);
+		Log.i("url", requestUri);
 	}
 	
 	@Override

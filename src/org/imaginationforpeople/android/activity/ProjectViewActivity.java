@@ -1,5 +1,7 @@
 package org.imaginationforpeople.android.activity;
 
+import java.util.List;
+
 import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.handler.ProjectViewHandler;
 import org.imaginationforpeople.android.helper.DisplayHelper;
@@ -8,6 +10,7 @@ import org.imaginationforpeople.android.model.Question;
 import org.imaginationforpeople.android.thread.ProjectViewThread;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -26,15 +29,29 @@ public class ProjectViewActivity extends Activity {
 		if(project != null)
 			displayProject();
 		else {
-			Bundle extras = getIntent().getExtras();
+			String projectLang;
+			String projectSlug;
 			
-			if(extras.containsKey("project_title"))
-				setTitle(extras.getString("project_title"));
-			else
+			Uri data = getIntent().getData();
+			if(data != null) {
+				List<String> path = data.getPathSegments();
+				projectLang = path.get(0);
+				projectSlug = path.get(2);
 				setTitle("");
+			} else {
+				Bundle extras = getIntent().getExtras();
+				
+				if(extras.containsKey("project_title"))
+					setTitle(extras.getString("project_title"));
+				else
+					setTitle("");
+				
+				projectLang = extras.getString("project_lang");
+				projectSlug = extras.getString("project_slug");
+			}
 			
 			ProjectViewHandler handler = new ProjectViewHandler(this);
-			ProjectViewThread thread = new ProjectViewThread(handler, extras.getInt("project_id"));
+			ProjectViewThread thread = new ProjectViewThread(handler, projectLang, projectSlug);
 			
 			thread.start();
 		}
