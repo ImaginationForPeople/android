@@ -27,6 +27,9 @@
     <string name="projectslist_loading">Loading projects…</string>
     <string name="projectslist_item_image_description">Project image</string>
     
+    <!-- ProjectView keys -->
+    <string name="projectview_menu_share">Share project</string>
+    
     <!-- Error keys -->
     <string name="error_server">Problem with the server</string>
     <string name="error_server_timeout">The server doesn\'t respond in time.</string>

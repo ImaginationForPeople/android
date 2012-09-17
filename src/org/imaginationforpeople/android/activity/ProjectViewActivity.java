@@ -5,21 +5,51 @@ import java.util.List;
 import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.handler.ProjectViewHandler;
 import org.imaginationforpeople.android.helper.DisplayHelper;
+import org.imaginationforpeople.android.helper.UriHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.imaginationforpeople.android.model.Question;
 import org.imaginationforpeople.android.thread.ProjectViewThread;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
 public class ProjectViewActivity extends Activity {
+	private boolean displayMenu = false;
 	private I4pProjectTranslation project;
 	
+	@TargetApi(14)
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		if(displayMenu) {
+			// Inflating the menu
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.projectview, menu);
+			
+			// Creating share intent
+			Intent shareIntent = new Intent(Intent.ACTION_SEND);
+			shareIntent.putExtra(Intent.EXTRA_TEXT, UriHelper.getProjectUrl(project));
+			shareIntent.putExtra(Intent.EXTRA_SUBJECT, project.getTitle());
+			shareIntent.setType("text/plain");
+			
+			// Configuring share button (Android 4.0+)
+			MenuItem share = menu.findItem(R.id.projectview_share);
+			ShareActionProvider sap = (ShareActionProvider) share.getActionProvider();
+			sap.setShareIntent(shareIntent);
+		}
+		return super.onCreateOptionsMenu(menu);
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,8 +96,11 @@ public class ProjectViewActivity extends Activity {
 		project = p;
 	}
 	
+	@TargetApi(11)
 	public void displayProject() {
 		setContentView(R.layout.projectview_description);
+		displayMenu = true;
+		invalidateOptionsMenu();
 		
 		if("".equals(getTitle()))
 			setTitle(project.getTitle());
