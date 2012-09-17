@@ -14,6 +14,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,28 +27,41 @@ import android.widget.TextView;
 
 public class ProjectViewActivity extends Activity {
 	private boolean displayMenu = false;
+	private Intent shareIntent;
 	private I4pProjectTranslation project;
 	
 	@TargetApi(14)
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		if(displayMenu) {
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		if(displayMenu && menu.size() == 0) {
 			// Inflating the menu
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.projectview, menu);
 			
 			// Creating share intent
-			Intent shareIntent = new Intent(Intent.ACTION_SEND);
+			shareIntent = new Intent(Intent.ACTION_SEND);
 			shareIntent.putExtra(Intent.EXTRA_TEXT, UriHelper.getProjectUrl(project));
 			shareIntent.putExtra(Intent.EXTRA_SUBJECT, project.getTitle());
 			shareIntent.setType("text/plain");
 			
 			// Configuring share button (Android 4.0+)
-			MenuItem share = menu.findItem(R.id.projectview_share);
-			ShareActionProvider sap = (ShareActionProvider) share.getActionProvider();
-			sap.setShareIntent(shareIntent);
+			if(Build.VERSION.SDK_INT >= 14) {
+				MenuItem share = menu.findItem(R.id.projectview_share);
+				ShareActionProvider sap = (ShareActionProvider) share.getActionProvider();
+				sap.setShareIntent(shareIntent);
+			}
 		}
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+		case R.id.projectview_share:
+			startActivity(shareIntent);
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -100,7 +114,8 @@ public class ProjectViewActivity extends Activity {
 	public void displayProject() {
 		setContentView(R.layout.projectview_description);
 		displayMenu = true;
-		invalidateOptionsMenu();
+		if(Build.VERSION.SDK_INT >= 11)
+			invalidateOptionsMenu(); // Rebuild the menu
 		
 		if("".equals(getTitle()))
 			setTitle(project.getTitle());
@@ -143,7 +158,7 @@ public class ProjectViewActivity extends Activity {
 			callto.setVisibility(View.GONE);
 		}
 		
-		LinearLayout questions = (LinearLayout) findViewById(R.id.projectview_description_questions_container);
+		/*LinearLayout questions = (LinearLayout) findViewById(R.id.projectview_description_questions_container);
 		TextView questionView, answerView;
 		for(Question question : project.getProject().getQuestions()) {
 			if(question.getAnswer() != null) {
@@ -157,6 +172,6 @@ public class ProjectViewActivity extends Activity {
 				questions.addView(questionView);
 				questions.addView(answerView);
 			}
-		}
+		}*/
 	}
 }
