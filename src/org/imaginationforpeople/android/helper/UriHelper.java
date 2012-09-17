@@ -1,7 +1,10 @@
 package org.imaginationforpeople.android.helper;
 
+import org.imaginationforpeople.android.model.I4pProjectTranslation;
+
 public class UriHelper extends BaseHelper {
-	public final static String API_BASE_URL = "http://10.0.0.5:8000/api/v1";
+	public final static String BASE_URL = "http://10.0.0.5:8000";
+	public final static String API_BASE_URL = BASE_URL + "/api/v1";
 	
 	// Public class with private constructor prevent instantiations
 	private UriHelper() {}
@@ -24,5 +27,9 @@ public class UriHelper extends BaseHelper {
 	
 	public static String getRandomProjectViewUri() {
 		return API_BASE_URL + "/project/random/?format=json&lang=" + LanguageHelper.getPreferredLanguageCode();
+	}
+	
+	public static String getProjectUrl(I4pProjectTranslation project) {
+		return BASE_URL + "/" + project.getLanguageCode() + "/project/" + project.getSlug() + "/";
 	}
 }
