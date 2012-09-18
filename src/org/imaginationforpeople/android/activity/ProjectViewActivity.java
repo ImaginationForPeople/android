@@ -57,17 +57,29 @@ public class ProjectViewActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
+		case android.R.id.home:
+			if(getIntent().getData() != null) {
+				Intent intent = new Intent(this, HomepageActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+				startActivity(intent);
+			} else 
+				finish();
+			break;
 		case R.id.projectview_share:
 			startActivity(shareIntent);
 			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	
+	@TargetApi(14)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.loading);
+		
+		if(Build.VERSION.SDK_INT >= 14)
+			getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		project = (I4pProjectTranslation) getLastNonConfigurationInstance();
 		if(project != null)
