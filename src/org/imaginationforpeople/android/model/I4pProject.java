@@ -10,7 +10,7 @@ public class I4pProject {
 	private boolean bestOf;
 	private Location location;
 	private List<User> members;
-	private List<Objective> objective;
+	private List<Objective> objectives;
 	private List<Picture> pictures;
 	private List<Question> questions;
 	private List<Reference> references;
@@ -42,11 +42,11 @@ public class I4pProject {
 	public void setMembers(List<User> members) {
 		this.members = members;
 	}
-	public List<Objective> getObjective() {
-		return objective;
+	public List<Objective> getObjectives() {
+		return objectives;
 	}
-	public void setObjective(List<Objective> objective) {
-		this.objective = objective;
+	public void setObjectives(List<Objective> objectives) {
+		this.objectives = objectives;
 	}
 	public List<Picture> getPictures() {
 		return pictures;

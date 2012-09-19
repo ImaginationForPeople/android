@@ -170,7 +170,7 @@ public class ProjectViewActivity extends Activity {
 			callto.setVisibility(View.GONE);
 		}
 		
-		/*LinearLayout questions = (LinearLayout) findViewById(R.id.projectview_description_questions_container);
+		LinearLayout questions = (LinearLayout) findViewById(R.id.projectview_description_questions_container);
 		TextView questionView, answerView;
 		for(Question question : project.getProject().getQuestions()) {
 			if(question.getAnswer() != null) {
@@ -184,6 +184,6 @@ public class ProjectViewActivity extends Activity {
 				questions.addView(questionView);
 				questions.addView(answerView);
 			}
-		}*/
+		}
 	}
 }
