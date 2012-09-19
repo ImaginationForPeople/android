@@ -93,14 +93,11 @@ public class ProjectViewActivity extends Activity {
 				List<String> path = data.getPathSegments();
 				projectLang = path.get(0);
 				projectSlug = path.get(2);
-				setTitle("");
 			} else {
 				Bundle extras = getIntent().getExtras();
 				
 				if(extras.containsKey("project_title"))
 					setTitle(extras.getString("project_title"));
-				else
-					setTitle("");
 				
 				projectLang = extras.getString("project_lang");
 				projectSlug = extras.getString("project_slug");
@@ -129,8 +126,7 @@ public class ProjectViewActivity extends Activity {
 		if(Build.VERSION.SDK_INT >= 11)
 			invalidateOptionsMenu(); // Rebuild the menu
 		
-		if("".equals(getTitle()))
-			setTitle(project.getTitle());
+		setTitle(project.getTitle());
 		
 		TextView baseline = (TextView) findViewById(R.id.projectview_description_baseline_text);
 		baseline.setText(project.getBaseline());
