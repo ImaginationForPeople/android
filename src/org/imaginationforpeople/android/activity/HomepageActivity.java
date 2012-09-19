@@ -72,7 +72,6 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 		// -- Initializing application
 		preferences = getPreferences(Context.MODE_PRIVATE);
 		LanguageHelper.setSharedPreferences(preferences);
-		LanguageHelper.setResources(getResources());
 		
 		// -- Initializing projects list
 		adapters = (SparseArray<ProjectsGridAdapter>) getLastNonConfigurationInstance();
