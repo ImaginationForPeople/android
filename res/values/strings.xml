@@ -5,7 +5,6 @@
     <string name="close">Close</string>
     
     <!-- Homepage keys -->
-    <string name="homepage_menu_reload">Reload projects</string>
     <string name="homepage_menu_language">Change language</string>
     <string name="homepage_spinner_prompt">Choose a language</string>
     <string-array name="homepage_spinner_languages">

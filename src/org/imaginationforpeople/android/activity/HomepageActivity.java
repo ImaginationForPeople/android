@@ -56,9 +56,6 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 		case R.id.homepage_lang:
 			languagesDialog.show();
 			break;
-		case R.id.homepage_reload:
-			loadProjects();
-			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
