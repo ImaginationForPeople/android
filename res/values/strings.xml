@@ -29,6 +29,7 @@
     
     <!-- ProjectView keys -->
     <string name="projectview_menu_share">Share project</string>
+    <string name="projectview_menu_share_dialog">Share project with…</string>
     
     <!-- Error keys -->
     <string name="error_server">Problem with the server</string>

@@ -22,7 +22,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
 public class ProjectViewActivity extends Activity {
@@ -39,17 +38,11 @@ public class ProjectViewActivity extends Activity {
 			inflater.inflate(R.menu.projectview, menu);
 			
 			// Creating share intent
-			shareIntent = new Intent(Intent.ACTION_SEND);
-			shareIntent.putExtra(Intent.EXTRA_TEXT, UriHelper.getProjectUrl(project));
-			shareIntent.putExtra(Intent.EXTRA_SUBJECT, project.getTitle());
-			shareIntent.setType("text/plain");
-			
-			// Configuring share button (Android 4.0+)
-			if(Build.VERSION.SDK_INT >= 14) {
-				MenuItem share = menu.findItem(R.id.projectview_share);
-				ShareActionProvider sap = (ShareActionProvider) share.getActionProvider();
-				sap.setShareIntent(shareIntent);
-			}
+			Intent prepareShareIntent = new Intent(Intent.ACTION_SEND);
+			prepareShareIntent.putExtra(Intent.EXTRA_TEXT, UriHelper.getProjectUrl(project));
+			prepareShareIntent.putExtra(Intent.EXTRA_SUBJECT, project.getTitle());
+			prepareShareIntent.setType("text/plain");
+			shareIntent = Intent.createChooser(prepareShareIntent, getResources().getText(R.string.projectview_menu_share_dialog));
 		}
 		return super.onCreateOptionsMenu(menu);
 	}
