@@ -23,7 +23,6 @@
     <string name="homepage_tab_latest">Latest projects</string>
     
     <!-- ProjectsList keys -->
-    <string name="projectslist_api_verify">Verifying API…</string>
     <string name="projectslist_loading">Loading projects…</string>
     <string name="projectslist_item_image_description">Project image</string>
     
@@ -38,5 +37,4 @@
     <string name="error_json_badanswer">It seems the server\'s answer is malformed because we cannot understand the JSON.</string>
     <string name="error_unknown">Unknown error</string>
     <string name="error_unknown_message">An unhandled error has occured. Please make a bug report :)</string>
-    <string name="error_api">This application cannot work with server\'s API version.\nPlease update your application.</string>
 </resources>
