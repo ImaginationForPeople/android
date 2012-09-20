@@ -28,8 +28,12 @@
     <string name="projectslist_item_image_description">Project image</string>
     
     <!-- ProjectView keys -->
+    <string name="projectview_menu_favorites_add">Add to favorites</string>
+    <string name="projectview_menu_favorites_remove">Remove from favorites</string>
     <string name="projectview_menu_share">Share project</string>
     <string name="projectview_menu_share_dialog">Share project with…</string>
+    <string name="projectview_toast_favorites_add">%1$s added to favorites</string>
+    <string name="projectview_toast_favorites_remove">%1$s removed from favorites</string>
     
     <!-- Error keys -->
     <string name="error_server">Problem with the server</string>
