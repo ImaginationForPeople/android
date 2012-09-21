@@ -8,6 +8,7 @@ import org.imaginationforpeople.android.helper.DisplayHelper;
 import org.imaginationforpeople.android.helper.UriHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.imaginationforpeople.android.model.Question;
+import org.imaginationforpeople.android.sqlite.FavoriteSqlite;
 import org.imaginationforpeople.android.thread.ProjectViewThread;
 
 import android.annotation.TargetApi;
@@ -22,34 +23,39 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.ShareActionProvider;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ProjectViewActivity extends Activity {
 	private boolean displayMenu = false;
 	private Intent shareIntent;
+	private FavoriteSqlite db;
 	private I4pProjectTranslation project;
 	
 	@TargetApi(14)
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		if(displayMenu && menu.size() == 0) {
-			// Inflating the menu
-			MenuInflater inflater = getMenuInflater();
-			inflater.inflate(R.menu.projectview, menu);
-			
-			// Creating share intent
-			shareIntent = new Intent(Intent.ACTION_SEND);
-			shareIntent.putExtra(Intent.EXTRA_TEXT, UriHelper.getProjectUrl(project));
-			shareIntent.putExtra(Intent.EXTRA_SUBJECT, project.getTitle());
-			shareIntent.setType("text/plain");
-			
-			// Configuring share button (Android 4.0+)
-			if(Build.VERSION.SDK_INT >= 14) {
-				MenuItem share = menu.findItem(R.id.projectview_share);
-				ShareActionProvider sap = (ShareActionProvider) share.getActionProvider();
-				sap.setShareIntent(shareIntent);
+		if(displayMenu) {
+			// Inflate menu only if it hasn't been done before
+			if(menu.size() == 0) {
+				// Inflating the menu
+				MenuInflater inflater = getMenuInflater();
+				inflater.inflate(R.menu.projectview, menu);
+				
+				// Creating share intent
+				Intent prepareShareIntent = new Intent(Intent.ACTION_SEND);
+				prepareShareIntent.putExtra(Intent.EXTRA_TEXT, UriHelper.getProjectUrl(project));
+				prepareShareIntent.putExtra(Intent.EXTRA_SUBJECT, project.getTitle());
+				prepareShareIntent.setType("text/plain");
+				shareIntent = Intent.createChooser(prepareShareIntent, getResources().getText(R.string.projectview_menu_share_dialog));
 			}
+			
+			// Defining favorite state
+			MenuItem favoriteItem = menu.getItem(0);
+			if(db.isFavorite(project))
+				favoriteItem.setTitle(R.string.projectview_menu_favorites_remove);
+			else
+				favoriteItem.setTitle(R.string.projectview_menu_favorites_add);
 		}
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -65,6 +71,17 @@ public class ProjectViewActivity extends Activity {
 			} else 
 				finish();
 			break;
+		case R.id.projectview_favorite:
+			Toast t;
+			if(db.isFavorite(project)) {
+				db.removeFavorite(project);
+				t = Toast.makeText(this, getResources().getString(R.string.projectview_toast_favorites_remove, project.getTitle()), Toast.LENGTH_SHORT);
+			} else {
+				db.addFavorite(project);
+				t = Toast.makeText(this, getResources().getString(R.string.projectview_toast_favorites_add, project.getTitle()), Toast.LENGTH_SHORT);
+			}
+			t.show();
+			break;
 		case R.id.projectview_share:
 			startActivity(shareIntent);
 			break;
@@ -77,6 +94,7 @@ public class ProjectViewActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.loading);
+		db = new FavoriteSqlite(this);
 		
 		if(Build.VERSION.SDK_INT >= 11)
 			getActionBar().setDisplayHomeAsUpEnabled(true);

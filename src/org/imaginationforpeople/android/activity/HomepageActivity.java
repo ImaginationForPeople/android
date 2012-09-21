@@ -13,6 +13,7 @@ import org.imaginationforpeople.android.homepage.TabHelperHoneycomb;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.imaginationforpeople.android.shake.ShakeEventListener;
 import org.imaginationforpeople.android.shake.ShakeListener;
+import org.imaginationforpeople.android.sqlite.FavoriteSqlite;
 import org.imaginationforpeople.android.thread.ProjectsListThread;
 
 import android.app.Activity;
@@ -31,6 +32,7 @@ import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class HomepageActivity extends Activity implements OnClickListener, OnCancelListener, ShakeListener {
 	private static ProjectsListThread bestThread;
@@ -53,11 +55,18 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
+		case R.id.homepage_favorites:
+			FavoriteSqlite db = new FavoriteSqlite(this);
+			if(db.hasFavorites()) {
+				Intent intent = new Intent(this, FavoritesActivity.class);
+				startActivity(intent);
+			} else {
+				Toast t = Toast.makeText(this, R.string.favorites_no, Toast.LENGTH_SHORT);
+				t.show();
+			}
+			break;
 		case R.id.homepage_lang:
 			languagesDialog.show();
-			break;
-		case R.id.homepage_reload:
-			loadProjects();
 			break;
 		}
 		return super.onOptionsItemSelected(item);
