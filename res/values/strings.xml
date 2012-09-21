@@ -1,10 +1,12 @@
 <resources>
     <!-- General keys -->
     <string name="app_name">Imagination for People</string>
+    <string name="app_favorites">My favorites projects</string>
     <string name="cancel">Cancel</string>
     <string name="close">Close</string>
     
     <!-- Homepage keys -->
+    <string name="homepage_menu_favorites">Favorites</string>
     <string name="homepage_menu_language">Change language</string>
     <string name="homepage_spinner_prompt">Choose a language</string>
     <string-array name="homepage_spinner_languages">

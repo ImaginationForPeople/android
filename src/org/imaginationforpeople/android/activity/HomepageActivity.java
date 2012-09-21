@@ -53,6 +53,10 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
+		case R.id.homepage_favorites:
+			Intent intent = new Intent(this, FavoritesActivity.class);
+			startActivity(intent);
+			break;
 		case R.id.homepage_lang:
 			languagesDialog.show();
 			break;

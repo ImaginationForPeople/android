@@ -30,6 +30,9 @@
                     android:pathPattern="/.*/project/.*/" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.FavoritesActivity"
+            android:label="@string/app_favorites" />
     </application>
 
 </manifest>

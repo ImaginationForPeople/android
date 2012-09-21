@@ -1,5 +1,8 @@
 package org.imaginationforpeople.android.sqlite;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 
 import android.content.ContentValues;
@@ -58,5 +61,28 @@ public class FavoriteSqlite extends SQLiteOpenHelper {
 		boolean isFavorite = (c.getCount() == 1);
 		db.close();
 		return isFavorite;
+	}
+	
+	public List<I4pProjectTranslation> getFavorites() {
+		ArrayList<I4pProjectTranslation> projects = new ArrayList<I4pProjectTranslation>();
+		
+		String[] columns = {"language_code", "slug", "title"};
+		
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = db.query(TABLE_NAME, columns, null, null, null, null, null);
+		if(c.getCount() > 0) {
+			c.moveToFirst();
+			while(!c.isAfterLast()) {
+				I4pProjectTranslation project = new I4pProjectTranslation();
+				project.setLanguageCode(c.getString(0));
+				project.setSlug(c.getString(1));
+				project.setTitle(c.getString(2));
+				projects.add(project);
+				c.moveToNext();
+			}
+		}
+		db.close();
+		
+		return projects;
 	}
 }
