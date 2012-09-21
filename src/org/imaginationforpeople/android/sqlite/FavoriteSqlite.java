@@ -95,4 +95,10 @@ public class FavoriteSqlite extends SQLiteOpenHelper {
 		
 		return projects;
 	}
+	
+	public void removeAllFavorites() {
+		SQLiteDatabase db = getWritableDatabase();
+		db.delete(TABLE_NAME, null, null);
+		db.close();
+	}
 }
