@@ -36,6 +36,10 @@
     <string name="projectview_toast_favorites_add">%1$s added to favorites</string>
     <string name="projectview_toast_favorites_remove">%1$s removed from favorites</string>
     
+    <!-- Favorites keys -->
+    <string name="favorites_no">You don\'t have favorites</string>
+    <string name="favorites_no_anymore">You don\'t have favorites anymore</string>
+    
     <!-- Error keys -->
     <string name="error_server">Problem with the server</string>
     <string name="error_server_timeout">The server doesn\'t respond in time.</string>

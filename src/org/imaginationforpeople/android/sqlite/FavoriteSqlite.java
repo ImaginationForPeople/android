@@ -63,6 +63,15 @@ public class FavoriteSqlite extends SQLiteOpenHelper {
 		return isFavorite;
 	}
 	
+	public boolean hasFavorites() {
+		String[] columns = {"id"};
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = db.query(TABLE_NAME, columns, null, null, null, null, null);
+		boolean hasFavorites = (c.getCount() >= 1);
+		db.close();
+		return hasFavorites;
+	}
+	
 	public List<I4pProjectTranslation> getFavorites() {
 		ArrayList<I4pProjectTranslation> projects = new ArrayList<I4pProjectTranslation>();
 		

@@ -2,6 +2,7 @@ package org.imaginationforpeople.android.activity;
 
 import java.util.ArrayList;
 
+import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.imaginationforpeople.android.sqlite.FavoriteSqlite;
 
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class FavoritesActivity extends ListActivity {
 	private FavoriteSqlite db;
@@ -46,6 +48,11 @@ public class FavoritesActivity extends ListActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if(!db.hasFavorites()) {
+			Toast t = Toast.makeText(this, R.string.favorites_no_anymore, Toast.LENGTH_SHORT);
+			t.show();
+			finish();
+		}
 		adapter.clear();
 		for(I4pProjectTranslation project : db.getFavorites())
 			adapter.add(project);
