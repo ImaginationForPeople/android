@@ -72,13 +72,13 @@ public class ProjectViewActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	@TargetApi(14)
+	@TargetApi(11)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.loading);
 		
-		if(Build.VERSION.SDK_INT >= 14)
+		if(Build.VERSION.SDK_INT >= 11)
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		project = (I4pProjectTranslation) getLastNonConfigurationInstance();
