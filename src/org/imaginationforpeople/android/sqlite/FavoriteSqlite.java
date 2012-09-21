@@ -55,9 +55,10 @@ public class FavoriteSqlite extends SQLiteOpenHelper {
 	}
 	
 	public boolean isFavorite(I4pProjectTranslation project) {
+		String[] columns = {"id"};
 		String[] data = {project.getLanguageCode(), project.getSlug()};
 		SQLiteDatabase db = getReadableDatabase();
-		Cursor c = db.query(TABLE_NAME, null, "language_code = ? AND slug = ?", data, null, null, null);
+		Cursor c = db.query(TABLE_NAME, columns, "language_code = ? AND slug = ?", data, null, null, null);
 		boolean isFavorite = (c.getCount() == 1);
 		db.close();
 		return isFavorite;
