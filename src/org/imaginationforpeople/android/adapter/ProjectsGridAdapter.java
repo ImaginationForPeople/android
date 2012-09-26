@@ -56,6 +56,8 @@ public class ProjectsGridAdapter extends BaseAdapter {
 		List<Picture> projectPictures = project.getProject().getPictures();
 		if(projectPictures.size() > 0)
 			projectImage.setImageBitmap (projectPictures.get(0).getThumbBitmap());
+		else
+			projectImage.setImageResource(R.drawable.project_nophoto);
 		
 		return convertView;
 	}
