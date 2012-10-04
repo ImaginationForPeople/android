@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.handler.ProjectViewHandler;
-import org.imaginationforpeople.android.helper.DisplayHelper;
 import org.imaginationforpeople.android.helper.UriHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
+import org.imaginationforpeople.android.model.Objective;
 import org.imaginationforpeople.android.model.Question;
 import org.imaginationforpeople.android.sqlite.FavoriteSqlite;
 import org.imaginationforpeople.android.thread.ProjectViewThread;
@@ -21,12 +21,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ProjectViewActivity extends Activity {
+public class ProjectViewActivity extends Activity implements OnClickListener {
 	private boolean displayMenu = false;
 	private Intent shareIntent;
 	private FavoriteSqlite db;
@@ -50,8 +52,11 @@ public class ProjectViewActivity extends Activity {
 				shareIntent = Intent.createChooser(prepareShareIntent, getResources().getText(R.string.projectview_menu_share_dialog));
 			}
 			
+			MenuItem videoItem = menu.getItem(0);
+			videoItem.setVisible(project.getProject().getVideos().size() != 0);
+			
 			// Defining favorite state
-			MenuItem favoriteItem = menu.getItem(0);
+			MenuItem favoriteItem = menu.getItem(1);
 			if(db.isFavorite(project))
 				favoriteItem.setTitle(R.string.projectview_menu_favorites_remove);
 			else
@@ -70,6 +75,10 @@ public class ProjectViewActivity extends Activity {
 				startActivity(intent);
 			} else 
 				finish();
+			break;
+		case R.id.projectview_video:
+			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(project.getProject().getVideos().get(0).getVideoUrl()));
+			startActivity(intent);
 			break;
 		case R.id.projectview_favorite:
 			Toast t;
@@ -93,6 +102,8 @@ public class ProjectViewActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if(Build.VERSION.SDK_INT < 11)
+			requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.loading);
 		db = new FavoriteSqlite(this);
 		
@@ -146,58 +157,98 @@ public class ProjectViewActivity extends Activity {
 		
 		setTitle(project.getTitle());
 		
-		TextView baseline = (TextView) findViewById(R.id.projectview_description_baseline_text);
+		LinearLayout overlay = (LinearLayout) findViewById(R.id.projectview_description_overlay);
+		overlay.getBackground().setAlpha(127);
+		
+		if(project.getProject().getPictures().size() > 0) {
+			ImageView image = (ImageView) findViewById(R.id.projectview_description_image);
+			image.setImageBitmap(project.getProject().getPictures().get(0).getImageBitmap());
+		}
+		
+		TextView title = (TextView) findViewById(R.id.projectview_description_title);
+		title.setText(project.getTitle());
+		
+		TextView baseline = (TextView) findViewById(R.id.projectview_description_baseline);
 		baseline.setText(project.getBaseline());
 		
-		if(project.getAboutSection() != null) {
-			TextView about = (TextView) findViewById(R.id.projectview_description_about_text);
-			about.setText(project.getAboutSection());
-		} else {
-			LinearLayout about = (LinearLayout) findViewById(R.id.projectview_description_about_container);
-			about.setVisibility(View.GONE);
-		}
-		
-		ProgressBar status = (ProgressBar) findViewById(R.id.projectview_description_status_progress);
+		ImageView status = (ImageView) findViewById(R.id.projectview_description_status);
 		if("IDEA".equals(project.getProject().getStatus())) {
-			status.setProgress(1);
+			status.setImageResource(R.drawable.project_status_idea);
+			status.setContentDescription(getResources().getString(R.string.projectview_description_status_idea));
 		} else if("BEGIN".equals(project.getProject().getStatus())) {
-			status.setProgress(2);
+			status.setImageResource(R.drawable.project_status_begin);
+			status.setContentDescription(getResources().getString(R.string.projectview_description_status_begin));
 		} else if("WIP".equals(project.getProject().getStatus())) {
-			status.setProgress(3);
+			status.setImageResource(R.drawable.project_status_wip);
+			status.setContentDescription(getResources().getString(R.string.projectview_description_status_wip));
 		} else if("END".equals(project.getProject().getStatus())) {
-			status.setProgress(4);
+			status.setImageResource(R.drawable.project_status_end);
+			status.setContentDescription(getResources().getString(R.string.projectview_description_status_end));
 		}
 		
-		if(project.getProject().getWebsite() != null) {
-			TextView website = (TextView) findViewById(R.id.projectview_description_website_text);
-			website.setText(project.getProject().getWebsite());
-		} else {
-			LinearLayout website = (LinearLayout) findViewById(R.id.projectview_description_website_container);
-			website.setVisibility(View.GONE);
-		}
-		
-		if(project.getCalltoSection() != null) {
-			TextView callto = (TextView) findViewById(R.id.projectview_description_callto_text);
-			callto.setText(project.getCalltoSection());
-		} else {
-			LinearLayout callto = (LinearLayout) findViewById(R.id.projectview_description_callto_container);
-			callto.setVisibility(View.GONE);
-		}
-		
-		LinearLayout questions = (LinearLayout) findViewById(R.id.projectview_description_questions_container);
-		TextView questionView, answerView;
-		for(Question question : project.getProject().getQuestions()) {
-			if(question.getAnswer() != null) {
-				questionView = new TextView(this);
-				questionView.setText(question.getQuestion());
-				
-				answerView = new TextView(this);
-				answerView.setText(question.getAnswer());
-				answerView.setPadding(DisplayHelper.dpToPx(10), 0, 0, 0);
-				
-				questions.addView(questionView);
-				questions.addView(answerView);
+		if(project.getProject().getLocation() != null) {
+			if(!"".equals(project.getProject().getLocation().getCountry())) {
+				int flag = getResources().getIdentifier("flag_"+project.getProject().getLocation().getCountry().toLowerCase(), "drawable", "org.imaginationforpeople.android");
+				if(flag != 0) {
+					ImageView flagView = (ImageView) findViewById(R.id.projectview_description_flag);
+					flagView.setImageResource(flag);
+				}
 			}
 		}
+		
+		TextView website = (TextView) findViewById(R.id.projectview_description_website);
+		if("".equals(project.getProject().getWebsite()))
+			website.setVisibility(View.GONE);
+		else
+			website.setOnClickListener(this);
+		
+		if(project.getAboutSection() == null || "".equals(project.getAboutSection())) {
+			LinearLayout aboutContainer = (LinearLayout) findViewById(R.id.projectview_description_about_container);
+			aboutContainer.setVisibility(View.GONE);
+		} else {
+			TextView aboutText = (TextView) findViewById(R.id.projectview_description_about_text);
+			aboutText.setText(project.getAboutSection().trim());
+		}
+		
+		if("".equals(project.getThemes())) {
+			LinearLayout themesContainer = (LinearLayout) findViewById(R.id.projectview_description_themes_container);
+			themesContainer.setVisibility(View.GONE);
+		} else {
+			TextView themesText = (TextView) findViewById(R.id.projectview_description_themes_text);
+			themesText.setText(project.getThemes());
+		}
+		
+		if(project.getProject().getObjectives().size() == 0) {
+			LinearLayout objectivesContainer = (LinearLayout) findViewById(R.id.projectview_description_objectives_container);
+			objectivesContainer.setVisibility(View.GONE);
+		} else {
+			TextView objectivesText = (TextView) findViewById(R.id.projectview_description_objectives_text);
+			List<Objective> objectivesObject = project.getProject().getObjectives(); 
+			String objectives = objectivesObject.get(0).getName();
+			for(int i = 1; i < objectivesObject.size(); i++) {
+				objectives += ", " + objectivesObject.get(i).getName();
+			}
+			objectivesText.setText(objectives);
+		}
+			
+		LinearLayout questions = (LinearLayout) findViewById(R.id.projectview_description_questions_container);
+		for(Question question : project.getProject().getQuestions()) {
+			if(question.getAnswer() != null) {
+				LinearLayout questionLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.projectview_question, null);
+				
+				TextView questionView = (TextView) questionLayout.findViewById(R.id.projectview_question_question);
+				TextView answerView = (TextView) questionLayout.findViewById(R.id.projectview_question_answer);
+				
+				questionView.setText(Build.VERSION.SDK_INT < 14 ? question.getQuestion().toUpperCase() : question.getQuestion());
+				answerView.setText(question.getAnswer().trim());
+				
+				questions.addView(questionLayout);
+			}
+		}
+	}
+
+	public void onClick(View arg0) {
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(project.getProject().getWebsite()));
+		startActivity(intent);
 	}
 }

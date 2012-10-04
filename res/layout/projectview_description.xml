@@ -1,80 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-    <TextView 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:id="@+id/projectview_description_baseline_text" />
-    <LinearLayout 
-        android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <LinearLayout
+	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:orientation="horizontal">
-	    <TextView 
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="Status" />
-	    <ProgressBar
+	    android:orientation="vertical">
+	    
+	    <RelativeLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="150dp"
+		    android:minHeight="150dp">
+	    
+		    <ImageView
+		        android:id="@+id/projectview_description_image"
+		        android:layout_width="match_parent"
+		        android:layout_height="150dp"
+		        android:contentDescription="@string/projectview_description_image_description"
+		        android:scaleType="centerCrop"
+		        android:src="@drawable/project_nophoto" />
+		    
+		    <LinearLayout
+		        style="@style/blackBackground"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentBottom="true"
+		        android:orientation="vertical"
+				android:id="@+id/projectview_description_overlay"
+		        android:paddingTop="5dp"
+		        android:paddingLeft="10dp"
+		        android:paddingBottom="5dp"
+		        android:height="35dp">
+		        
+		        <TextView
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:id="@+id/projectview_description_title"
+		            android:textAllCaps="true"
+		            android:textColor="@android:color/white"
+		            android:textSize="20dp"
+		            android:textStyle="bold"/>
+		        
+		        <TextView
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:id="@+id/projectview_description_baseline"
+		            android:textColor="@android:color/white"
+		            android:textStyle="italic" />
+		        
+	        </LinearLayout>
+		           
+		</RelativeLayout>
+		
+	    <LinearLayout
+	        style="@style/blackBackground"
+	        android:layout_height="40dp"
+	        android:orientation="horizontal">
+	        
+	        <ImageView
+	            android:layout_width="175dp"
+	            android:layout_height="25dp"
+	            android:layout_gravity="center_vertical"
+	            android:paddingLeft="10dp"
+	            android:paddingRight="10dp"
+	            android:scaleType="fitCenter"
+	            android:id="@+id/projectview_description_status" />
+	        
+	        <ImageView
+	            android:layout_width="20dp"
+	            android:layout_height="20dp"
+	            android:layout_gravity="center_vertical"
+	            android:scaleType="fitXY"
+	            android:id="@+id/projectview_description_flag" />
+	        
+	        <TextView
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center_vertical"
+	            android:gravity="right"
+	            android:paddingRight="10dp"
+	            android:text="@string/projectview_description_website"
+	            android:textColor="@color/website_link"
+	            android:textSize="15dp"
+	            android:id="@+id/projectview_description_website" />
+	        
+	    </LinearLayout>
+	    
+	    <LinearLayout
+	    	android:layout_width="match_parent"
+	   		android:layout_height="wrap_content"
+		    android:orientation="vertical"
+		    android:id="@+id/projectview_description_about_container"
+		    android:padding="10dp"
+		    android:paddingBottom="0dp">
+	        
+	       	<TextView
+	        	android:layout_width="match_parent"
+	         	android:layout_height="wrap_content"
+	         	android:text="@string/projectview_description_about"
+	         	android:textAllCaps="true"
+	         	android:textStyle="bold" />
+	     
+	     	<TextView
+	         	android:layout_width="match_parent"
+	         	android:layout_height="wrap_content"
+	         	android:id="@+id/projectview_description_about_text" />
+	        
+	    </LinearLayout>
+	    
+	    <LinearLayout 
+	        style="@style/colorContainer"
+	        android:id="@+id/projectview_description_themes_container">
+	        
+	        <TextView
+	            style="@style/colorTitle"
+	            android:text="@string/projectview_description_themes"
+	            android:textColor="@color/themes" />
+	        
+	        <View 
+	            style="@style/colorLine"
+	            android:background="@color/themes" />
+	        
+	        <TextView
+	            style="@style/colorText"
+	            android:id="@+id/projectview_description_themes_text" />
+	        
+	    </LinearLayout>
+	    
+	    <LinearLayout 
+	        style="@style/colorContainer"
+	        android:id="@+id/projectview_description_objectives_container">
+	        
+	        <TextView
+	            style="@style/colorTitle"
+	            android:text="@string/projectview_description_objectives"
+	            android:textColor="@color/objectives" />
+	        
+	        <View 
+	            style="@style/colorLine"
+	            android:background="@color/objectives" />
+	        
+	        <TextView
+	            style="@style/colorText"
+	            android:id="@+id/projectview_description_objectives_text" />
+	        
+	    </LinearLayout>
+	    
+	    <LinearLayout
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        style="?android:attr/progressBarStyleHorizontal"
-	        android:paddingLeft="5dp"
-	        android:paddingRight="20dp"
-	        android:max="4"
-	        android:id="@+id/projectview_description_status_progress" />
+	        android:orientation="vertical"
+	        android:id="@+id/projectview_description_questions_container" />
+	    
 	</LinearLayout>
-    <LinearLayout 
-        android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
-	    android:id="@+id/projectview_description_website_container">
-	    <TextView 
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:text="Website" />
-	    <TextView 
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:paddingLeft="5dp"
-	        android:autoLink="web"
-	        android:id="@+id/projectview_description_website_text" />
-	</LinearLayout>
-    <LinearLayout 
-        android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical"
-	    android:id="@+id/projectview_description_about_container">
-	    <TextView 
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:text="About project" />
-	    <TextView 
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:paddingLeft="10dp"
-	        android:id="@+id/projectview_description_about_text" />
-	</LinearLayout>
-	<LinearLayout 
-        android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical"
-	    android:id="@+id/projectview_description_callto_container">
-	    <TextView 
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:text="Take action" />
-	    <TextView 
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:paddingLeft="10dp"
-	        android:id="@+id/projectview_description_callto_text" />
-	</LinearLayout>
-    <LinearLayout 
-        android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical"
-	    android:id="@+id/projectview_description_questions_container"/>
-
-</LinearLayout>
+    
+</ScrollView>

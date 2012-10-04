@@ -12,6 +12,7 @@ import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.fasterxml.jackson.core.JsonFactory;
@@ -50,7 +51,8 @@ public class ProjectsListThread extends BaseGetJson {
 			if(project.getProject().getPictures().size() > 0) {
 				String thumbUrl = project.getProject().getPictures().get(0).getThumbUrl();
 				InputStream URLcontent = (InputStream) new URL(thumbUrl).getContent();
-				project.getProject().getPictures().get(0).setThumbBitmap(BitmapFactory.decodeStream(URLcontent));
+				Bitmap bitmap = BitmapFactory.decodeStream(URLcontent);
+				project.getProject().getPictures().get(0).setThumbBitmap(bitmap);
 			}
 			projects.add(project);
 		}
