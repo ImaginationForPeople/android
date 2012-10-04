@@ -165,6 +165,10 @@ public class ProjectViewActivity extends Activity implements OnClickListener {
 			image.setImageBitmap(project.getProject().getPictures().get(0).getImageBitmap());
 		}
 		
+		ImageView bestof = (ImageView) findViewById(R.id.projectview_description_bestof);
+		if(!project.getProject().getBestOf())
+			bestof.setVisibility(View.GONE);
+		
 		TextView title = (TextView) findViewById(R.id.projectview_description_title);
 		title.setText(project.getTitle());
 		

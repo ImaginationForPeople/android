@@ -21,6 +21,17 @@
 		        android:scaleType="centerCrop"
 		        android:src="@drawable/project_nophoto" />
 		    
+		    <ImageView
+		        android:id="@+id/projectview_description_bestof"
+		        android:layout_width="25dp"
+		        android:layout_height="44dp"
+		        android:layout_alignParentRight="true"
+		        android:layout_alignParentTop="true"
+		        android:layout_marginRight="30dp"
+		        android:scaleType="fitXY"
+		        android:src="@drawable/bestof"
+		        android:contentDescription="@string/projectview_description_bestof" />
+		    
 		    <LinearLayout
 		        style="@style/blackBackground"
 		        android:layout_height="wrap_content"
