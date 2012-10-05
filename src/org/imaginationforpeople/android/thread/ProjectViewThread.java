@@ -9,6 +9,7 @@ import org.imaginationforpeople.android.helper.DataHelper;
 import org.imaginationforpeople.android.helper.UriHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.imaginationforpeople.android.model.Picture;
+import org.imaginationforpeople.android.model.User;
 import org.json.JSONException;
 
 import android.graphics.BitmapFactory;
@@ -49,6 +50,13 @@ public class ProjectViewThread extends BaseGetJson {
 				picture.setThumbBitmap(BitmapFactory.decodeStream(URLcontent));
 				URLcontent = (InputStream) new URL(picture.getImageUrl()).getContent();
 				picture.setImageBitmap(BitmapFactory.decodeStream(URLcontent));
+			}
+		}
+		
+		if(project.getProject().getMembers().size() > 0) {
+			for(User member : project.getProject().getMembers()) {
+				InputStream URLcontent = (InputStream) new URL(member.getAvatarUrl()).getContent();
+				member.setAvatarBitmap(BitmapFactory.decodeStream(URLcontent));
 			}
 		}
 		
