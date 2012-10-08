@@ -13,6 +13,7 @@ import org.imaginationforpeople.android.model.User;
 import org.json.JSONException;
 
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -56,7 +57,7 @@ public class ProjectViewThread extends BaseGetJson {
 		if(project.getProject().getMembers().size() > 0) {
 			for(User member : project.getProject().getMembers()) {
 				InputStream URLcontent = (InputStream) new URL(member.getAvatarUrl()).getContent();
-				member.setAvatarBitmap(BitmapFactory.decodeStream(URLcontent));
+				member.setAvatarDrawable(Drawable.createFromStream(URLcontent, null));
 			}
 		}
 		

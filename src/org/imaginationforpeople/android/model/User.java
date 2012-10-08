@@ -1,6 +1,6 @@
 package org.imaginationforpeople.android.model;
 
-import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -9,7 +9,7 @@ public class User {
 	private String username;
 	@JsonProperty("avatar")
 	private String avatarUrl;
-	private Bitmap avatarBitmap;
+	private Drawable avatarDrawable;
 	
 	public String getFullname() {
 		return fullname;
@@ -29,10 +29,10 @@ public class User {
 	public void setAvatarUrl(String avatarUrl) {
 		this.avatarUrl = avatarUrl;
 	}
-	public Bitmap getAvatarBitmap() {
-		return avatarBitmap;
+	public Drawable getAvatarDrawable() {
+		return avatarDrawable;
 	}
-	public void setAvatarBitmap(Bitmap avatarBitmap) {
-		this.avatarBitmap = avatarBitmap;
+	public void setAvatarDrawable(Drawable avatarDrawable) {
+		this.avatarDrawable = avatarDrawable;
 	}
 }

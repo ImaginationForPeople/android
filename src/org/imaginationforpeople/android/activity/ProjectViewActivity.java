@@ -8,6 +8,7 @@ import org.imaginationforpeople.android.helper.UriHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.imaginationforpeople.android.model.Objective;
 import org.imaginationforpeople.android.model.Question;
+import org.imaginationforpeople.android.model.User;
 import org.imaginationforpeople.android.sqlite.FavoriteSqlite;
 import org.imaginationforpeople.android.thread.ProjectViewThread;
 
@@ -248,6 +249,16 @@ public class ProjectViewActivity extends Activity implements OnClickListener {
 				
 				questions.addView(questionLayout);
 			}
+		}
+		
+		LinearLayout members = (LinearLayout) findViewById(R.id.projectview_description_members_text);
+		for(User member : project.getProject().getMembers()) {
+			TextView memberName = (TextView) getLayoutInflater().inflate(android.R.layout.simple_list_item_1, null);
+			
+			memberName.setText(member.getFullname());
+			memberName.setCompoundDrawablesWithIntrinsicBounds(null, null, member.getAvatarDrawable(), null);
+			
+			members.addView(memberName);
 		}
 	}
 

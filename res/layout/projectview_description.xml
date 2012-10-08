@@ -163,6 +163,26 @@
 	        android:orientation="vertical"
 	        android:id="@+id/projectview_description_questions_container" />
 	    
+	    <LinearLayout 
+	        style="@style/colorContainer"
+	        android:id="@+id/projectview_description_members_container">
+	        
+	        <TextView
+	            style="@style/colorTitle"
+	            android:text="@string/projectview_description_members"
+	            android:textColor="#04add1"/>
+	        
+	        <View
+	            style="@style/colorLine"
+	            android:background="#04add1" />
+	        
+	        <LinearLayout
+		        style="@style/colorText"
+		        android:orientation="vertical"
+		        android:id="@+id/projectview_description_members_text" />
+	        
+	    </LinearLayout>
+	    
 	</LinearLayout>
     
 </ScrollView>

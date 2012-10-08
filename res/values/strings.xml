@@ -46,6 +46,7 @@
     <string name="projectview_description_about">About project</string>
     <string name="projectview_description_themes">THEMES</string>
     <string name="projectview_description_objectives">OBJECTIVES</string>
+    <string name="projectview_description_members">MEMBERS</string>
     
     <!-- Favorites keys -->
     <string name="favorites_menu_remove_all">Remove all favorites</string>
