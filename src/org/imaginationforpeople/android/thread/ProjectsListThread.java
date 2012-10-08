@@ -46,6 +46,8 @@ public class ProjectsListThread extends BaseGetJson {
 		
 		int jsonLength = jsonProjects.length();
 		for(int i = 0; i < jsonLength; i++) {
+			if(isStopped())
+				return null;
 			JsonParser parser = factory.createJsonParser(jsonProjects.getString(i));
 			I4pProjectTranslation project = mapper.readValue(parser, I4pProjectTranslation.class);
 			if(project.getProject().getPictures().size() > 0) {

@@ -47,6 +47,8 @@ public class ProjectViewThread extends BaseGetJson {
 		
 		if(project.getProject().getPictures().size() > 0) {
 			for(Picture picture : project.getProject().getPictures()) {
+				if(isStopped())
+					return null;
 				InputStream URLcontent = (InputStream) new URL(picture.getThumbUrl()).getContent();
 				picture.setThumbBitmap(BitmapFactory.decodeStream(URLcontent));
 				URLcontent = (InputStream) new URL(picture.getImageUrl()).getContent();
@@ -56,6 +58,8 @@ public class ProjectViewThread extends BaseGetJson {
 		
 		if(project.getProject().getMembers().size() > 0) {
 			for(User member : project.getProject().getMembers()) {
+				if(isStopped())
+					return null;
 				InputStream URLcontent = (InputStream) new URL(member.getAvatarUrl()).getContent();
 				member.setAvatarDrawable(Drawable.createFromStream(URLcontent, null));
 			}
