@@ -3,33 +3,30 @@ package org.imaginationforpeople.android.activity;
 import java.util.List;
 
 import org.imaginationforpeople.android.R;
+import org.imaginationforpeople.android.adapter.ProjectViewAdapter;
 import org.imaginationforpeople.android.handler.ProjectViewHandler;
 import org.imaginationforpeople.android.helper.UriHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
-import org.imaginationforpeople.android.model.Objective;
-import org.imaginationforpeople.android.model.Question;
-import org.imaginationforpeople.android.model.User;
 import org.imaginationforpeople.android.sqlite.FavoriteSqlite;
 import org.imaginationforpeople.android.thread.ProjectViewThread;
 
+import com.viewpagerindicator.PageIndicator;
+import com.viewpagerindicator.TitlePageIndicator;
+
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-public class ProjectViewActivity extends Activity implements OnClickListener {
+public class ProjectViewActivity extends FragmentActivity {
 	private boolean displayMenu = false;
 	private Intent shareIntent;
 	private FavoriteSqlite db;
@@ -111,38 +108,28 @@ public class ProjectViewActivity extends Activity implements OnClickListener {
 		if(Build.VERSION.SDK_INT >= 11)
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		
-		project = (I4pProjectTranslation) getLastNonConfigurationInstance();
-		if(project != null)
-			displayProject();
-		else {
-			String projectLang;
-			String projectSlug;
+		String projectLang;
+		String projectSlug;
+		
+		Uri data = getIntent().getData();
+		if(data != null) {
+			List<String> path = data.getPathSegments();
+			projectLang = path.get(0);
+			projectSlug = path.get(2);
+		} else {
+			Bundle extras = getIntent().getExtras();
 			
-			Uri data = getIntent().getData();
-			if(data != null) {
-				List<String> path = data.getPathSegments();
-				projectLang = path.get(0);
-				projectSlug = path.get(2);
-			} else {
-				Bundle extras = getIntent().getExtras();
-				
-				if(extras.containsKey("project_title"))
-					setTitle(extras.getString("project_title"));
-				
-				projectLang = extras.getString("project_lang");
-				projectSlug = extras.getString("project_slug");
-			}
+			if(extras.containsKey("project_title"))
+				setTitle(extras.getString("project_title"));
 			
-			ProjectViewHandler handler = new ProjectViewHandler(this);
-			ProjectViewThread thread = new ProjectViewThread(handler, projectLang, projectSlug);
-			
-			thread.start();
+			projectLang = extras.getString("project_lang");
+			projectSlug = extras.getString("project_slug");
 		}
-	}
-	
-	@Override
-	public Object onRetainNonConfigurationInstance() {
-		return project;
+		
+		ProjectViewHandler handler = new ProjectViewHandler(this);
+		ProjectViewThread thread = new ProjectViewThread(handler, projectLang, projectSlug);
+		
+		thread.start();
 	}
 	
 	public void setProject(I4pProjectTranslation p) {
@@ -151,119 +138,19 @@ public class ProjectViewActivity extends Activity implements OnClickListener {
 	
 	@TargetApi(11)
 	public void displayProject() {
-		setContentView(R.layout.projectview_description);
+		setContentView(R.layout.projectview_root);
 		displayMenu = true;
 		if(Build.VERSION.SDK_INT >= 11)
 			invalidateOptionsMenu(); // Rebuild the menu
 		
 		setTitle(project.getTitle());
 		
-		LinearLayout overlay = (LinearLayout) findViewById(R.id.projectview_description_overlay);
-		overlay.getBackground().setAlpha(127);
+		ProjectViewAdapter adapter = new ProjectViewAdapter(getSupportFragmentManager(), project, getResources());
 		
-		if(project.getProject().getPictures().size() > 0) {
-			ImageView image = (ImageView) findViewById(R.id.projectview_description_image);
-			image.setImageBitmap(project.getProject().getPictures().get(0).getImageBitmap());
-		}
-		
-		ImageView bestof = (ImageView) findViewById(R.id.projectview_description_bestof);
-		if(!project.getProject().getBestOf())
-			bestof.setVisibility(View.GONE);
-		
-		TextView title = (TextView) findViewById(R.id.projectview_description_title);
-		title.setText(project.getTitle());
-		
-		TextView baseline = (TextView) findViewById(R.id.projectview_description_baseline);
-		baseline.setText(project.getBaseline());
-		
-		ImageView status = (ImageView) findViewById(R.id.projectview_description_status);
-		if("IDEA".equals(project.getProject().getStatus())) {
-			status.setImageResource(R.drawable.project_status_idea);
-			status.setContentDescription(getResources().getString(R.string.projectview_description_status_idea));
-		} else if("BEGIN".equals(project.getProject().getStatus())) {
-			status.setImageResource(R.drawable.project_status_begin);
-			status.setContentDescription(getResources().getString(R.string.projectview_description_status_begin));
-		} else if("WIP".equals(project.getProject().getStatus())) {
-			status.setImageResource(R.drawable.project_status_wip);
-			status.setContentDescription(getResources().getString(R.string.projectview_description_status_wip));
-		} else if("END".equals(project.getProject().getStatus())) {
-			status.setImageResource(R.drawable.project_status_end);
-			status.setContentDescription(getResources().getString(R.string.projectview_description_status_end));
-		}
-		
-		if(project.getProject().getLocation() != null) {
-			if(!"".equals(project.getProject().getLocation().getCountry())) {
-				int flag = getResources().getIdentifier("flag_"+project.getProject().getLocation().getCountry().toLowerCase(), "drawable", "org.imaginationforpeople.android");
-				if(flag != 0) {
-					ImageView flagView = (ImageView) findViewById(R.id.projectview_description_flag);
-					flagView.setImageResource(flag);
-				}
-			}
-		}
-		
-		TextView website = (TextView) findViewById(R.id.projectview_description_website);
-		if("".equals(project.getProject().getWebsite()))
-			website.setVisibility(View.GONE);
-		else
-			website.setOnClickListener(this);
-		
-		if(project.getAboutSection() == null || "".equals(project.getAboutSection())) {
-			LinearLayout aboutContainer = (LinearLayout) findViewById(R.id.projectview_description_about_container);
-			aboutContainer.setVisibility(View.GONE);
-		} else {
-			TextView aboutText = (TextView) findViewById(R.id.projectview_description_about_text);
-			aboutText.setText(project.getAboutSection().trim());
-		}
-		
-		if("".equals(project.getThemes())) {
-			LinearLayout themesContainer = (LinearLayout) findViewById(R.id.projectview_description_themes_container);
-			themesContainer.setVisibility(View.GONE);
-		} else {
-			TextView themesText = (TextView) findViewById(R.id.projectview_description_themes_text);
-			themesText.setText(project.getThemes());
-		}
-		
-		if(project.getProject().getObjectives().size() == 0) {
-			LinearLayout objectivesContainer = (LinearLayout) findViewById(R.id.projectview_description_objectives_container);
-			objectivesContainer.setVisibility(View.GONE);
-		} else {
-			TextView objectivesText = (TextView) findViewById(R.id.projectview_description_objectives_text);
-			List<Objective> objectivesObject = project.getProject().getObjectives(); 
-			String objectives = objectivesObject.get(0).getName();
-			for(int i = 1; i < objectivesObject.size(); i++) {
-				objectives += ", " + objectivesObject.get(i).getName();
-			}
-			objectivesText.setText(objectives);
-		}
-			
-		LinearLayout questions = (LinearLayout) findViewById(R.id.projectview_description_questions_container);
-		for(Question question : project.getProject().getQuestions()) {
-			if(question.getAnswer() != null) {
-				LinearLayout questionLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.projectview_question, null);
-				
-				TextView questionView = (TextView) questionLayout.findViewById(R.id.projectview_question_question);
-				TextView answerView = (TextView) questionLayout.findViewById(R.id.projectview_question_answer);
-				
-				questionView.setText(Build.VERSION.SDK_INT < 14 ? question.getQuestion().toUpperCase() : question.getQuestion());
-				answerView.setText(question.getAnswer().trim());
-				
-				questions.addView(questionLayout);
-			}
-		}
-		
-		LinearLayout members = (LinearLayout) findViewById(R.id.projectview_description_members_text);
-		for(User member : project.getProject().getMembers()) {
-			TextView memberName = (TextView) getLayoutInflater().inflate(android.R.layout.simple_list_item_1, null);
-			
-			memberName.setText(member.getFullname());
-			memberName.setCompoundDrawablesWithIntrinsicBounds(null, null, member.getAvatarDrawable(), null);
-			
-			members.addView(memberName);
-		}
-	}
+		ViewPager pager = (ViewPager)findViewById(R.id.pager);
+        pager.setAdapter(adapter);
 
-	public void onClick(View arg0) {
-		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(project.getProject().getWebsite()));
-		startActivity(intent);
+        PageIndicator indicator = (TitlePageIndicator)findViewById(R.id.indicator);
+        indicator.setViewPager(pager);
 	}
 }

@@ -36,6 +36,7 @@
     <string name="projectview_menu_share_dialog">Share project with…</string>
     <string name="projectview_toast_favorites_add">%1$s added to favorites</string>
     <string name="projectview_toast_favorites_remove">%1$s removed from favorites</string>
+    <string name="projectview_root_info">Informations</string>
     <string name="projectview_description_image_description">Project image</string>
     <string name="projectview_description_bestof">This project is to discover</string>
     <string name="projectview_description_status_idea">Concept</string>
