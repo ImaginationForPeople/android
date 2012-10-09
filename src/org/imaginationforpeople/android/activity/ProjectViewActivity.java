@@ -251,14 +251,19 @@ public class ProjectViewActivity extends Activity implements OnClickListener {
 			}
 		}
 		
-		LinearLayout members = (LinearLayout) findViewById(R.id.projectview_description_members_text);
-		for(User member : project.getProject().getMembers()) {
-			TextView memberName = (TextView) getLayoutInflater().inflate(android.R.layout.simple_list_item_1, null);
-			
-			memberName.setText(member.getFullname());
-			memberName.setCompoundDrawablesWithIntrinsicBounds(null, null, member.getAvatarDrawable(), null);
-			
-			members.addView(memberName);
+		if(project.getProject().getMembers().size() == 0) {
+			LinearLayout membersContainer = (LinearLayout) findViewById(R.id.projectview_description_members_container);
+			membersContainer.setVisibility(View.GONE);
+		} else {
+			LinearLayout members = (LinearLayout) findViewById(R.id.projectview_description_members_text);
+			for(User member : project.getProject().getMembers()) {
+				TextView memberName = (TextView) getLayoutInflater().inflate(android.R.layout.simple_list_item_1, null);
+				
+				memberName.setText(member.getFullname());
+				memberName.setCompoundDrawablesWithIntrinsicBounds(null, null, member.getAvatarDrawable(), null);
+				
+				members.addView(memberName);
+			}
 		}
 	}
 
