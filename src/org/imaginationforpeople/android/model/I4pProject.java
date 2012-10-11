@@ -1,22 +1,28 @@
 package org.imaginationforpeople.android.model;
 
-import java.util.List;
+import java.util.ArrayList;
+
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class I4pProject {
+public class I4pProject implements Parcelable {
 	private int id;
 	@JsonProperty("best_of")
 	private boolean bestOf;
 	private Location location;
-	private List<User> members;
-	private List<Objective> objectives;
-	private List<Picture> pictures;
-	private List<Question> questions;
-	private List<Reference> references;
+	private ArrayList<User> members;
+	private ArrayList<Objective> objectives;
+	private ArrayList<Picture> pictures;
+	private ArrayList<Question> questions;
+	private ArrayList<Reference> references;
 	private String status;
-	private List<Video> videos;
+	private ArrayList<Video> videos;
 	private String website;
+	
+	public I4pProject() {}
 	
 	public int getId() {
 		return id;
@@ -36,34 +42,34 @@ public class I4pProject {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-	public List<User> getMembers() {
+	public ArrayList<User> getMembers() {
 		return members;
 	}
-	public void setMembers(List<User> members) {
+	public void setMembers(ArrayList<User> members) {
 		this.members = members;
 	}
-	public List<Objective> getObjectives() {
+	public ArrayList<Objective> getObjectives() {
 		return objectives;
 	}
-	public void setObjectives(List<Objective> objectives) {
+	public void setObjectives(ArrayList<Objective> objectives) {
 		this.objectives = objectives;
 	}
-	public List<Picture> getPictures() {
+	public ArrayList<Picture> getPictures() {
 		return pictures;
 	}
-	public void setPictures(List<Picture> pictures) {
+	public void setPictures(ArrayList<Picture> pictures) {
 		this.pictures = pictures;
 	}
-	public List<Question> getQuestions() {
+	public ArrayList<Question> getQuestions() {
 		return questions;
 	}
-	public void setQuestions(List<Question> questions) {
+	public void setQuestions(ArrayList<Question> questions) {
 		this.questions = questions;
 	}
-	public List<Reference> getReferences() {
+	public ArrayList<Reference> getReferences() {
 		return references;
 	}
-	public void setReferences(List<Reference> references) {
+	public void setReferences(ArrayList<Reference> references) {
 		this.references = references;
 	}
 	public String getStatus() {
@@ -72,10 +78,10 @@ public class I4pProject {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public List<Video> getVideos() {
+	public ArrayList<Video> getVideos() {
 		return videos;
 	}
-	public void setVideos(List<Video> videos) {
+	public void setVideos(ArrayList<Video> videos) {
 		this.videos = videos;
 	}
 	public String getWebsite() {
@@ -83,5 +89,25 @@ public class I4pProject {
 	}
 	public void setWebsite(String website) {
 		this.website = website;
+	}
+	
+	public int describeContents() {
+		return 0;
+	}
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(id);
+		dest.writeBooleanArray(new boolean[] {bestOf});
+		dest.writeStringArray(new String[] {
+			status,
+			website
+		});
+		dest.writeParcelable(location, 0);
+		Bundle data = new Bundle();
+		data.putParcelableArrayList("members", members);
+		data.putParcelableArrayList("objectives", objectives);
+		data.putParcelableArrayList("pictures", pictures);
+		data.putParcelableArrayList("questions", questions);
+		data.putParcelableArrayList("references", references);
+		data.putParcelableArrayList("videos", videos);
 	}
 }

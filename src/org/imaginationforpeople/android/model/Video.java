@@ -1,11 +1,16 @@
 package org.imaginationforpeople.android.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Video {
+public class Video implements Parcelable {
 	private int id;
 	@JsonProperty("video_url")
 	private String videoUrl;
+	
+	public Video() {}
 	
 	public int getId() {
 		return id;
@@ -18,5 +23,28 @@ public class Video {
 	}
 	public void setVideoUrl(String videoUrl) {
 		this.videoUrl = videoUrl;
+	}
+	
+	public int describeContents() {
+		return 0;
+	}
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(id);
+		dest.writeString(videoUrl);
+	}
+	
+	public static final Parcelable.Creator<Video> CREATOR = new Parcelable.Creator<Video>() {
+		public Video createFromParcel(Parcel source) {
+			return new Video(source);
+		}
+		
+		public Video[] newArray(int size) {
+			return new Video[size];
+		}
+	};
+	
+	private Video(Parcel source) {
+		id = source.readInt();
+		videoUrl = source.readString();
 	}
 }

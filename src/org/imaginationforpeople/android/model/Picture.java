@@ -3,8 +3,10 @@ package org.imaginationforpeople.android.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Picture {
+public class Picture implements Parcelable {
 	private int id;
 	private String author;
 	private String created;
@@ -17,6 +19,8 @@ public class Picture {
 	@JsonProperty("url")
 	private String imageUrl;
 	private Bitmap imageBitmap;
+	
+	public Picture() {}
 	
 	public int getId() {
 		return id;
@@ -77,5 +81,52 @@ public class Picture {
 	}
 	public void setImageBitmap(Bitmap imageBitmap) {
 		this.imageBitmap = imageBitmap;
+	}
+	
+	public int describeContents() {
+		return 0;
+	}
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(id);
+		dest.writeStringArray(new String[] {
+			author,
+			created,
+			desc,
+			license,
+			source,
+			thumbUrl,
+			imageUrl
+		});
+		dest.writeParcelableArray(new Parcelable[] {
+			thumbBitmap,
+			imageBitmap
+		}, 0);
+	}
+	
+	public static final Parcelable.Creator<Picture> CREATOR = new Parcelable.Creator<Picture>() {
+		public Picture createFromParcel(Parcel source) {
+			return new Picture(source);
+		}
+		
+		public Picture[] newArray(int size) {
+			return new Picture[size];
+		}
+	};
+	
+	private Picture(Parcel in) {
+		id = in.readInt();
+		String[] stringData = new String[7];
+		in.readStringArray(stringData);
+		author = stringData[0];
+		created = stringData[1];
+		desc = stringData[2];
+		license = stringData[3];
+		source = stringData[4];
+		thumbUrl = stringData[5];
+		imageUrl = stringData[6];
+		
+		Parcelable[] parcelableData = in.readParcelableArray(Picture.class.getClassLoader());
+		thumbBitmap = (Bitmap) parcelableData[0];
+		imageBitmap = (Bitmap) parcelableData[1];
 	}
 }
