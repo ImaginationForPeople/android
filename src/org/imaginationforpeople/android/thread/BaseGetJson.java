@@ -13,7 +13,6 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.util.EntityUtils;
 import org.imaginationforpeople.android.handler.BaseHandler;
-import org.imaginationforpeople.android.handler.ProjectsListHandler;
 import org.json.JSONException;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -38,13 +37,6 @@ public abstract class BaseGetJson extends Thread {
 	
 	@Override
 	public void run() {
-		if(arg == ProjectsListHandler.BEST_PROJECTS)
-			try {
-				sleep(300);
-			} catch (InterruptedException e1) {
-				// TODO Bloc catch généré automatiquement
-				e1.printStackTrace();
-			}
 		Message msg;
 		msg = handler.obtainMessage();
 		msg.arg1 = BaseHandler.STATUS_START;
