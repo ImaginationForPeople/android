@@ -5,6 +5,7 @@ import java.util.List;
 import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.adapter.ProjectViewAdapter;
 import org.imaginationforpeople.android.handler.ProjectViewHandler;
+import org.imaginationforpeople.android.helper.DataHelper;
 import org.imaginationforpeople.android.helper.UriHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.imaginationforpeople.android.sqlite.FavoriteSqlite;
@@ -30,6 +31,7 @@ public class ProjectViewActivity extends FragmentActivity {
 	private boolean displayMenu = false;
 	private Intent shareIntent;
 	private FavoriteSqlite db;
+	private ProjectViewThread thread;
 	private I4pProjectTranslation project;
 	
 	@TargetApi(14)
@@ -102,34 +104,54 @@ public class ProjectViewActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		if(Build.VERSION.SDK_INT < 11)
 			requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.loading);
 		db = new FavoriteSqlite(this);
 		
 		if(Build.VERSION.SDK_INT >= 11)
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		
-		String projectLang;
-		String projectSlug;
-		
-		Uri data = getIntent().getData();
-		if(data != null) {
-			List<String> path = data.getPathSegments();
-			projectLang = path.get(0);
-			projectSlug = path.get(2);
+		if(savedInstanceState != null && savedInstanceState.containsKey(DataHelper.PROJECT_VIEW_KEY)) {
+			project = savedInstanceState.getParcelable(DataHelper.PROJECT_VIEW_KEY);
+			displayProject();
 		} else {
-			Bundle extras = getIntent().getExtras();
+			setContentView(R.layout.loading);
 			
-			if(extras.containsKey("project_title"))
-				setTitle(extras.getString("project_title"));
+			String projectLang;
+			String projectSlug;
 			
-			projectLang = extras.getString("project_lang");
-			projectSlug = extras.getString("project_slug");
+			Uri data = getIntent().getData();
+			if(data != null) {
+				List<String> path = data.getPathSegments();
+				projectLang = path.get(0);
+				projectSlug = path.get(2);
+			} else {
+				Bundle extras = getIntent().getExtras();
+				
+				if(extras.containsKey("project_title"))
+					setTitle(extras.getString("project_title"));
+				
+				projectLang = extras.getString("project_lang");
+				projectSlug = extras.getString("project_slug");
+			}
+			
+			ProjectViewHandler handler = new ProjectViewHandler(this);
+			thread = new ProjectViewThread(handler, projectLang, projectSlug);
+			
+			thread.start();
 		}
-		
-		ProjectViewHandler handler = new ProjectViewHandler(this);
-		ProjectViewThread thread = new ProjectViewThread(handler, projectLang, projectSlug);
-		
-		thread.start();
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		if(thread == null || !thread.isAlive())
+			outState.putParcelable(DataHelper.PROJECT_VIEW_KEY, project);
+		super.onSaveInstanceState(outState);
+	}
+	
+	@Override
+	protected void onStop() {
+		if(thread != null)
+			thread.requestStop();
+		super.onStop();
 	}
 	
 	public void setProject(I4pProjectTranslation p) {

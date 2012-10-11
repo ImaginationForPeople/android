@@ -1,11 +1,12 @@
 package org.imaginationforpeople.android.adapter;
 
 import org.imaginationforpeople.android.R;
+import org.imaginationforpeople.android.helper.DataHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
-import org.imaginationforpeople.android.projectview.BaseProjectViewFragment;
 import org.imaginationforpeople.android.projectview.InfoProjectViewFragment;
 
 import android.content.res.Resources;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -14,7 +15,7 @@ public class ProjectViewAdapter extends FragmentPagerAdapter {
 	private static int[] fragmentsName = {
 		R.string.projectview_root_info
 	};
-	private static BaseProjectViewFragment[] fragments = {
+	private static Fragment[] fragments = {
 		new InfoProjectViewFragment()
 	};
 	private static Resources resources;
@@ -22,9 +23,10 @@ public class ProjectViewAdapter extends FragmentPagerAdapter {
 	public ProjectViewAdapter(FragmentManager fm, I4pProjectTranslation project, Resources r) {
 		super(fm);
 		resources = r;
-		for(BaseProjectViewFragment fragment : fragments) {
-			fragment.setProject(project);
-			fragment.setRetainInstance(true);
+		Bundle data = new Bundle();
+		data.putParcelable(DataHelper.PROJECT_VIEW_KEY, project);
+		for(Fragment fragment : fragments) {
+			fragment.setArguments(data);
 		}
 	}
 

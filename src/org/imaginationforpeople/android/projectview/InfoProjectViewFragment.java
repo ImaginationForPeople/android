@@ -3,6 +3,8 @@ package org.imaginationforpeople.android.projectview;
 import java.util.List;
 
 import org.imaginationforpeople.android.R;
+import org.imaginationforpeople.android.helper.DataHelper;
+import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.imaginationforpeople.android.model.Objective;
 import org.imaginationforpeople.android.model.Question;
 import org.imaginationforpeople.android.model.User;
@@ -11,6 +13,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,47 +23,50 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-public class InfoProjectViewFragment extends BaseProjectViewFragment implements OnClickListener {
+public class InfoProjectViewFragment extends Fragment implements OnClickListener {
+	private I4pProjectTranslation project;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		project = getArguments().getParcelable(DataHelper.PROJECT_VIEW_KEY);
 		ScrollView layout = (ScrollView) inflater.inflate(R.layout.projectview_info, null);
 		
 		LinearLayout overlay = (LinearLayout) layout.findViewById(R.id.projectview_description_overlay);
 		overlay.getBackground().setAlpha(127);
 		
-		if(getProject().getProject().getPictures().size() > 0) {
+		if(project.getProject().getPictures().size() > 0) {
 			ImageView image = (ImageView) layout.findViewById(R.id.projectview_description_image);
-			image.setImageBitmap(getProject().getProject().getPictures().get(0).getImageBitmap());
+			image.setImageBitmap(project.getProject().getPictures().get(0).getImageBitmap());
 		}
 		
 		ImageView bestof = (ImageView) layout.findViewById(R.id.projectview_description_bestof);
-		if(!getProject().getProject().getBestOf())
+		if(!project.getProject().getBestOf())
 			bestof.setVisibility(View.GONE);
 		
 		TextView title = (TextView) layout.findViewById(R.id.projectview_description_title);
-		title.setText(getProject().getTitle());
+		title.setText(project.getTitle());
 		
 		TextView baseline = (TextView) layout.findViewById(R.id.projectview_description_baseline);
-		baseline.setText(getProject().getBaseline());
+		baseline.setText(project.getBaseline());
 		
 		ImageView status = (ImageView) layout.findViewById(R.id.projectview_description_status);
-		if("IDEA".equals(getProject().getProject().getStatus())) {
+		if("IDEA".equals(project.getProject().getStatus())) {
 			status.setImageResource(R.drawable.project_status_idea);
 			status.setContentDescription(getResources().getString(R.string.projectview_description_status_idea));
-		} else if("BEGIN".equals(getProject().getProject().getStatus())) {
+		} else if("BEGIN".equals(project.getProject().getStatus())) {
 			status.setImageResource(R.drawable.project_status_begin);
 			status.setContentDescription(getResources().getString(R.string.projectview_description_status_begin));
-		} else if("WIP".equals(getProject().getProject().getStatus())) {
+		} else if("WIP".equals(project.getProject().getStatus())) {
 			status.setImageResource(R.drawable.project_status_wip);
 			status.setContentDescription(getResources().getString(R.string.projectview_description_status_wip));
-		} else if("END".equals(getProject().getProject().getStatus())) {
+		} else if("END".equals(project.getProject().getStatus())) {
 			status.setImageResource(R.drawable.project_status_end);
 			status.setContentDescription(getResources().getString(R.string.projectview_description_status_end));
 		}
 		
-		if(getProject().getProject().getLocation() != null) {
-			if(!"".equals(getProject().getProject().getLocation().getCountry())) {
-				int flag = getResources().getIdentifier("flag_"+getProject().getProject().getLocation().getCountry().toLowerCase(), "drawable", "org.imaginationforpeople.android");
+		if(project.getProject().getLocation() != null) {
+			if(!"".equals(project.getProject().getLocation().getCountry())) {
+				int flag = getResources().getIdentifier("flag_"+project.getProject().getLocation().getCountry().toLowerCase(), "drawable", "org.imaginationforpeople.android");
 				if(flag != 0) {
 					ImageView flagView = (ImageView) layout.findViewById(R.id.projectview_description_flag);
 					flagView.setImageResource(flag);
@@ -69,33 +75,33 @@ public class InfoProjectViewFragment extends BaseProjectViewFragment implements 
 		}
 		
 		TextView website = (TextView) layout.findViewById(R.id.projectview_description_website);
-		if("".equals(getProject().getProject().getWebsite()))
+		if("".equals(project.getProject().getWebsite()))
 			website.setVisibility(View.GONE);
 		else
 			website.setOnClickListener(this);
 		
-		if(getProject().getAboutSection() == null || "".equals(getProject().getAboutSection())) {
+		if(project.getAboutSection() == null || "".equals(project.getAboutSection())) {
 			LinearLayout aboutContainer = (LinearLayout) layout.findViewById(R.id.projectview_description_about_container);
 			aboutContainer.setVisibility(View.GONE);
 		} else {
 			TextView aboutText = (TextView) layout.findViewById(R.id.projectview_description_about_text);
-			aboutText.setText(getProject().getAboutSection().trim());
+			aboutText.setText(project.getAboutSection().trim());
 		}
 		
-		if("".equals(getProject().getThemes())) {
+		if("".equals(project.getThemes())) {
 			LinearLayout themesContainer = (LinearLayout) layout.findViewById(R.id.projectview_description_themes_container);
 			themesContainer.setVisibility(View.GONE);
 		} else {
 			TextView themesText = (TextView) layout.findViewById(R.id.projectview_description_themes_text);
-			themesText.setText(getProject().getThemes());
+			themesText.setText(project.getThemes());
 		}
 		
-		if(getProject().getProject().getObjectives().size() == 0) {
+		if(project.getProject().getObjectives().size() == 0) {
 			LinearLayout objectivesContainer = (LinearLayout) layout.findViewById(R.id.projectview_description_objectives_container);
 			objectivesContainer.setVisibility(View.GONE);
 		} else {
 			TextView objectivesText = (TextView) layout.findViewById(R.id.projectview_description_objectives_text);
-			List<Objective> objectivesObject = getProject().getProject().getObjectives(); 
+			List<Objective> objectivesObject = project.getProject().getObjectives(); 
 			String objectives = objectivesObject.get(0).getName();
 			for(int i = 1; i < objectivesObject.size(); i++) {
 				objectives += ", " + objectivesObject.get(i).getName();
@@ -104,7 +110,7 @@ public class InfoProjectViewFragment extends BaseProjectViewFragment implements 
 		}
 			
 		LinearLayout questions = (LinearLayout) layout.findViewById(R.id.projectview_description_questions_container);
-		for(Question question : getProject().getProject().getQuestions()) {
+		for(Question question : project.getProject().getQuestions()) {
 			if(question.getAnswer() != null) {
 				LinearLayout questionLayout = (LinearLayout) inflater.inflate(R.layout.projectview_question, null);
 				
@@ -118,12 +124,12 @@ public class InfoProjectViewFragment extends BaseProjectViewFragment implements 
 			}
 		}
 		
-		if(getProject().getProject().getMembers().size() == 0) {
+		if(project.getProject().getMembers().size() == 0) {
 			LinearLayout membersContainer = (LinearLayout) layout.findViewById(R.id.projectview_description_members_container);
 			membersContainer.setVisibility(View.GONE);
 		} else {
 			LinearLayout members = (LinearLayout) layout.findViewById(R.id.projectview_description_members_text);
-			for(User member : getProject().getProject().getMembers()) {
+			for(User member : project.getProject().getMembers()) {
 				TextView memberName = (TextView) inflater.inflate(android.R.layout.simple_list_item_1, null);
 				
 				memberName.setText(member.getFullname());
@@ -137,7 +143,7 @@ public class InfoProjectViewFragment extends BaseProjectViewFragment implements 
 	}
 	
 	public void onClick(View arg0) {
-		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getProject().getProject().getWebsite()));
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(project.getProject().getWebsite()));
 		startActivity(intent);
 	}
 }
