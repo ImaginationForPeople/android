@@ -118,14 +118,19 @@ public class InfoProjectViewFragment extends BaseProjectViewFragment implements 
 			}
 		}
 		
-		LinearLayout members = (LinearLayout) layout.findViewById(R.id.projectview_description_members_text);
-		for(User member : getProject().getProject().getMembers()) {
-			TextView memberName = (TextView) inflater.inflate(android.R.layout.simple_list_item_1, null);
-			
-			memberName.setText(member.getFullname());
-			memberName.setCompoundDrawablesWithIntrinsicBounds(null, null, member.getAvatarDrawable(), null);
-			
-			members.addView(memberName);
+		if(getProject().getProject().getMembers().size() == 0) {
+			LinearLayout membersContainer = (LinearLayout) layout.findViewById(R.id.projectview_description_members_container);
+			membersContainer.setVisibility(View.GONE);
+		} else {
+			LinearLayout members = (LinearLayout) layout.findViewById(R.id.projectview_description_members_text);
+			for(User member : getProject().getProject().getMembers()) {
+				TextView memberName = (TextView) inflater.inflate(android.R.layout.simple_list_item_1, null);
+				
+				memberName.setText(member.getFullname());
+				memberName.setCompoundDrawablesWithIntrinsicBounds(null, null, member.getAvatarDrawable(), null);
+				
+				members.addView(memberName);
+			}
 		}
 		
 		return layout;

@@ -1,8 +1,11 @@
 package org.imaginationforpeople.android.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class I4pProjectTranslation {
+public class I4pProjectTranslation implements Parcelable {
 	private int id;
 	@JsonProperty("resource_uri")
 	private String resourceUri;
@@ -19,6 +22,8 @@ public class I4pProjectTranslation {
 	private I4pProject project;
 	private String themes;
 	private String title;
+	
+	public I4pProjectTranslation() {}
 	
 	public int getId() {
 		return id;
@@ -91,5 +96,24 @@ public class I4pProjectTranslation {
 	@Override
 	public String toString() {
 		return title;
+	}
+	
+	public int describeContents() {
+		return 0;
+	}
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(id);
+		dest.writeStringArray(new String[] {
+			resourceUri,
+			slug,
+			languageCode,
+			aboutSection,
+			baseline,
+			calltoSection,
+			partnersSection,
+			themes,
+			title
+		});
+		dest.writeParcelable(project, 0);
 	}
 }
