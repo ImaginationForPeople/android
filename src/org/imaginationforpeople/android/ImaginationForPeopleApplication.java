@@ -8,6 +8,6 @@ public class ImaginationForPeopleApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		LanguageHelper.setResources(getResources());
+		LanguageHelper.setContext(this);
 	}
 }
