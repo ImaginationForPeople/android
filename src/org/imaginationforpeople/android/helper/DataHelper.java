@@ -1,11 +1,13 @@
 package org.imaginationforpeople.android.helper;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Date;
 
 import android.content.Context;
 
@@ -55,5 +57,15 @@ public class DataHelper extends BaseHelper {
 	
 	public static boolean checkImageFile(String url) {
 		return checkFile(url, FILE_PREFIX_PROJECT_IMAGE);
+	}
+	
+	public static void removeOldFiles() {
+		long oneday = new Date().getTime() - 86400; // One day
+		for(String path : getContext().fileList()) {
+			File file = new File(getContext().getFilesDir(), path);
+			if(file.lastModified() < oneday) {
+				getContext().deleteFile(path);
+			}
+		}
 	}
 }
