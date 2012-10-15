@@ -11,6 +11,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.imaginationforpeople.android.handler.ProjectsListHandler;
+import org.imaginationforpeople.android.helper.DataHelper;
 import org.imaginationforpeople.android.helper.UriHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.json.JSONArray;
@@ -55,7 +56,7 @@ public class ProjectsListThread extends BaseGetJson {
 				return null;
 			JsonParser parser = factory.createJsonParser(jsonProjects.getString(i));
 			I4pProjectTranslation project = mapper.readValue(parser, I4pProjectTranslation.class);
-			if(project.getProject().getPictures().size() > 0) {
+			if(project.getProject().getPictures().size() > 0 && !DataHelper.checkThumbFile(project.getProject().getPictures().get(0).getThumbUrl())) {
 				HttpClient httpClient = new DefaultHttpClient();
 				HttpGet httpGet = new HttpGet();
 				try {

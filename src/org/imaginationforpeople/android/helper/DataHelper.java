@@ -1,11 +1,59 @@
 package org.imaginationforpeople.android.helper;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
+
+import android.content.Context;
+
 public class DataHelper extends BaseHelper {
 	public static final String BEST_PROJECTS_KEY = "bestProjects";
 	public static final String LATEST_PROJECTS_KEY = "latestProjects";
 	public static final String PROJECT_VIEW_KEY = "project";
 	
+	public static final String FILE_PREFIX_PROJECT_THUMB = "projectThumb_";
+	public static final String FILE_PREFIX_PROJECT_IMAGE = "projectImage_";
+	
 	public static final int PROJECT_RANDOM = -1;
 	
 	private DataHelper() {}
+	
+	public static FileOutputStream openFileOutput(String name) {
+		try {
+			return getContext().openFileOutput(name, Context.MODE_PRIVATE);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static FileInputStream openFileInput(String name) {
+		try {
+			return getContext().openFileInput(name);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static boolean checkFile(String url, String prefix) {
+		try {
+			String path = new URL(url).getPath();
+			return Arrays.asList(getContext().fileList()).contains(prefix + path.substring(path.lastIndexOf('/') + 1));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public static boolean checkThumbFile(String url) {
+		return checkFile(url, FILE_PREFIX_PROJECT_THUMB);
+	}
+	
+	public static boolean checkImageFile(String url) {
+		return checkFile(url, FILE_PREFIX_PROJECT_IMAGE);
+	}
 }

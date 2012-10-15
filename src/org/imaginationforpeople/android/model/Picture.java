@@ -1,8 +1,16 @@
 package org.imaginationforpeople.android.model;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.imaginationforpeople.android.helper.DataHelper;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -65,9 +73,27 @@ public class Picture implements Parcelable {
 		this.thumbUrl = thumbUrl;
 	}
 	public Bitmap getThumbBitmap() {
+		if(thumbBitmap == null) {
+			String path;
+			try {
+				path = new URL(thumbUrl).getPath();
+				FileInputStream file = DataHelper.openFileInput(DataHelper.FILE_PREFIX_PROJECT_THUMB + path.substring(path.lastIndexOf('/') + 1));
+				thumbBitmap = BitmapFactory.decodeStream(file);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
 		return thumbBitmap;
 	}
 	public void setThumbBitmap(Bitmap thumbBitmap) {
+		try {
+			String path = new URL(thumbUrl).getPath();
+			FileOutputStream file = DataHelper.openFileOutput(DataHelper.FILE_PREFIX_PROJECT_THUMB + path.substring(path.lastIndexOf('/') + 1));
+			thumbBitmap.compress(Bitmap.CompressFormat.PNG, 90, file);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
 		this.thumbBitmap = thumbBitmap;
 	}
 	public String getImageUrl() {
@@ -77,9 +103,27 @@ public class Picture implements Parcelable {
 		this.imageUrl = imageUrl;
 	}
 	public Bitmap getImageBitmap() {
+		if(imageBitmap == null) {
+			String path;
+			try {
+				path = new URL(imageUrl).getPath();
+				FileInputStream file = DataHelper.openFileInput(DataHelper.FILE_PREFIX_PROJECT_IMAGE + path.substring(path.lastIndexOf('/') + 1));
+				imageBitmap = BitmapFactory.decodeStream(file);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
 		return imageBitmap;
 	}
 	public void setImageBitmap(Bitmap imageBitmap) {
+		try {
+			String path = new URL(imageUrl).getPath();
+			FileOutputStream file = DataHelper.openFileOutput(DataHelper.FILE_PREFIX_PROJECT_IMAGE + path.substring(path.lastIndexOf('/') + 1));
+			imageBitmap.compress(Bitmap.CompressFormat.PNG, 90, file);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
 		this.imageBitmap = imageBitmap;
 	}
 	
@@ -97,10 +141,6 @@ public class Picture implements Parcelable {
 			thumbUrl,
 			imageUrl
 		});
-		dest.writeParcelableArray(new Parcelable[] {
-			thumbBitmap,
-			imageBitmap
-		}, 0);
 	}
 	
 	public static final Parcelable.Creator<Picture> CREATOR = new Parcelable.Creator<Picture>() {
@@ -124,9 +164,5 @@ public class Picture implements Parcelable {
 		source = stringData[4];
 		thumbUrl = stringData[5];
 		imageUrl = stringData[6];
-		
-		Parcelable[] parcelableData = in.readParcelableArray(Picture.class.getClassLoader());
-		thumbBitmap = (Bitmap) parcelableData[0];
-		imageBitmap = (Bitmap) parcelableData[1];
 	}
 }
