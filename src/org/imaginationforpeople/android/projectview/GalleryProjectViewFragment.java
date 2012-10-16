@@ -4,8 +4,10 @@ import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.adapter.ProjectGalleryGridAdapter;
 import org.imaginationforpeople.android.helper.DataHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
+import org.imaginationforpeople.android.model.Picture;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,10 +17,13 @@ import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
-public class GalleryProjectViewFragment extends Fragment {
+public class GalleryProjectViewFragment extends Fragment implements OnItemClickListener {
 	private I4pProjectTranslation project;
+	private ProjectGalleryGridAdapter adapter;
 	
 	@TargetApi(13)
 	@Override
@@ -49,9 +54,18 @@ public class GalleryProjectViewFragment extends Fragment {
 		
 		layout.setColumnWidth(size);
 		layout.setVerticalSpacing(2);
-		ProjectGalleryGridAdapter adapter = new ProjectGalleryGridAdapter(getActivity(), project.getProject(), size);
+		adapter = new ProjectGalleryGridAdapter(getActivity(), project.getProject(), size);
 		layout.setAdapter(adapter);
+		layout.setOnItemClickListener(this);
 		
 		return layout;
+	}
+
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		Picture picture = adapter.getItem(position);
+		
+		Intent intent = new Intent(getActivity(), FullImageProjectViewActivity.class);
+		intent.putExtra("image", picture);
+		getActivity().startActivity(intent);
 	}
 }

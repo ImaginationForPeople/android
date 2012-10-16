@@ -49,6 +49,10 @@
     <string name="projectview_description_themes">THEMES</string>
     <string name="projectview_description_objectives">OBJECTIVES</string>
     <string name="projectview_description_members">MEMBERS</string>
+    <string name="projectview_gallery_slider_content_date">Date: %1$s</string>
+    <string name="projectview_gallery_slider_content_description">Description: %1$s</string>
+    <string name="projectview_gallery_slider_content_author">Author: %1$s</string>
+    <string name="projectview_gallery_slider_content_source">Source: %1$s</string>
     
     <!-- Favorites keys -->
     <string name="favorites_menu_remove_all">Remove all favorites</string>
