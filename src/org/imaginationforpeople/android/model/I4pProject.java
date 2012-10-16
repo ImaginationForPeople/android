@@ -109,5 +109,35 @@ public class I4pProject implements Parcelable {
 		data.putParcelableArrayList("questions", questions);
 		data.putParcelableArrayList("references", references);
 		data.putParcelableArrayList("videos", videos);
+		dest.writeBundle(data);
+	}
+	
+	public static final Parcelable.Creator<I4pProject> CREATOR = new Parcelable.Creator<I4pProject>() {
+		public I4pProject createFromParcel(Parcel source) {
+			return new I4pProject(source);
+		}
+		
+		public I4pProject[] newArray(int size) {
+			return new I4pProject[size];
+		}
+	};
+	
+	private I4pProject(Parcel source) {
+		id = source.readInt();
+		boolean[] booleanData = new boolean[1];
+		source.readBooleanArray(booleanData);
+		bestOf = booleanData[0];
+		String[] stringData = new String[2];
+		source.readStringArray(stringData);
+		status = stringData[0];
+		website = stringData[1];
+		location = source.readParcelable(Location.class.getClassLoader());
+		Bundle bundleData = source.readBundle();
+		members = bundleData.getParcelableArrayList("members");
+		objectives = bundleData.getParcelableArrayList("objectives");
+		pictures = bundleData.getParcelableArrayList("pictures");
+		questions = bundleData.getParcelableArrayList("questions");
+		references = bundleData.getParcelableArrayList("references");
+		videos = bundleData.getParcelableArrayList("videos");
 	}
 }
