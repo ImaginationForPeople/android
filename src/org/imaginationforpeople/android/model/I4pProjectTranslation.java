@@ -116,4 +116,30 @@ public class I4pProjectTranslation implements Parcelable {
 		});
 		dest.writeParcelable(project, 0);
 	}
+	
+	public static final Parcelable.Creator<I4pProjectTranslation> CREATOR = new Parcelable.Creator<I4pProjectTranslation>() {
+		public I4pProjectTranslation createFromParcel(Parcel source) {
+			return new I4pProjectTranslation(source);
+		}
+		
+		public I4pProjectTranslation[] newArray(int size) {
+			return new I4pProjectTranslation[size];
+		}
+	};
+	
+	private I4pProjectTranslation(Parcel source) {
+		id = source.readInt();
+		String[] stringData = new String[9];
+		source.readStringArray(stringData);
+		resourceUri = stringData[0];
+		slug = stringData[1];
+		languageCode = stringData[2];
+		aboutSection = stringData[3];
+		baseline = stringData[4];
+		calltoSection = stringData[5];
+		partnersSection = stringData[6];
+		themes = stringData[7];
+		title = stringData[8];
+		project = source.readParcelable(I4pProject.class.getClassLoader());
+	}
 }
