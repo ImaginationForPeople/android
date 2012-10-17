@@ -114,9 +114,10 @@ public class ProjectViewActivity extends FragmentActivity {
 			displayProject();
 		} else {
 			setContentView(R.layout.loading);
+			ProjectViewHandler handler = new ProjectViewHandler(this);
 			
-			String projectLang;
-			String projectSlug;
+			String projectLang = null;
+			String projectSlug = null;
 			
 			Uri data = getIntent().getData();
 			if(data != null) {
@@ -129,12 +130,16 @@ public class ProjectViewActivity extends FragmentActivity {
 				if(extras.containsKey("project_title"))
 					setTitle(extras.getString("project_title"));
 				
-				projectLang = extras.getString("project_lang");
-				projectSlug = extras.getString("project_slug");
+				if(extras.containsKey("project_id")) { // Mostly used if we want a random project
+					thread = new ProjectViewThread(handler, extras.getInt("project_id"));
+				} else {
+					projectLang = extras.getString("project_lang");
+					projectSlug = extras.getString("project_slug");
+				}
 			}
 			
-			ProjectViewHandler handler = new ProjectViewHandler(this);
-			thread = new ProjectViewThread(handler, projectLang, projectSlug);
+			if(thread == null)
+				thread = new ProjectViewThread(handler, projectLang, projectSlug);
 			
 			thread.start();
 		}
