@@ -18,6 +18,7 @@ public class DataHelper extends BaseHelper {
 	
 	public static final String FILE_PREFIX_PROJECT_THUMB = "projectThumb_";
 	public static final String FILE_PREFIX_PROJECT_IMAGE = "projectImage_";
+	public static final String FILE_PREFIX_USER_AVATAR = "avatar_";
 	
 	public static final int PROJECT_RANDOM = -1;
 	
@@ -57,6 +58,10 @@ public class DataHelper extends BaseHelper {
 	
 	public static boolean checkImageFile(String url) {
 		return checkFile(url, FILE_PREFIX_PROJECT_IMAGE);
+	}
+	
+	public static boolean checkAvatarFile(String url) {
+		return checkFile(url, FILE_PREFIX_USER_AVATAR);
 	}
 	
 	public static void removeOldFiles() {

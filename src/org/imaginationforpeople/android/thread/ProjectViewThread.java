@@ -90,16 +90,18 @@ public class ProjectViewThread extends BaseGetJson {
 			for(User member : project.getProject().getMembers()) {
 				if(isStopped())
 					return null;
-				HttpClient httpClient = new DefaultHttpClient();
-				HttpGet httpGet = new HttpGet();
-				try {
-					httpGet.setURI(new URI(member.getAvatarUrl()));
-					HttpResponse response = httpClient.execute(httpGet);
-					Drawable drawable = Drawable.createFromStream(response.getEntity().getContent(), null);
-					member.setAvatarDrawable(drawable);
-				} catch (URISyntaxException e) {
-					Log.w("Thumbnail", "Unable to load URI " + member.getAvatarUrl());
-					e.printStackTrace();
+				if(!DataHelper.checkAvatarFile(member.getAvatarUrl())) {
+					HttpClient httpClient = new DefaultHttpClient();
+					HttpGet httpGet = new HttpGet();
+					try {
+						httpGet.setURI(new URI(member.getAvatarUrl()));
+						HttpResponse response = httpClient.execute(httpGet);
+						Drawable drawable = Drawable.createFromStream(response.getEntity().getContent(), null);
+						member.setAvatarDrawable(drawable);
+					} catch (URISyntaxException e) {
+						Log.w("Thumbnail", "Unable to load URI " + member.getAvatarUrl());
+						e.printStackTrace();
+					}
 				}
 			}
 		}

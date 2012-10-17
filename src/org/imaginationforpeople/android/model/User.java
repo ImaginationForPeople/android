@@ -1,5 +1,12 @@
 package org.imaginationforpeople.android.model;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.imaginationforpeople.android.helper.DataHelper;
+
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -36,9 +43,27 @@ public class User implements Parcelable {
 		this.avatarUrl = avatarUrl;
 	}
 	public Drawable getAvatarDrawable() {
+		if(avatarDrawable == null) {
+			String path;
+			try {
+				path = new URL(avatarUrl).getPath();
+				FileInputStream file = DataHelper.openFileInput(DataHelper.FILE_PREFIX_USER_AVATAR + path.substring(path.lastIndexOf('/') + 1));
+				avatarDrawable = Drawable.createFromStream(file, null);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
 		return avatarDrawable;
 	}
 	public void setAvatarDrawable(Drawable avatarDrawable) {
+		try {
+			String path = new URL(avatarUrl).getPath();
+			FileOutputStream file = DataHelper.openFileOutput(DataHelper.FILE_PREFIX_USER_AVATAR + path.substring(path.lastIndexOf('/') + 1));
+			((BitmapDrawable) avatarDrawable).getBitmap().compress(Bitmap.CompressFormat.PNG, 90, file);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
 		this.avatarDrawable = avatarDrawable;
 	}
 	
@@ -51,7 +76,6 @@ public class User implements Parcelable {
 			username,
 			avatarUrl
 		});
-		dest.writeParcelable(((BitmapDrawable) avatarDrawable).getBitmap(), 0);
 	}
 	
 	public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
@@ -70,6 +94,5 @@ public class User implements Parcelable {
 		fullname = stringData[0];
 		username = stringData[1];
 		avatarUrl = stringData[2];
-		avatarDrawable = new BitmapDrawable((Bitmap) source.readParcelable(User.class.getClassLoader()));
 	}
 }
