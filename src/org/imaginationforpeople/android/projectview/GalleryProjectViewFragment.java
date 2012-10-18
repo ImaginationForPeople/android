@@ -5,10 +5,12 @@ import org.imaginationforpeople.android.adapter.ProjectGalleryGridAdapter;
 import org.imaginationforpeople.android.helper.DataHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.imaginationforpeople.android.model.Picture;
+import org.imaginationforpeople.android.model.Video;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -62,10 +64,22 @@ public class GalleryProjectViewFragment extends Fragment implements OnItemClickL
 	}
 
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		Picture picture = adapter.getItem(position);
+		Intent intent = null;
 		
-		Intent intent = new Intent(getActivity(), FullImageProjectViewActivity.class);
-		intent.putExtra("image", picture);
-		getActivity().startActivity(intent);
+		Bundle data = adapter.getItem(position);
+		switch(data.getInt("type")) {
+		case DataHelper.PROJECT_GALLERY_GRID_TYPE_PICTURE:
+			Picture picture = data.getParcelable("object");
+			intent = new Intent(getActivity(), FullImageProjectViewActivity.class);
+			intent.putExtra("image", picture);
+			break;
+		case DataHelper.PROJECT_GALLERY_GRID_TYPE_VIDEO:
+			Video video = data.getParcelable("object");
+			intent = new Intent(Intent.ACTION_VIEW, Uri.parse(video.getVideoUrl()));
+			break;
+		}
+		
+		if(intent != null)
+			startActivity(intent);
 	}
 }

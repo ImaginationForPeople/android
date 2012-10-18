@@ -52,9 +52,6 @@ public class ProjectViewActivity extends FragmentActivity {
 				shareIntent = Intent.createChooser(prepareShareIntent, getResources().getText(R.string.projectview_menu_share_dialog));
 			}
 			
-			MenuItem videoItem = menu.getItem(0);
-			videoItem.setVisible(project.getProject().getVideos().size() != 0);
-			
 			// Defining favorite state
 			MenuItem favoriteItem = menu.getItem(1);
 			if(db.isFavorite(project))
@@ -75,10 +72,6 @@ public class ProjectViewActivity extends FragmentActivity {
 				startActivity(intent);
 			} else 
 				finish();
-			break;
-		case R.id.projectview_video:
-			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(project.getProject().getVideos().get(0).getVideoUrl()));
-			startActivity(intent);
 			break;
 		case R.id.projectview_favorite:
 			Toast t;

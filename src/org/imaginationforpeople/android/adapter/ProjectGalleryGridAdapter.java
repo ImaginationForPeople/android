@@ -1,10 +1,12 @@
 package org.imaginationforpeople.android.adapter;
 
 import org.imaginationforpeople.android.R;
+import org.imaginationforpeople.android.helper.DataHelper;
 import org.imaginationforpeople.android.model.I4pProject;
 import org.imaginationforpeople.android.model.Picture;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -22,22 +24,44 @@ public class ProjectGalleryGridAdapter extends BaseAdapter {
 	}
 	
 	public int getCount() {
-		return project.getPictures().size();
+		return project.getPictures().size() + project.getVideos().size();
 	}
 
-	public Picture getItem(int position) {
-		return project.getPictures().get(position);
+	public Bundle getItem(int position) {
+		Bundle data = new Bundle();
+		if(position < project.getPictures().size()) {
+			data.putInt("type", DataHelper.PROJECT_GALLERY_GRID_TYPE_PICTURE);
+			data.putParcelable("object", project.getPictures().get(position));
+		}
+		else {
+			data.putInt("type", DataHelper.PROJECT_GALLERY_GRID_TYPE_VIDEO);
+			data.putParcelable("object", project.getVideos().get(position - project.getPictures().size()));
+		}
+		return data;
 	}
 
 	public long getItemId(int position) {
-		return project.getPictures().get(position).getId();
+		if(position < project.getPictures().size())
+			return project.getPictures().get(position).getId();
+		else
+			return project.getVideos().get(position - project.getPictures().size()).getId();
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if(convertView == null)
 			convertView = activity.getLayoutInflater().inflate(R.layout.projectview_gallery_item, null);
 		convertView.setMinimumHeight(size);
-		((ImageView) convertView).setImageBitmap(getItem(position).getThumbBitmap());
+		
+		Bundle data = getItem(position);
+		switch(data.getInt("type")) {
+		case DataHelper.PROJECT_GALLERY_GRID_TYPE_PICTURE:
+			((ImageView) convertView).setImageBitmap(((Picture) data.getParcelable("object")).getThumbBitmap());
+			break;
+		case DataHelper.PROJECT_GALLERY_GRID_TYPE_VIDEO:
+			((ImageView) convertView).setImageResource(R.drawable.projectview_gallery_video);
+			break;
+		}
+		
 		return convertView;
 	}
 
