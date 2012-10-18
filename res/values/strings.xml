@@ -36,6 +36,8 @@
     <string name="projectview_menu_share_dialog">Share project with…</string>
     <string name="projectview_toast_favorites_add">%1$s added to favorites</string>
     <string name="projectview_toast_favorites_remove">%1$s removed from favorites</string>
+    <string name="projectview_root_info">Informations</string>
+    <string name="projectview_root_gallery">Gallery</string>
     <string name="projectview_description_image_description">Project image</string>
     <string name="projectview_description_bestof">This project is to discover</string>
     <string name="projectview_description_status_idea">Concept</string>
@@ -47,6 +49,10 @@
     <string name="projectview_description_themes">THEMES</string>
     <string name="projectview_description_objectives">OBJECTIVES</string>
     <string name="projectview_description_members">MEMBERS</string>
+    <string name="projectview_gallery_slider_content_date">Date: %1$s</string>
+    <string name="projectview_gallery_slider_content_description">Description: %1$s</string>
+    <string name="projectview_gallery_slider_content_author">Author: %1$s</string>
+    <string name="projectview_gallery_slider_content_source">Source: %1$s</string>
     
     <!-- Favorites keys -->
     <string name="favorites_menu_remove_all">Remove all favorites</string>

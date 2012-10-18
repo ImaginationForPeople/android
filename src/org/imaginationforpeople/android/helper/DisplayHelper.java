@@ -1,7 +1,7 @@
 package org.imaginationforpeople.android.helper;
 
 public class DisplayHelper extends BaseHelper {
-	private final static float scale = resources.getDisplayMetrics().density;
+	private final static float scale = getResources().getDisplayMetrics().density;
 	
 	private DisplayHelper() {}
 	
