@@ -1,7 +1,7 @@
 <resources>
     <!-- General keys -->
     <string name="app_name">Imagination for People</string>
-    <string name="app_favorites">My favorites projects</string>
+    <string name="app_favorites">My favorite project</string>
     <string name="cancel">Cancel</string>
     <string name="close">Close</string>
     <string name="cant_be_undone">This action can\'t be undone!</string>
@@ -36,16 +36,16 @@
     <string name="projectview_menu_share_dialog">Share project with…</string>
     <string name="projectview_toast_favorites_add">%1$s added to favorites</string>
     <string name="projectview_toast_favorites_remove">%1$s removed from favorites</string>
-    <string name="projectview_root_info">Informations</string>
-    <string name="projectview_root_gallery">Gallery</string>
+    <string name="projectview_root_info">INFORMATION</string>
+    <string name="projectview_root_gallery">GALLERY</string>
     <string name="projectview_description_image_description">Project image</string>
-    <string name="projectview_description_bestof">This project is to discover</string>
+    <string name="projectview_description_bestof">Editor\'s pick</string>
     <string name="projectview_description_status_idea">Concept</string>
     <string name="projectview_description_status_begin">Starting</string>
     <string name="projectview_description_status_wip">In development</string>
     <string name="projectview_description_status_end">Mature</string>
     <string name="projectview_description_website">View website</string>
-    <string name="projectview_description_about">About project</string>
+    <string name="projectview_description_about">About the project</string>
     <string name="projectview_description_themes">THEMES</string>
     <string name="projectview_description_objectives">OBJECTIVES</string>
     <string name="projectview_description_members">MEMBERS</string>
@@ -57,13 +57,13 @@
     <!-- Favorites keys -->
     <string name="favorites_menu_remove_all">Remove all favorites</string>
     <string name="favorites_dialog_remove_all_title">Remove all favorites?</string>
-    <string name="favorites_no">You don\'t have favorites</string>
-    <string name="favorites_no_anymore">You don\'t have favorites anymore</string>
+    <string name="favorites_no">You don\'t have any favorite</string>
+    <string name="favorites_no_anymore">You don\'t have any favorite anymore</string>
     
     <!-- Error keys -->
     <string name="error_server">Problem with the server</string>
-    <string name="error_server_timeout">The server doesn\'t respond in time.</string>
-    <string name="error_server_badanswer">We cannot understand server\'s answer.</string>
+    <string name="error_server_timeout">The server didn\'t respond in time.</string>
+    <string name="error_server_badanswer">Cannot understand server\'s answer.</string>
     <string name="error_json">JSON error</string>
     <string name="error_json_badanswer">It seems the server\'s answer is malformed because we cannot understand the JSON.</string>
     <string name="error_unknown">Unknown error</string>
