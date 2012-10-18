@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--General keys-->
+  <string name="app_name">Imagination for People</string>
+  <string name="app_favorites">Mes projets favoris</string>
+  <string name="cancel">Annuler</string>
+  <string name="close">Fermer</string>
+  <string name="cant_be_undone">Cette action ne peut être annulée !</string>
+  <!--Homepage keys-->
+  <string name="homepage_menu_favorites">Favoris</string>
+  <string name="homepage_menu_language">Changer la langue</string>
+  <string name="homepage_spinner_prompt">Choisissez une langue</string>
+  <string-array name="homepage_spinner_languages">
+    <item>Chinois</item>
+    <item>Anglais</item>
+    <item>Français</item>
+    <item>Allemand</item>
+    <item>Grec</item>
+    <item>Italien</item>
+    <item>Portugais</item>
+    <item>Russe</item>
+    <item>Espagnol</item>
+  </string-array>
+  <string name="homepage_tab_bestof">À découvrir</string>
+  <string name="homepage_tab_latest">Derniers projets</string>
+  <!--ProjectsList keys-->
+  <string name="projectslist_loading">Chargement des projets…</string>
+  <string name="projectslist_item_image_description">Image du projet</string>
+  <!--ProjectView keys-->
+  <string name="projectview_menu_video">Regarder la vidéo</string>
+  <string name="projectview_menu_favorites_add">Ajouter aux favoris</string>
+  <string name="projectview_menu_favorites_remove">Supprimer des favoris</string>
+  <string name="projectview_menu_share">Partager le projet</string>
+  <string name="projectview_menu_share_dialog">Partager le projet avec…</string>
+  <string name="projectview_toast_favorites_add">%1$s ajouté aux favoris</string>
+  <string name="projectview_toast_favorites_remove">%1$s supprimé des favoris</string>
+  <string name="projectview_root_info">INFORMATIONS</string>
+  <string name="projectview_root_gallery">GALLERIE</string>
+  <string name="projectview_description_image_description">Image du projet</string>
+  <string name="projectview_description_bestof">Choix de l\'éditeur</string>
+  <string name="projectview_description_status_idea">Concept</string>
+  <string name="projectview_description_status_begin">Démarrage</string>
+  <string name="projectview_description_status_wip">En développement</string>
+  <string name="projectview_description_status_end">Mature</string>
+  <string name="projectview_description_website">Voir le site internet</string>
+  <string name="projectview_description_about">À propos du projet</string>
+  <string name="projectview_description_themes">THÈMES</string>
+  <string name="projectview_description_objectives">OBJECTIFS</string>
+  <string name="projectview_description_members">MEMBRES</string>
+  <string name="projectview_gallery_slider_content_date">Date : %1$s</string>
+  <string name="projectview_gallery_slider_content_description">Description : %1$s</string>
+  <string name="projectview_gallery_slider_content_author">Auteur : %1$s</string>
+  <string name="projectview_gallery_slider_content_source">Source : %1$s</string>
+  <!--Favorites keys-->
+  <string name="favorites_menu_remove_all">Supprimer tous les favoris</string>
+  <string name="favorites_dialog_remove_all_title">Supprimer tous les favoris ?</string>
+  <string name="favorites_no">Vous n\'avez pas de favoris</string>
+  <string name="favorites_no_anymore">Vous n\'avez plus de favoris</string>
+  <!--Error keys-->
+  <string name="error_server">Problème avec le serveur</string>
+  <string name="error_server_timeout">Le serveur n\'a pas répondu dans les temps.</string>
+  <string name="error_server_badanswer">Impossible de comprendre la réponse du serveur.</string>
+  <string name="error_json">Erreur du JSON</string>
+  <string name="error_json_badanswer">Il semble que la réponse du serveur soit mal formée car nous n\'arrivons à comprendre le JSON.</string>
+  <string name="error_unknown">Erreur inconnue</string>
+  <string name="error_unknown_message">Une erreur non prise en charge s\'est produite. Merci de faire un rapport de bogue :) </string>
+</resources>
