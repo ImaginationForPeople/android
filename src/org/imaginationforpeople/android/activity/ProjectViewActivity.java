@@ -53,7 +53,7 @@ public class ProjectViewActivity extends FragmentActivity {
 			}
 			
 			// Defining favorite state
-			MenuItem favoriteItem = menu.getItem(1);
+			MenuItem favoriteItem = menu.getItem(0);
 			if(db.isFavorite(project))
 				favoriteItem.setTitle(R.string.projectview_menu_favorites_remove);
 			else
