@@ -3,7 +3,6 @@ package org.imaginationforpeople.android.adapter;
 import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.helper.DataHelper;
 import org.imaginationforpeople.android.model.I4pProject;
-import org.imaginationforpeople.android.model.Picture;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -31,7 +30,7 @@ public class ProjectGalleryGridAdapter extends BaseAdapter {
 		Bundle data = new Bundle();
 		if(position < project.getPictures().size()) {
 			data.putInt("type", DataHelper.PROJECT_GALLERY_GRID_TYPE_PICTURE);
-			data.putParcelable("object", project.getPictures().get(position));
+			data.putInt("position", position);
 		}
 		else {
 			data.putInt("type", DataHelper.PROJECT_GALLERY_GRID_TYPE_VIDEO);
@@ -55,7 +54,7 @@ public class ProjectGalleryGridAdapter extends BaseAdapter {
 		Bundle data = getItem(position);
 		switch(data.getInt("type")) {
 		case DataHelper.PROJECT_GALLERY_GRID_TYPE_PICTURE:
-			((ImageView) convertView).setImageBitmap(((Picture) data.getParcelable("object")).getThumbBitmap());
+			((ImageView) convertView).setImageBitmap(project.getPictures().get(position).getThumbBitmap());
 			break;
 		case DataHelper.PROJECT_GALLERY_GRID_TYPE_VIDEO:
 			((ImageView) convertView).setImageResource(R.drawable.projectview_gallery_video);
