@@ -62,6 +62,7 @@ public class ProjectViewThread extends BaseGetJson {
 					httpGet = new HttpGet();
 					try {
 						httpGet.setURI(new URI(picture.getThumbUrl()));
+						httpGet.addHeader("Accept-Encoding", "gzip");
 						HttpResponse response = httpClient.execute(httpGet);
 						Bitmap bitmap = BitmapFactory.decodeStream(response.getEntity().getContent());
 						picture.setThumbBitmap(bitmap);
@@ -75,6 +76,7 @@ public class ProjectViewThread extends BaseGetJson {
 					httpGet = new HttpGet();
 					try {
 						httpGet.setURI(new URI(picture.getImageUrl()));
+						httpGet.addHeader("Accept-Encoding", "gzip");
 						HttpResponse response = httpClient.execute(httpGet);
 						Bitmap bitmap = BitmapFactory.decodeStream(response.getEntity().getContent());
 						picture.setImageBitmap(bitmap);
@@ -95,6 +97,7 @@ public class ProjectViewThread extends BaseGetJson {
 					HttpGet httpGet = new HttpGet();
 					try {
 						httpGet.setURI(new URI(member.getAvatarUrl()));
+						httpGet.addHeader("Accept-Encoding", "gzip");
 						HttpResponse response = httpClient.execute(httpGet);
 						Drawable drawable = Drawable.createFromStream(response.getEntity().getContent(), null);
 						member.setAvatarDrawable(drawable);

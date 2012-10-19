@@ -62,6 +62,7 @@ public class ProjectsListThread extends BaseGetJson {
 				try {
 					URI uri = new URI(project.getProject().getPictures().get(0).getThumbUrl());
 					httpGet.setURI(uri);
+					httpGet.addHeader("Accept-Encoding", "gzip");
 					HttpResponse response = httpClient.execute(httpGet);
 					Bitmap bitmap = BitmapFactory.decodeStream(response.getEntity().getContent());
 					project.getProject().getPictures().get(0).setThumbBitmap(bitmap);
