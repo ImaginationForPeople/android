@@ -7,10 +7,12 @@ import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.imaginationforpeople.android.model.Picture;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class ProjectsGridAdapter extends BaseAdapter {
@@ -51,13 +53,24 @@ public class ProjectsGridAdapter extends BaseAdapter {
 		I4pProjectTranslation project = getItem(position);
 		TextView projectTitle = (TextView) convertView.findViewById(R.id.projectslist_item_text);
 		ImageView projectImage = (ImageView) convertView.findViewById(R.id.projectslist_item_image);
+		ProgressBar projectLoading = (ProgressBar) convertView.findViewById(R.id.projectslist_item_loading);
 		projectTitle.setText(project.getTitle());
 		projectTitle.getBackground().setAlpha(127);
 		List<Picture> projectPictures = project.getProject().getPictures();
-		if(projectPictures.size() > 0)
-			projectImage.setImageBitmap (projectPictures.get(0).getThumbBitmap());
-		else
+		if(projectPictures.size() > 0) {
+			Bitmap thumb = projectPictures.get(0).getThumbBitmap();
+			if(thumb == null) {
+				projectImage.setVisibility(View.GONE);
+				projectLoading.setVisibility(View.VISIBLE);
+			} else {
+				projectImage.setImageBitmap(thumb);
+				projectLoading.setVisibility(View.GONE);
+				projectImage.setVisibility(View.VISIBLE);
+			}
+		} else {
+			projectLoading.setVisibility(View.GONE);
 			projectImage.setImageResource(R.drawable.project_nophoto);
+		}
 		
 		return convertView;
 	}

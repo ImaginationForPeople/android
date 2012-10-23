@@ -77,8 +77,11 @@ public class Picture implements Parcelable {
 			String path;
 			try {
 				path = new URL(thumbUrl).getPath();
-				FileInputStream file = DataHelper.openFileInput(DataHelper.FILE_PREFIX_PROJECT_THUMB + path.substring(path.lastIndexOf('/') + 1));
-				thumbBitmap = BitmapFactory.decodeStream(file);
+				if(DataHelper.checkThumbFile(thumbUrl)) {
+					FileInputStream file = DataHelper.openFileInput(DataHelper.FILE_PREFIX_PROJECT_THUMB + path.substring(path.lastIndexOf('/') + 1));
+					thumbBitmap = BitmapFactory.decodeStream(file);
+				} else
+					return null;
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 				return null;

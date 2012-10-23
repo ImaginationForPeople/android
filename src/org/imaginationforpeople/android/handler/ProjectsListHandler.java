@@ -3,10 +3,10 @@ package org.imaginationforpeople.android.handler;
 import java.util.List;
 
 import org.imaginationforpeople.android.R;
+import org.imaginationforpeople.android.activity.HomepageActivity;
 import org.imaginationforpeople.android.adapter.ProjectsGridAdapter;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -19,12 +19,12 @@ public class ProjectsListHandler extends BaseHandler implements OnClickListener,
 	
 	private int count = 0;
 	
-	private Activity activity;
+	private HomepageActivity activity;
 	private ProgressDialog progress;
 	private ProjectsGridAdapter bestAdapter;
 	private ProjectsGridAdapter latestAdapter;
 	
-	public ProjectsListHandler(Activity ac, ProgressDialog pd, ProjectsGridAdapter ba, ProjectsGridAdapter la) {
+	public ProjectsListHandler(HomepageActivity ac, ProgressDialog pd, ProjectsGridAdapter ba, ProjectsGridAdapter la) {
 		activity = ac;
 		progress = pd;
 		bestAdapter = ba;
@@ -62,8 +62,10 @@ public class ProjectsListHandler extends BaseHandler implements OnClickListener,
 			adapter.addProject(project);
 		}
 		
-		if(++count >= 2)
+		if(++count >= 2) {
 			progress.dismiss();
+			activity.launchAsynchronousImageDownload();
+		}
 	}
 	
 	@Override

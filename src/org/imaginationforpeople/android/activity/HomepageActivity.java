@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.adapter.ProjectsGridAdapter;
 import org.imaginationforpeople.android.handler.ProjectsListHandler;
+import org.imaginationforpeople.android.handler.ProjectsListImageHandler;
 import org.imaginationforpeople.android.helper.DataHelper;
 import org.imaginationforpeople.android.helper.LanguageHelper;
 import org.imaginationforpeople.android.homepage.TabHelper;
@@ -14,6 +15,7 @@ import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.imaginationforpeople.android.shake.ShakeEventListener;
 import org.imaginationforpeople.android.shake.ShakeListener;
 import org.imaginationforpeople.android.sqlite.FavoriteSqlite;
+import org.imaginationforpeople.android.thread.ProjectsListImagesThread;
 import org.imaginationforpeople.android.thread.ProjectsListThread;
 
 import android.app.Activity;
@@ -36,8 +38,11 @@ import android.widget.Toast;
 public class HomepageActivity extends Activity implements OnClickListener, OnCancelListener, ShakeListener {
 	private static ProjectsListThread bestThread;
 	private static ProjectsListThread latestThread;
+	private ProjectsListImagesThread bestImageThread;
+	private ProjectsListImagesThread latestImageThread;
 	private ArrayList<I4pProjectTranslation> bestProjects;
 	private ArrayList<I4pProjectTranslation> latestProjects;
+	private ProjectsGridAdapter bestAdapter;
 	private static ProgressDialog progress;
 	private AlertDialog languagesDialog;
 	private SharedPreferences preferences;
@@ -71,12 +76,11 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.homepage);
-		
 		// -- Initializing application
 		preferences = getPreferences(Context.MODE_PRIVATE);
 		LanguageHelper.setSharedPreferences(preferences);
@@ -89,7 +93,7 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 			bestProjects = new ArrayList<I4pProjectTranslation>();
 			latestProjects = new ArrayList<I4pProjectTranslation>();
 		}
-		ProjectsGridAdapter bestAdapter = new ProjectsGridAdapter(this, bestProjects);
+		bestAdapter = new ProjectsGridAdapter(this, bestProjects);
 		ProjectsGridAdapter latestAdapter = new ProjectsGridAdapter(this, latestProjects);
 		
 		if(Build.VERSION.SDK_INT >= 11)
@@ -113,6 +117,8 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 		
 		if(bestAdapter.getCount() == 0 || latestAdapter.getCount() == 0)
 			loadProjects();
+		else
+			launchAsynchronousImageDownload();
 		
 		// -- Initializing language chooser UI
 		int selectedLanguage = LanguageHelper.getPreferredLanguageInt();
@@ -124,6 +130,12 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 		
 		// -- Initializing shaker
 		shaker = new ShakeEventListener(this);
+	}
+	
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		launchAsynchronousImageDownload();
 	}
 	
 	@Override
@@ -178,11 +190,27 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 		latestThread.start();
 	}
 	
+	public void launchAsynchronousImageDownload() {
+		ProjectsListImageHandler handler = new ProjectsListImageHandler(bestAdapter);
+		if(bestImageThread == null || !bestImageThread.isAlive()) {
+			bestImageThread = new ProjectsListImagesThread(handler, bestProjects);
+			bestImageThread.start();
+		}
+		if(latestImageThread == null || !latestImageThread.isAlive()) {
+			latestImageThread = new ProjectsListImagesThread(handler, latestProjects);
+			latestImageThread.start();
+		}
+	}
+	
 	public void requestStopThreads() {
 		if(bestThread != null)
 			bestThread.requestStop();
 		if(latestThread != null)
 			latestThread.requestStop();
+		if(bestImageThread != null)
+			bestImageThread.requestStop();
+		if(latestImageThread != null)
+			latestImageThread.requestStop();
 	}
 
 	public void onShake() {
