@@ -1,5 +1,62 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppTheme" parent="android:Theme.Light" />
+    <style name="AppThemeWhite" parent="android:Theme.Light" />
+    <style name="AppThemeBlack" parent="android:Theme.Black" />
+    
+    <style name="blackBackground">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@android:color/black</item>
+    </style>
+    
+    <style name="colorContainer">
+        <item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:orientation">vertical</item>
+		<item name="android:padding">5dp</item>
+		<item name="android:paddingTop">0dp</item>
+		<item name="android:paddingBottom">0dp</item>
+    </style>
+    
+    <style name="colorTitle">
+        <item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:paddingLeft">5dp</item>
+    </style>
+    
+    <style name="colorLine">
+        <item name="android:layout_width">match_parent</item>
+	    <item name="android:layout_height">1dp</item>
+		<item name="android:layout_marginBottom">4dp</item>
+		<item name="android:layout_marginTop">1dp</item>
+    </style>
+    
+    <style name="colorText">
+        <item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:paddingLeft">5dp</item>
+    </style>
+    
+    <style name="questionLayout">
+        <item name="android:layout_width">match_parent</item>
+    	<item name="android:layout_height">match_parent</item>
+    	<item name="android:orientation">vertical</item>
+    	<item name="android:paddingTop">20dp</item>
+    </style>
+    
+    <style name="questionTitle" parent="blackBackground">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="questionAnswer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:paddingBottom">0dp</item>
+    </style>
 
 </resources>

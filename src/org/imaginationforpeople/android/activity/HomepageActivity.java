@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.adapter.ProjectsGridAdapter;
 import org.imaginationforpeople.android.handler.ProjectsListHandler;
+import org.imaginationforpeople.android.handler.ProjectsListImageHandler;
 import org.imaginationforpeople.android.helper.DataHelper;
 import org.imaginationforpeople.android.helper.LanguageHelper;
 import org.imaginationforpeople.android.homepage.TabHelper;
@@ -13,6 +14,8 @@ import org.imaginationforpeople.android.homepage.TabHelperHoneycomb;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.imaginationforpeople.android.shake.ShakeEventListener;
 import org.imaginationforpeople.android.shake.ShakeListener;
+import org.imaginationforpeople.android.sqlite.FavoriteSqlite;
+import org.imaginationforpeople.android.thread.ProjectsListImagesThread;
 import org.imaginationforpeople.android.thread.ProjectsListThread;
 
 import android.app.Activity;
@@ -27,15 +30,19 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class HomepageActivity extends Activity implements OnClickListener, OnCancelListener, ShakeListener {
 	private static ProjectsListThread bestThread;
 	private static ProjectsListThread latestThread;
-	private SparseArray<ProjectsGridAdapter> adapters;
+	private ProjectsListImagesThread bestImageThread;
+	private ProjectsListImagesThread latestImageThread;
+	private ArrayList<I4pProjectTranslation> bestProjects;
+	private ArrayList<I4pProjectTranslation> latestProjects;
+	private ProjectsGridAdapter bestAdapter;
 	private static ProgressDialog progress;
 	private AlertDialog languagesDialog;
 	private SharedPreferences preferences;
@@ -53,34 +60,41 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
+		case R.id.homepage_favorites:
+			FavoriteSqlite db = new FavoriteSqlite(this);
+			if(db.hasFavorites()) {
+				Intent intent = new Intent(this, FavoritesActivity.class);
+				startActivity(intent);
+			} else {
+				Toast t = Toast.makeText(this, R.string.favorites_no, Toast.LENGTH_SHORT);
+				t.show();
+			}
+			break;
 		case R.id.homepage_lang:
 			languagesDialog.show();
-			break;
-		case R.id.homepage_reload:
-			loadProjects();
 			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
-	@SuppressWarnings("unchecked")
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.homepage);
-		
 		// -- Initializing application
 		preferences = getPreferences(Context.MODE_PRIVATE);
 		LanguageHelper.setSharedPreferences(preferences);
-		LanguageHelper.setResources(getResources());
 		
 		// -- Initializing projects list
-		adapters = (SparseArray<ProjectsGridAdapter>) getLastNonConfigurationInstance();
-		if(adapters == null) {
-			adapters = new SparseArray<ProjectsGridAdapter>(); 
-			adapters.append(DataHelper.BEST_PROJECTS_KEY, new ProjectsGridAdapter(this, new ArrayList<I4pProjectTranslation>()));
-			adapters.append(DataHelper.LATEST_PROJECTS_KEY, new ProjectsGridAdapter(this, new ArrayList<I4pProjectTranslation>()));
+		if(savedInstanceState != null) {
+			bestProjects = savedInstanceState.getParcelableArrayList(DataHelper.BEST_PROJECTS_KEY);
+			latestProjects = savedInstanceState.getParcelableArrayList(DataHelper.LATEST_PROJECTS_KEY);
+		} else { 
+			bestProjects = new ArrayList<I4pProjectTranslation>();
+			latestProjects = new ArrayList<I4pProjectTranslation>();
 		}
+		bestAdapter = new ProjectsGridAdapter(this, bestProjects);
+		ProjectsGridAdapter latestAdapter = new ProjectsGridAdapter(this, latestProjects);
 		
 		if(Build.VERSION.SDK_INT >= 11)
 			tabHelper = new TabHelperHoneycomb();
@@ -88,8 +102,8 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 			tabHelper = new TabHelperEclair();
 		
 		tabHelper.setActivity(this);
-		tabHelper.setBestProjectsAdapter(adapters.get(DataHelper.BEST_PROJECTS_KEY));
-		tabHelper.setLatestProjectsAdapter(adapters.get(DataHelper.LATEST_PROJECTS_KEY));
+		tabHelper.setBestProjectsAdapter(bestAdapter);
+		tabHelper.setLatestProjectsAdapter(latestAdapter);
 		tabHelper.init();
 		
 		if(savedInstanceState != null && savedInstanceState.containsKey(TabHelper.STATE_KEY))
@@ -99,11 +113,12 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 		progress.setOnCancelListener(this);
 		progress.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getText(R.string.cancel), this);
 		
-		handler = new ProjectsListHandler(this, progress, adapters.get(DataHelper.BEST_PROJECTS_KEY), adapters.get(DataHelper.LATEST_PROJECTS_KEY));
+		handler = new ProjectsListHandler(this, progress, bestAdapter, latestAdapter);
 		
-		if(adapters.get(DataHelper.BEST_PROJECTS_KEY).getCount() == 0 || adapters.get(DataHelper.LATEST_PROJECTS_KEY).getCount() == 0) {
+		if(bestAdapter.getCount() == 0 || latestAdapter.getCount() == 0)
 			loadProjects();
-		}
+		else
+			launchAsynchronousImageDownload();
 		
 		// -- Initializing language chooser UI
 		int selectedLanguage = LanguageHelper.getPreferredLanguageInt();
@@ -118,14 +133,17 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 	}
 	
 	@Override
+	protected void onRestart() {
+		super.onRestart();
+		launchAsynchronousImageDownload();
+	}
+	
+	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		tabHelper.saveCurrentTab(outState);
+		outState.putParcelableArrayList(DataHelper.BEST_PROJECTS_KEY, bestProjects);
+		outState.putParcelableArrayList(DataHelper.LATEST_PROJECTS_KEY, latestProjects);
 		super.onSaveInstanceState(outState);
-	}
-
-	@Override
-	public Object onRetainNonConfigurationInstance() {
-		return adapters;
 	}
 
 	@Override
@@ -156,6 +174,7 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 			Editor editor = preferences.edit();
 			editor.putInt("language", which);
 			editor.commit();
+			requestStopThreads();
 			loadProjects();
 		}
 		dialog.dismiss();
@@ -172,11 +191,27 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 		latestThread.start();
 	}
 	
+	public void launchAsynchronousImageDownload() {
+		ProjectsListImageHandler handler = new ProjectsListImageHandler(bestAdapter);
+		if(bestImageThread == null || !bestImageThread.isAlive()) {
+			bestImageThread = new ProjectsListImagesThread(handler, bestProjects);
+			bestImageThread.start();
+		}
+		if(latestImageThread == null || !latestImageThread.isAlive()) {
+			latestImageThread = new ProjectsListImagesThread(handler, latestProjects);
+			latestImageThread.start();
+		}
+	}
+	
 	public void requestStopThreads() {
 		if(bestThread != null)
 			bestThread.requestStop();
 		if(latestThread != null)
 			latestThread.requestStop();
+		if(bestImageThread != null)
+			bestImageThread.requestStop();
+		if(latestImageThread != null)
+			latestImageThread.requestStop();
 	}
 
 	public void onShake() {

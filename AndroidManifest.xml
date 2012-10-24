@@ -1,14 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.imaginationforpeople.android"
-    android:versionCode="1"
-    android:versionName="1.0">
+    android:versionCode="2012102401"
+    android:versionName="0.9">
 
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="15" />
     <uses-permission android:name="android.permission.INTERNET"/>
 
-    <application android:label="@string/app_name"
+    <application android:name=".ImaginationForPeopleApplication" 
+        android:label="@string/app_name"
         android:icon="@drawable/ic_launcher"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppThemeBlack">
 		<activity
             android:name=".activity.HomepageActivity"
             android:label="@string/app_name" >
@@ -18,18 +19,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.ProjectViewActivity">
+            android:name=".activity.ProjectViewActivity"
+            android:theme="@style/AppThemeWhite">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:scheme="http"
-                    android:host="10.0.0.5"
-                    android:port="8000"
+                    android:host="imaginationforpeople.org"
                     android:pathPattern="/.*/project/.*/" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".projectview.FullImageProjectViewActivity"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".activity.FavoritesActivity"
+            android:label="@string/app_favorites"
+            android:theme="@style/AppThemeWhite" />
     </application>
 
 </manifest>

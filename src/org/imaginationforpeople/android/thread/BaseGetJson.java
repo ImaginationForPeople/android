@@ -31,6 +31,10 @@ public abstract class BaseGetJson extends Thread {
 		stop = true;
 	}
 	
+	protected boolean isStopped() {
+		return stop;
+	}
+	
 	@Override
 	public void run() {
 		Message msg;

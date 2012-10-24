@@ -3,53 +3,61 @@ package org.imaginationforpeople.android.activity;
 import java.util.List;
 
 import org.imaginationforpeople.android.R;
+import org.imaginationforpeople.android.adapter.ProjectViewAdapter;
 import org.imaginationforpeople.android.handler.ProjectViewHandler;
-import org.imaginationforpeople.android.helper.DisplayHelper;
+import org.imaginationforpeople.android.helper.DataHelper;
 import org.imaginationforpeople.android.helper.UriHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
-import org.imaginationforpeople.android.model.Question;
+import org.imaginationforpeople.android.sqlite.FavoriteSqlite;
 import org.imaginationforpeople.android.thread.ProjectViewThread;
 
+import com.viewpagerindicator.PageIndicator;
+import com.viewpagerindicator.TitlePageIndicator;
+
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.ShareActionProvider;
-import android.widget.TextView;
+import android.view.Window;
+import android.widget.Toast;
 
-public class ProjectViewActivity extends Activity {
+public class ProjectViewActivity extends FragmentActivity {
 	private boolean displayMenu = false;
 	private Intent shareIntent;
+	private FavoriteSqlite db;
+	private ProjectViewThread thread;
 	private I4pProjectTranslation project;
 	
 	@TargetApi(14)
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		if(displayMenu && menu.size() == 0) {
-			// Inflating the menu
-			MenuInflater inflater = getMenuInflater();
-			inflater.inflate(R.menu.projectview, menu);
-			
-			// Creating share intent
-			shareIntent = new Intent(Intent.ACTION_SEND);
-			shareIntent.putExtra(Intent.EXTRA_TEXT, UriHelper.getProjectUrl(project));
-			shareIntent.putExtra(Intent.EXTRA_SUBJECT, project.getTitle());
-			shareIntent.setType("text/plain");
-			
-			// Configuring share button (Android 4.0+)
-			if(Build.VERSION.SDK_INT >= 14) {
-				MenuItem share = menu.findItem(R.id.projectview_share);
-				ShareActionProvider sap = (ShareActionProvider) share.getActionProvider();
-				sap.setShareIntent(shareIntent);
+		if(displayMenu) {
+			// Inflate menu only if it hasn't been done before
+			if(menu.size() == 0) {
+				// Inflating the menu
+				MenuInflater inflater = getMenuInflater();
+				inflater.inflate(R.menu.projectview, menu);
+				
+				// Creating share intent
+				Intent prepareShareIntent = new Intent(Intent.ACTION_SEND);
+				prepareShareIntent.putExtra(Intent.EXTRA_TEXT, UriHelper.getProjectUrl(project));
+				prepareShareIntent.putExtra(Intent.EXTRA_SUBJECT, project.getTitle());
+				prepareShareIntent.setType("text/plain");
+				shareIntent = Intent.createChooser(prepareShareIntent, getResources().getText(R.string.projectview_menu_share_dialog));
 			}
+			
+			// Defining favorite state
+			MenuItem favoriteItem = menu.getItem(0);
+			if(db.isFavorite(project))
+				favoriteItem.setTitle(R.string.projectview_menu_favorites_remove);
+			else
+				favoriteItem.setTitle(R.string.projectview_menu_favorites_add);
 		}
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -65,6 +73,17 @@ public class ProjectViewActivity extends Activity {
 			} else 
 				finish();
 			break;
+		case R.id.projectview_favorite:
+			Toast t;
+			if(db.isFavorite(project)) {
+				db.removeFavorite(project);
+				t = Toast.makeText(this, getResources().getString(R.string.projectview_toast_favorites_remove, project.getTitle()), Toast.LENGTH_SHORT);
+			} else {
+				db.addFavorite(project);
+				t = Toast.makeText(this, getResources().getString(R.string.projectview_toast_favorites_add, project.getTitle()), Toast.LENGTH_SHORT);
+			}
+			t.show();
+			break;
 		case R.id.projectview_share:
 			startActivity(shareIntent);
 			break;
@@ -72,50 +91,65 @@ public class ProjectViewActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	@TargetApi(14)
+	@TargetApi(11)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.loading);
+		if(Build.VERSION.SDK_INT < 11)
+			requestWindowFeature(Window.FEATURE_NO_TITLE);
+		db = new FavoriteSqlite(this);
 		
-		if(Build.VERSION.SDK_INT >= 14)
+		if(Build.VERSION.SDK_INT >= 11)
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		
-		project = (I4pProjectTranslation) getLastNonConfigurationInstance();
-		if(project != null)
+		if(savedInstanceState != null && savedInstanceState.containsKey(DataHelper.PROJECT_VIEW_KEY)) {
+			project = savedInstanceState.getParcelable(DataHelper.PROJECT_VIEW_KEY);
 			displayProject();
-		else {
-			String projectLang;
-			String projectSlug;
+		} else {
+			setContentView(R.layout.loading);
+			ProjectViewHandler handler = new ProjectViewHandler(this);
+			
+			String projectLang = null;
+			String projectSlug = null;
 			
 			Uri data = getIntent().getData();
 			if(data != null) {
 				List<String> path = data.getPathSegments();
 				projectLang = path.get(0);
 				projectSlug = path.get(2);
-				setTitle("");
 			} else {
 				Bundle extras = getIntent().getExtras();
 				
 				if(extras.containsKey("project_title"))
 					setTitle(extras.getString("project_title"));
-				else
-					setTitle("");
 				
-				projectLang = extras.getString("project_lang");
-				projectSlug = extras.getString("project_slug");
+				if(extras.containsKey("project_id")) { // Mostly used if we want a random project
+					thread = new ProjectViewThread(handler, extras.getInt("project_id"));
+				} else {
+					projectLang = extras.getString("project_lang");
+					projectSlug = extras.getString("project_slug");
+				}
 			}
 			
-			ProjectViewHandler handler = new ProjectViewHandler(this);
-			ProjectViewThread thread = new ProjectViewThread(handler, projectLang, projectSlug);
+			if(thread == null)
+				thread = new ProjectViewThread(handler, projectLang, projectSlug);
 			
 			thread.start();
 		}
 	}
 	
 	@Override
-	public Object onRetainNonConfigurationInstance() {
-		return project;
+	protected void onSaveInstanceState(Bundle outState) {
+		if(thread == null || !thread.isAlive())
+			outState.putParcelable(DataHelper.PROJECT_VIEW_KEY, project);
+		super.onSaveInstanceState(outState);
+	}
+	
+	@Override
+	protected void onStop() {
+		if(thread != null)
+			thread.requestStop();
+		super.onStop();
 	}
 	
 	public void setProject(I4pProjectTranslation p) {
@@ -124,66 +158,19 @@ public class ProjectViewActivity extends Activity {
 	
 	@TargetApi(11)
 	public void displayProject() {
-		setContentView(R.layout.projectview_description);
+		setContentView(R.layout.projectview_root);
 		displayMenu = true;
 		if(Build.VERSION.SDK_INT >= 11)
 			invalidateOptionsMenu(); // Rebuild the menu
 		
-		if("".equals(getTitle()))
-			setTitle(project.getTitle());
+		setTitle(project.getTitle());
 		
-		TextView baseline = (TextView) findViewById(R.id.projectview_description_baseline_text);
-		baseline.setText(project.getBaseline());
+		ProjectViewAdapter adapter = new ProjectViewAdapter(getSupportFragmentManager(), project, getResources());
 		
-		if(project.getAboutSection() != null) {
-			TextView about = (TextView) findViewById(R.id.projectview_description_about_text);
-			about.setText(project.getAboutSection());
-		} else {
-			LinearLayout about = (LinearLayout) findViewById(R.id.projectview_description_about_container);
-			about.setVisibility(View.GONE);
-		}
-		
-		ProgressBar status = (ProgressBar) findViewById(R.id.projectview_description_status_progress);
-		if("IDEA".equals(project.getProject().getStatus())) {
-			status.setProgress(1);
-		} else if("BEGIN".equals(project.getProject().getStatus())) {
-			status.setProgress(2);
-		} else if("WIP".equals(project.getProject().getStatus())) {
-			status.setProgress(3);
-		} else if("END".equals(project.getProject().getStatus())) {
-			status.setProgress(4);
-		}
-		
-		if(project.getProject().getWebsite() != null) {
-			TextView website = (TextView) findViewById(R.id.projectview_description_website_text);
-			website.setText(project.getProject().getWebsite());
-		} else {
-			LinearLayout website = (LinearLayout) findViewById(R.id.projectview_description_website_container);
-			website.setVisibility(View.GONE);
-		}
-		
-		if(project.getCalltoSection() != null) {
-			TextView callto = (TextView) findViewById(R.id.projectview_description_callto_text);
-			callto.setText(project.getCalltoSection());
-		} else {
-			LinearLayout callto = (LinearLayout) findViewById(R.id.projectview_description_callto_container);
-			callto.setVisibility(View.GONE);
-		}
-		
-		LinearLayout questions = (LinearLayout) findViewById(R.id.projectview_description_questions_container);
-		TextView questionView, answerView;
-		for(Question question : project.getProject().getQuestions()) {
-			if(question.getAnswer() != null) {
-				questionView = new TextView(this);
-				questionView.setText(question.getQuestion());
-				
-				answerView = new TextView(this);
-				answerView.setText(question.getAnswer());
-				answerView.setPadding(DisplayHelper.dpToPx(10), 0, 0, 0);
-				
-				questions.addView(questionView);
-				questions.addView(answerView);
-			}
-		}
+		ViewPager pager = (ViewPager)findViewById(R.id.pager);
+        pager.setAdapter(adapter);
+
+        PageIndicator indicator = (TitlePageIndicator)findViewById(R.id.indicator);
+        indicator.setViewPager(pager);
 	}
 }

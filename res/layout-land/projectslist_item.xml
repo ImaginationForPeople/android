@@ -5,13 +5,23 @@
     android:minHeight="130dp"
     android:id="@+id/projectslist_item_layout">
     
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
+        android:id="@+id/projectslist_item_loading" />
+    
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="130dp"
         android:scaleType="centerCrop"
         android:src="@drawable/project_nophoto"
         android:contentDescription="@string/projectslist_item_image_description"
-        android:id="@+id/projectslist_item_image" />
+        android:id="@+id/projectslist_item_image"
+        android:layout_alignParentTop="true" />
     
     <TextView
         android:layout_width="match_parent"
