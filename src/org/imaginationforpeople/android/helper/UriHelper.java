@@ -3,7 +3,7 @@ package org.imaginationforpeople.android.helper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 
 public class UriHelper extends BaseHelper {
-	public final static String BASE_URL = "http://staging.imaginationforpeople.org";
+	public final static String BASE_URL = "http://imaginationforpeople.org";
 	public final static String API_BASE_URL = BASE_URL + "/api/v1";
 	
 	// Public class with private constructor prevent instantiations
