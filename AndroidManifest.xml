@@ -36,7 +36,8 @@
             android:label="@string/app_name" />
         <activity
             android:name=".activity.FavoritesActivity"
-            android:label="@string/app_favorites" />
+            android:label="@string/app_favorites"
+            android:theme="@style/AppThemeWhite" />
     </application>
 
 </manifest>
