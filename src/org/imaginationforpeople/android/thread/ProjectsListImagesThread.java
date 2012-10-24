@@ -32,8 +32,6 @@ public class ProjectsListImagesThread extends Thread {
 	@Override
 	public void run() {
 		for(I4pProjectTranslation project : projects) {
-			if(stop)
-				return;
 			if(project.getProject().getPictures().size() > 0 && !DataHelper.checkThumbFile(project.getProject().getPictures().get(0).getThumbUrl())) {
 				HttpClient httpClient = new DefaultHttpClient();
 				HttpGet httpGet = new HttpGet();
@@ -57,6 +55,8 @@ public class ProjectsListImagesThread extends Thread {
 					e.printStackTrace();
 				}
 			}
+			if(stop)
+				return;
 		}
 	}
 	

@@ -174,6 +174,7 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 			Editor editor = preferences.edit();
 			editor.putInt("language", which);
 			editor.commit();
+			requestStopThreads();
 			loadProjects();
 		}
 		dialog.dismiss();
