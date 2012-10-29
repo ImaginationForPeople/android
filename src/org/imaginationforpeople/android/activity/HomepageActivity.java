@@ -18,9 +18,12 @@ import org.imaginationforpeople.android.sqlite.FavoriteSqlite;
 import org.imaginationforpeople.android.thread.ProjectsListImagesThread;
 import org.imaginationforpeople.android.thread.ProjectsListThread;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,6 +36,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 public class HomepageActivity extends Activity implements OnClickListener, OnCancelListener, ShakeListener {
@@ -50,10 +54,17 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 	private TabHelper tabHelper;
 	private ShakeEventListener shaker;
 	
+	@TargetApi(11)
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.projectslist, menu);
+		
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		SearchView searchView = (SearchView) menu.findItem(R.id.homepage_search).getActionView();
+		ComponentName component = new ComponentName(this, SearchActivity.class);
+		searchView.setSearchableInfo(searchManager.getSearchableInfo(component));
+		searchView.setIconifiedByDefault(true);
 		return super.onCreateOptionsMenu(menu);
 	}
 	
@@ -132,9 +143,11 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 		shaker = new ShakeEventListener(this);
 	}
 	
+	@TargetApi(11)
 	@Override
 	protected void onRestart() {
 		super.onRestart();
+		invalidateOptionsMenu();
 		launchAsynchronousImageDownload();
 	}
 	

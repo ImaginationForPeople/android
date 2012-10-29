@@ -1,5 +1,7 @@
 package org.imaginationforpeople.android.helper;
 
+import java.net.URLEncoder;
+
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 
 public class UriHelper extends BaseHelper {
@@ -31,5 +33,9 @@ public class UriHelper extends BaseHelper {
 	
 	public static String getProjectUrl(I4pProjectTranslation project) {
 		return BASE_URL + "/" + project.getLanguageCode() + "/project/" + project.getSlug() + "/";
+	}
+	
+	public static String getFullSearchUrl(String search) {
+		return API_BASE_URL + "/project/search/" + URLEncoder.encode(search) + "/?format=json&lang=" + LanguageHelper.getPreferredLanguageCode();
 	}
 }
