@@ -52,6 +52,7 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 	private ProjectsListHandler handler;
 	private TabHelper tabHelper;
 	private ShakeEventListener shaker;
+	private SearchView searchView;
 	
 	@TargetApi(11)
 	@Override
@@ -61,7 +62,7 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 		
 		if(Build.VERSION.SDK_INT >= 11) {
 			SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-			SearchView searchView = (SearchView) menu.findItem(R.id.homepage_search).getActionView();
+			searchView = (SearchView) menu.findItem(R.id.homepage_search).getActionView();
 			searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 			searchView.setIconifiedByDefault(true);
 		}
@@ -69,6 +70,7 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 		return super.onCreateOptionsMenu(menu);
 	}
 	
+	@TargetApi(11)
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
@@ -151,8 +153,11 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		if(Build.VERSION.SDK_INT >= 11)
-			invalidateOptionsMenu();
+		if(Build.VERSION.SDK_INT >= 11) {
+			// Calling twice: first empty text field, second iconify the view
+			searchView.setIconified(true);
+			searchView.setIconified(true);
+		}
 		launchAsynchronousImageDownload();
 	}
 	
