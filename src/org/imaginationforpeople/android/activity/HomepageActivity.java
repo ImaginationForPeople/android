@@ -70,7 +70,6 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 		return super.onCreateOptionsMenu(menu);
 	}
 	
-	@TargetApi(11)
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
