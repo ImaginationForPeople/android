@@ -23,7 +23,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -60,17 +59,22 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.projectslist, menu);
 		
-		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		SearchView searchView = (SearchView) menu.findItem(R.id.homepage_search).getActionView();
-		ComponentName component = new ComponentName(this, SearchActivity.class);
-		searchView.setSearchableInfo(searchManager.getSearchableInfo(component));
-		searchView.setIconifiedByDefault(true);
+		if(Build.VERSION.SDK_INT >= 11) {
+			SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+			SearchView searchView = (SearchView) menu.findItem(R.id.homepage_search).getActionView();
+			searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+			searchView.setIconifiedByDefault(true);
+		}
+		
 		return super.onCreateOptionsMenu(menu);
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
+		case R.id.homepage_search:
+			onSearchRequested();
+			break;
 		case R.id.homepage_favorites:
 			FavoriteSqlite db = new FavoriteSqlite(this);
 			if(db.hasFavorites()) {
@@ -147,7 +151,8 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		invalidateOptionsMenu();
+		if(Build.VERSION.SDK_INT >= 11)
+			invalidateOptionsMenu();
 		launchAsynchronousImageDownload();
 	}
 	

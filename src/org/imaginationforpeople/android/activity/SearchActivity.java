@@ -34,25 +34,36 @@ public class SearchActivity extends Activity implements OnItemClickListener {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.search, menu);
 		
-		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		SearchView searchView = (SearchView) menu.findItem(R.id.search_search).getActionView();
-		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-		searchView.setIconifiedByDefault(true);
-		searchView.setQuery(search, false);
+		if(Build.VERSION.SDK_INT >= 11) {
+			SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+			SearchView searchView = (SearchView) menu.findItem(R.id.search_search).getActionView();
+			searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+			searchView.setIconifiedByDefault(true);
+			searchView.setQuery(search, false);
+		}
+		
 		return super.onCreateOptionsMenu(menu);
 	}
 	
-	@TargetApi(11)
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch(item.getItemId()) {
 		case android.R.id.home:
 			finish();
 			break;
+		case R.id.search_search:
+			onSearchRequested();
+			break;
 		}
 		return super.onMenuItemSelected(featureId, item);
 	}
 	
+	@Override
+	public boolean onSearchRequested() {
+		startSearch(search, false, null, false);
+		return false;
+	}
+
 	@TargetApi(11)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +91,8 @@ public class SearchActivity extends Activity implements OnItemClickListener {
 		super.onNewIntent(intent);
 		search = intent.getStringExtra(SearchManager.QUERY);
 		setTitle(getResources().getString(R.string.search_searching, search));
-		invalidateOptionsMenu();
+		if(Build.VERSION.SDK_INT >= 11)
+			invalidateOptionsMenu();
 		handleSearch();
 	}
 	
