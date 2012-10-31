@@ -35,6 +35,10 @@ public class UriHelper extends BaseHelper {
 		return BASE_URL + "/" + project.getLanguageCode() + "/project/" + project.getSlug() + "/";
 	}
 	
+	public static String getQuickSearchUrl(String search) {
+		return API_BASE_URL + "/project/quicksearch/" + URLEncoder.encode(search) + "/?format=json&lang=" + LanguageHelper.getPreferredLanguageCode();
+	}
+	
 	public static String getFullSearchUrl(String search) {
 		return API_BASE_URL + "/project/search/" + URLEncoder.encode(search) + "/?format=json&lang=" + LanguageHelper.getPreferredLanguageCode();
 	}

@@ -68,32 +68,49 @@ public class SearchActivity extends Activity implements OnItemClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if(savedInstanceState != null)
-			search = savedInstanceState.getString("search");
-		else
-			search = getIntent().getStringExtra(SearchManager.QUERY);
-		setTitle(getResources().getString(R.string.search_searching, search));
-		
-		if(Build.VERSION.SDK_INT >= 11)
-			getActionBar().setDisplayHomeAsUpEnabled(true);
-		
-		if(savedInstanceState != null)
-			projects = savedInstanceState.getParcelableArrayList("results");
-		if(projects == null || projects.size() == 0)
-			handleSearch();
-		else
-			displayResults();
+		if(Intent.ACTION_VIEW.equals(getIntent().getAction())) {
+			openProject();
+			finish();
+		} else {
+			if(savedInstanceState != null)
+				search = savedInstanceState.getString("search");
+			else
+				search = getIntent().getStringExtra(SearchManager.QUERY);
+			setTitle(getResources().getString(R.string.search_searching, search));
+			
+			if(Build.VERSION.SDK_INT >= 11)
+				getActionBar().setDisplayHomeAsUpEnabled(true);
+			
+			if(savedInstanceState != null)
+				projects = savedInstanceState.getParcelableArrayList("results");
+			if(projects == null || projects.size() == 0)
+				handleSearch();
+			else
+				displayResults();
+		}
 	}
 	
 	@TargetApi(11)
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		search = intent.getStringExtra(SearchManager.QUERY);
-		setTitle(getResources().getString(R.string.search_searching, search));
-		if(Build.VERSION.SDK_INT >= 11)
-			invalidateOptionsMenu();
-		handleSearch();
+		setIntent(intent);
+		if(Intent.ACTION_VIEW.equals(intent.getAction()))
+			openProject();
+		else {
+			search = intent.getStringExtra(SearchManager.QUERY);
+			setTitle(getResources().getString(R.string.search_searching, search));
+			if(Build.VERSION.SDK_INT >= 11)
+				invalidateOptionsMenu();
+			handleSearch();
+		}
+	}
+	
+	private void openProject() {
+		Intent intent = new Intent(this, ProjectViewActivity.class);
+		intent.putExtra("project_title", getIntent().getStringExtra(SearchManager.EXTRA_DATA_KEY));
+		intent.putExtra("project_id", Integer.parseInt(getIntent().getDataString()));
+		startActivity(intent);
 	}
 	
 	private void handleSearch() {
