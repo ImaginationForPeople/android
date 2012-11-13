@@ -1,5 +1,6 @@
 package org.imaginationforpeople.android.helper;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
@@ -36,10 +37,20 @@ public class UriHelper extends BaseHelper {
 	}
 	
 	public static String getQuickSearchUrl(String search) {
-		return API_BASE_URL + "/project/quicksearch/" + URLEncoder.encode(search) + "/?format=json&lang=" + LanguageHelper.getPreferredLanguageCode();
+		try {
+			return API_BASE_URL + "/search/project/?q=" + URLEncoder.encode(search, "UTF-8") + "&format=json&limit=3&lang=" + LanguageHelper.getPreferredLanguageCode();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return API_BASE_URL + "/search/project/?q=" + search + "&format=json&limit=3&lang=" + LanguageHelper.getPreferredLanguageCode();
+		}
 	}
 	
 	public static String getFullSearchUrl(String search) {
-		return API_BASE_URL + "/project/search/" + URLEncoder.encode(search) + "/?format=json&lang=" + LanguageHelper.getPreferredLanguageCode();
+		try {
+			return API_BASE_URL + "/search/project/?q=" + URLEncoder.encode(search, "UTF-8") + "&format=json&lang=" + LanguageHelper.getPreferredLanguageCode();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return API_BASE_URL + "/search/project/?q=" + search + "&format=json&lang=" + LanguageHelper.getPreferredLanguageCode();
+		}
 	}
 }
