@@ -137,7 +137,10 @@ public class HomepageActivity extends Activity implements OnClickListener,
 		
 		// -- Initializing shaker
 		shaker = new ShakeEventListener(this);
-		animation = new ShakeAnimation(findViewById(R.id.homepage_shake), this);
+		if(Build.VERSION.SDK_INT >= 12)
+			animation = new ShakeAnimation(findViewById(R.id.homepage_shake), this);
+		else
+			animation = new ShakeAnimation(this, findViewById(R.id.homepage_shake), this);
 	}
 	
 	@Override

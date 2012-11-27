@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/black"
-    android:id="@android:id/tabhost">
-    <LinearLayout 
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TabWidget 
-            android:id="@android:id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <FrameLayout 
-            android:id="@android:id/tabcontent"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-           	android:layout_weight="1" />
-	</LinearLayout>
-</TabHost>
+    android:layout_height="match_parent">
+	<TabHost
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:background="@android:color/black"
+	    android:id="@android:id/tabhost">
+	    <LinearLayout 
+	        android:orientation="vertical"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent">
+	        <TabWidget 
+	            android:id="@android:id/tabs"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content" />
+	        <FrameLayout 
+	            android:id="@android:id/tabcontent"
+	            android:layout_width="match_parent"
+	            android:layout_height="0dp"
+	           	android:layout_weight="1" />
+		</LinearLayout>
+	</TabHost>
+	<ImageView
+        style="@style/homepage_shake_style"
+       	android:id="@+id/homepage_shake"
+        android:src="@drawable/shake_phone"
+        android:contentDescription="@string/homepage_shake_description" />
+</FrameLayout>
