@@ -58,5 +58,14 @@
         <item name="android:padding">10dp</item>
         <item name="android:paddingBottom">0dp</item>
     </style>
-
+	
+    <style name="homepage_shake_style">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:layout_gravity">bottom|right</item>
+		<item name="android:visibility">gone</item>
+       	<item name="android:layout_marginBottom">16dp</item>
+       	<item name="android:layout_marginRight">16dp</item>
+       	<item name="android:clickable">true</item>	 
+    </style>
 </resources>

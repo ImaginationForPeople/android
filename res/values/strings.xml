@@ -7,6 +7,7 @@
     <string name="cant_be_undone">This action can\'t be undone!</string>
     
     <!-- Homepage keys -->
+    <string name="homepage_shake_description">Shake it</string>
     <string name="homepage_menu_favorites">Favorites</string>
     <string name="homepage_menu_language">Change language</string>
     <string name="homepage_spinner_prompt">Choose a language</string>
@@ -23,6 +24,11 @@
     </string-array>
     <string name="homepage_tab_bestof">To discover</string>
     <string name="homepage_tab_latest">Latest projects</string>
+    
+    <!-- Shake dialog keys -->
+    <string name="shake_dialog_title">Just shake it!</string>
+    <string name="shake_dialog_message">Shake your device just a bit stronger and we\'ll show you a random project.\nDiscovery of new projects is now fun!</string>
+    <string name="shake_dialog_checkbox">Never show me this again</string>
     
     <!-- ProjectsList keys -->
     <string name="projectslist_loading">Loading projects…</string>

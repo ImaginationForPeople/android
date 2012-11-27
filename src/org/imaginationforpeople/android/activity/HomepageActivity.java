@@ -12,8 +12,9 @@ import org.imaginationforpeople.android.homepage.TabHelper;
 import org.imaginationforpeople.android.homepage.TabHelperEclair;
 import org.imaginationforpeople.android.homepage.TabHelperHoneycomb;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
+import org.imaginationforpeople.android.shake.ShakeAnimation;
+import org.imaginationforpeople.android.shake.ShakeAnimation.AnimationListener;
 import org.imaginationforpeople.android.shake.ShakeEventListener;
-import org.imaginationforpeople.android.shake.ShakeListener;
 import org.imaginationforpeople.android.sqlite.FavoriteSqlite;
 import org.imaginationforpeople.android.thread.ProjectsListImagesThread;
 import org.imaginationforpeople.android.thread.ProjectsListThread;
@@ -33,9 +34,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Toast;
 
-public class HomepageActivity extends Activity implements OnClickListener, OnCancelListener, ShakeListener {
+public class HomepageActivity extends Activity implements OnClickListener,
+		OnCancelListener, ShakeEventListener.ShakeListener, AnimationListener, OnCheckedChangeListener {
 	private static ProjectsListThread bestThread;
 	private static ProjectsListThread latestThread;
 	private ProjectsListImagesThread bestImageThread;
@@ -49,6 +55,7 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 	private ProjectsListHandler handler;
 	private TabHelper tabHelper;
 	private ShakeEventListener shaker;
+	private ShakeAnimation animation;
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -130,6 +137,7 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 		
 		// -- Initializing shaker
 		shaker = new ShakeEventListener(this);
+		animation = new ShakeAnimation(findViewById(R.id.homepage_shake), this);
 	}
 	
 	@Override
@@ -218,5 +226,35 @@ public class HomepageActivity extends Activity implements OnClickListener, OnCan
 		Intent intent = new Intent(this, ProjectViewActivity.class);
 		intent.putExtra("project_id", DataHelper.PROJECT_RANDOM);
 		startActivity(intent);
+	}
+	
+	public void onLittleShake() {
+		if(
+			!bestThread.isAlive()
+		 && !latestThread.isAlive()
+		 && preferences.getBoolean("shake_hint", true)
+		)
+			animation.showAnimation();
+	}
+	
+	public void onClick() {
+		animation.hideAnimation();
+		
+		View shakeLayout = getLayoutInflater().inflate(R.layout.shake_dialog, null);
+		CheckBox shakeCheckbox = (CheckBox) shakeLayout.findViewById(R.id.shake_checkbox);
+		shakeCheckbox.setOnCheckedChangeListener(this);
+		
+		AlertDialog.Builder shakeAlert = new AlertDialog.Builder(this);
+		shakeAlert.setIcon(android.R.drawable.ic_dialog_info);
+		shakeAlert.setTitle(R.string.shake_dialog_title);
+		shakeAlert.setView(shakeLayout);
+		shakeAlert.setPositiveButton(android.R.string.ok, null);
+		shakeAlert.create().show();
+	}
+	
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		Editor editor = preferences.edit();
+		editor.putBoolean("shake_hint", !isChecked);
+		editor.commit();
 	}
 }
