@@ -10,7 +10,8 @@
     <string name="homepage_shake_description">Shake it</string>
     <string name="homepage_menu_favorites">Favorites</string>
     <string name="homepage_menu_language">Change language</string>
-    <string name="homepage_spinner_prompt">Choose a language</string>
+    <string name="homepage_spinner_language_prompt">Choose a language</string>
+    <string name="homepage_spinner_content_prompt">Select projects to display</string>
     <string-array name="homepage_spinner_languages">
         <item>Chinese</item>
         <item>English</item>
@@ -22,8 +23,10 @@
         <item>Russian</item>
         <item>Spanish</item>
     </string-array>
-    <string name="homepage_tab_bestof">To discover</string>
-    <string name="homepage_tab_latest">Latest projects</string>
+    <string-array name="homepage_spinner_dropdown">
+        <item>To Discover</item>
+        <item>Latest Projects</item>
+    </string-array>
     
     <!-- Shake dialog keys -->
     <string name="shake_dialog_title">Just shake it!</string>

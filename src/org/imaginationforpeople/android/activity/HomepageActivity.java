@@ -8,9 +8,9 @@ import org.imaginationforpeople.android.handler.ProjectsListHandler;
 import org.imaginationforpeople.android.handler.ProjectsListImageHandler;
 import org.imaginationforpeople.android.helper.DataHelper;
 import org.imaginationforpeople.android.helper.LanguageHelper;
-import org.imaginationforpeople.android.homepage.TabHelper;
-import org.imaginationforpeople.android.homepage.TabHelperEclair;
-import org.imaginationforpeople.android.homepage.TabHelperHoneycomb;
+import org.imaginationforpeople.android.homepage.SpinnerHelper;
+import org.imaginationforpeople.android.homepage.SpinnerHelperEclair;
+import org.imaginationforpeople.android.homepage.SpinnerHelperHoneycomb;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.imaginationforpeople.android.shake.ShakeAnimation;
 import org.imaginationforpeople.android.shake.ShakeAnimation.AnimationListener;
@@ -19,6 +19,7 @@ import org.imaginationforpeople.android.sqlite.FavoriteSqlite;
 import org.imaginationforpeople.android.thread.ProjectsListImagesThread;
 import org.imaginationforpeople.android.thread.ProjectsListThread;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -42,18 +43,16 @@ import android.widget.Toast;
 
 public class HomepageActivity extends Activity implements OnClickListener,
 		OnCancelListener, ShakeEventListener.ShakeListener, AnimationListener, OnCheckedChangeListener {
-	private static ProjectsListThread bestThread;
-	private static ProjectsListThread latestThread;
-	private ProjectsListImagesThread bestImageThread;
-	private ProjectsListImagesThread latestImageThread;
-	private ArrayList<I4pProjectTranslation> bestProjects;
-	private ArrayList<I4pProjectTranslation> latestProjects;
-	private ProjectsGridAdapter bestAdapter;
+	private static ProjectsListThread[] threads = new ProjectsListThread[DataHelper.CONTENT_NUMBER];
+	private ProjectsListImagesThread[] imageThreads = new ProjectsListImagesThread[DataHelper.CONTENT_NUMBER];
+	private ArrayList<ArrayList<I4pProjectTranslation>> projects = new ArrayList<ArrayList<I4pProjectTranslation>>(DataHelper.CONTENT_NUMBER);
+	private ProjectsGridAdapter adapters[] = new ProjectsGridAdapter[DataHelper.CONTENT_NUMBER];
 	private static ProgressDialog progress;
 	private AlertDialog languagesDialog;
 	private SharedPreferences preferences;
 	private ProjectsListHandler handler;
-	private TabHelper tabHelper;
+	private SpinnerHelper spinnerHelper;
+	private AlertDialog contentDialog;
 	private ShakeEventListener shaker;
 	private ShakeAnimation animation;
 	
@@ -67,6 +66,13 @@ public class HomepageActivity extends Activity implements OnClickListener,
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
+		case R.id.homepage_content:
+			AlertDialog.Builder contentBuilder = new AlertDialog.Builder(this);
+			contentBuilder.setTitle(R.string.homepage_spinner_content_prompt);
+			contentBuilder.setSingleChoiceItems(R.array.homepage_spinner_dropdown, spinnerHelper.getCurrentSelection()                                                                                                                                      , spinnerHelper);
+			contentDialog = contentBuilder.create();
+			contentDialog.show();
+			break;
 		case R.id.homepage_favorites:
 			FavoriteSqlite db = new FavoriteSqlite(this);
 			if(db.hasFavorites()) {
@@ -84,6 +90,7 @@ public class HomepageActivity extends Activity implements OnClickListener,
 		return super.onOptionsItemSelected(item);
 	}
 	
+	@TargetApi(11)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -93,36 +100,40 @@ public class HomepageActivity extends Activity implements OnClickListener,
 		LanguageHelper.setSharedPreferences(preferences);
 		
 		// -- Initializing projects list
-		if(savedInstanceState != null) {
-			bestProjects = savedInstanceState.getParcelableArrayList(DataHelper.BEST_PROJECTS_KEY);
-			latestProjects = savedInstanceState.getParcelableArrayList(DataHelper.LATEST_PROJECTS_KEY);
-		} else { 
-			bestProjects = new ArrayList<I4pProjectTranslation>();
-			latestProjects = new ArrayList<I4pProjectTranslation>();
+		if(savedInstanceState != null)
+			for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++) {
+				ArrayList<I4pProjectTranslation> project = savedInstanceState.getParcelableArrayList("projects_" + String.valueOf(i)); 
+				projects.add(i, project); 
+			}
+		else
+			for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++) {
+				projects.add(i, new ArrayList<I4pProjectTranslation>());
+			}
+		
+		adapters = new ProjectsGridAdapter[DataHelper.CONTENT_NUMBER];
+		for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++) {
+			adapters[i] = new ProjectsGridAdapter(this, projects.get(i));
 		}
-		bestAdapter = new ProjectsGridAdapter(this, bestProjects);
-		ProjectsGridAdapter latestAdapter = new ProjectsGridAdapter(this, latestProjects);
 		
 		if(Build.VERSION.SDK_INT >= 11)
-			tabHelper = new TabHelperHoneycomb();
+			spinnerHelper = new SpinnerHelperHoneycomb();
 		else
-			tabHelper = new TabHelperEclair();
+			spinnerHelper = new SpinnerHelperEclair();
 		
-		tabHelper.setActivity(this);
-		tabHelper.setBestProjectsAdapter(bestAdapter);
-		tabHelper.setLatestProjectsAdapter(latestAdapter);
-		tabHelper.init();
+		spinnerHelper.setActivity(this);
+		spinnerHelper.setAdapters(adapters);
+		spinnerHelper.init();
 		
-		if(savedInstanceState != null && savedInstanceState.containsKey(TabHelper.STATE_KEY))
-			tabHelper.restoreCurrentTab(savedInstanceState.getInt(TabHelper.STATE_KEY));
+		if(savedInstanceState != null && savedInstanceState.containsKey(SpinnerHelper.STATE_KEY))
+			spinnerHelper.restoreCurrentSelection(savedInstanceState.getInt(SpinnerHelper.STATE_KEY));
 		
 		progress = new ProgressDialog(this);
 		progress.setOnCancelListener(this);
 		progress.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getText(R.string.cancel), this);
 		
-		handler = new ProjectsListHandler(this, progress, bestAdapter, latestAdapter);
+		handler = new ProjectsListHandler(this, progress, adapters);
 		
-		if(bestAdapter.getCount() == 0 || latestAdapter.getCount() == 0)
+		if(adapters[0].getCount() == 0 || adapters[1].getCount() == 0)
 			loadProjects();
 		else
 			launchAsynchronousImageDownload();
@@ -131,7 +142,7 @@ public class HomepageActivity extends Activity implements OnClickListener,
 		int selectedLanguage = LanguageHelper.getPreferredLanguageInt();
 		
 		AlertDialog.Builder languagesBuilder = new AlertDialog.Builder(this);
-		languagesBuilder.setTitle(R.string.homepage_spinner_prompt);
+		languagesBuilder.setTitle(R.string.homepage_spinner_language_prompt);
 		languagesBuilder.setSingleChoiceItems(R.array.homepage_spinner_languages, selectedLanguage, this);
 		languagesDialog = languagesBuilder.create();
 		
@@ -151,9 +162,9 @@ public class HomepageActivity extends Activity implements OnClickListener,
 	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		tabHelper.saveCurrentTab(outState);
-		outState.putParcelableArrayList(DataHelper.BEST_PROJECTS_KEY, bestProjects);
-		outState.putParcelableArrayList(DataHelper.LATEST_PROJECTS_KEY, latestProjects);
+		spinnerHelper.saveCurrentSelection(outState);
+		for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++)
+			outState.putParcelableArrayList("projects_" + String.valueOf(i), projects.get(i));
 		super.onSaveInstanceState(outState);
 	}
 
@@ -196,33 +207,31 @@ public class HomepageActivity extends Activity implements OnClickListener,
 	}
 	
 	public void loadProjects() {
-		bestThread = new ProjectsListThread(handler, ProjectsListHandler.BEST_PROJECTS);
-		latestThread = new ProjectsListThread(handler, ProjectsListHandler.LATEST_PROJECTS);
-		bestThread.start();
-		latestThread.start();
+		threads[0] = new ProjectsListThread(handler, ProjectsListHandler.BEST_PROJECTS);
+		threads[1] = new ProjectsListThread(handler, ProjectsListHandler.LATEST_PROJECTS);
+		threads[0].start();
+		threads[1].start();
 	}
 	
 	public void launchAsynchronousImageDownload() {
-		ProjectsListImageHandler handler = new ProjectsListImageHandler(bestAdapter);
-		if(bestImageThread == null || !bestImageThread.isAlive()) {
-			bestImageThread = new ProjectsListImagesThread(handler, bestProjects);
-			bestImageThread.start();
+		ProjectsListImageHandler handler = new ProjectsListImageHandler(adapters[DataHelper.CONTENT_BEST]);
+		if(imageThreads[0] == null || !imageThreads[0].isAlive()) {
+			imageThreads[0] = new ProjectsListImagesThread(handler, projects.get(0));
+			imageThreads[0].start();
 		}
-		if(latestImageThread == null || !latestImageThread.isAlive()) {
-			latestImageThread = new ProjectsListImagesThread(handler, latestProjects);
-			latestImageThread.start();
+		if(imageThreads[1] == null || !imageThreads[1].isAlive()) {
+			imageThreads[1] = new ProjectsListImagesThread(handler, projects.get(1));
+			imageThreads[1].start();
 		}
 	}
 	
 	public void requestStopThreads() {
-		if(bestThread != null)
-			bestThread.requestStop();
-		if(latestThread != null)
-			latestThread.requestStop();
-		if(bestImageThread != null)
-			bestImageThread.requestStop();
-		if(latestImageThread != null)
-			latestImageThread.requestStop();
+		for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++) {
+			if(threads[i] != null)
+				threads[i].requestStop();
+			if(imageThreads[i] != null)
+				imageThreads[i].requestStop();
+		}
 	}
 
 	public void onShake() {
@@ -233,8 +242,8 @@ public class HomepageActivity extends Activity implements OnClickListener,
 	
 	public void onLittleShake() {
 		if(
-			!bestThread.isAlive()
-		 && !latestThread.isAlive()
+			!threads[0].isAlive()
+		 && !threads[1].isAlive()
 		 && preferences.getBoolean("shake_hint", true)
 		)
 			animation.showAnimation();

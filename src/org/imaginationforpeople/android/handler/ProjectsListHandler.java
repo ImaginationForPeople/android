@@ -5,6 +5,7 @@ import java.util.List;
 import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.activity.HomepageActivity;
 import org.imaginationforpeople.android.adapter.ProjectsGridAdapter;
+import org.imaginationforpeople.android.helper.DataHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 
 import android.app.AlertDialog;
@@ -21,14 +22,12 @@ public class ProjectsListHandler extends BaseHandler implements OnClickListener,
 	
 	private HomepageActivity activity;
 	private ProgressDialog progress;
-	private ProjectsGridAdapter bestAdapter;
-	private ProjectsGridAdapter latestAdapter;
+	private ProjectsGridAdapter[] adapters;
 	
-	public ProjectsListHandler(HomepageActivity ac, ProgressDialog pd, ProjectsGridAdapter ba, ProjectsGridAdapter la) {
+	public ProjectsListHandler(HomepageActivity ac, ProgressDialog pd, ProjectsGridAdapter[] a) {
 		activity = ac;
 		progress = pd;
-		bestAdapter = ba;
-		latestAdapter = la;
+		adapters = a;
 	}
 	
 	@Override
@@ -39,10 +38,10 @@ public class ProjectsListHandler extends BaseHandler implements OnClickListener,
 		
 		switch(arg) {
 		case BEST_PROJECTS:
-			bestAdapter.clearProjects();
+			adapters[DataHelper.CONTENT_BEST].clearProjects();
 			break;
 		case LATEST_PROJECTS:
-			latestAdapter.clearProjects();
+			adapters[DataHelper.CONTENT_LATEST].clearProjects();
 		}
 	}
 	
@@ -53,10 +52,10 @@ public class ProjectsListHandler extends BaseHandler implements OnClickListener,
 		ProjectsGridAdapter adapter = null;
 		switch(arg) {
 		case BEST_PROJECTS:
-			adapter = bestAdapter;
+			adapter = adapters[DataHelper.CONTENT_BEST];
 			break;
 		case LATEST_PROJECTS:
-			adapter = latestAdapter;
+			adapter = adapters[DataHelper.CONTENT_LATEST];
 		}
 		for(I4pProjectTranslation project : projects) {
 			adapter.addProject(project);
