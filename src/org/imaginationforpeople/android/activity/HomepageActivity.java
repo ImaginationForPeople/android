@@ -189,6 +189,10 @@ public class HomepageActivity extends Activity implements OnClickListener,
 	}
 	
 	public void changeContent(int content) {
+		// Setting title on Android 2.x
+		if(Build.VERSION.SDK_INT < 11)
+			setTitle(getResources().getStringArray(R.array.homepage_spinner_dropdown)[content]);
+		
 		requestStopThreads();
 		spinnerHelper.displayContent(adapters[content]);
 		if(projects.get(content).size() == 0) {

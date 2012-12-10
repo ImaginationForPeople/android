@@ -1,20 +1,17 @@
 package org.imaginationforpeople.android.homepage;
 
-import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.adapter.ProjectsGridAdapter;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.LinearLayout;
 
 public class SpinnerHelperEclair extends SpinnerHelper {
 	private int selectedContent = 0;
 
 	@Override
 	public void init() {
-		generateView(0);
+		super.init();
+		activity.changeContent(0);
 	}
 
 	@Override
@@ -24,7 +21,8 @@ public class SpinnerHelperEclair extends SpinnerHelper {
 
 	@Override
 	public void restoreCurrentSelection(int position) {
-		generateView(position);
+		activity.changeContent(position);
+		selectedContent = position;
 	}
 	
 	@Override
@@ -34,25 +32,18 @@ public class SpinnerHelperEclair extends SpinnerHelper {
 
 	public void onClick(DialogInterface dialog, int which) {
 		dialog.dismiss();
-		generateView(which);
+		activity.changeContent(which);
 		selectedContent = which;
-	}
-	
-	private void generateView(int id) {
-		LinearLayout content = (LinearLayout) activity.findViewById(R.id.homepage_content);
-		LayoutInflater inflater = activity.getLayoutInflater();
-		View contentView = inflater.inflate(R.layout.projectslist, null);
-		//GridView grid = (GridView) contentView.findViewById(android.R.id.list);
-		//grid.setAdapter(adapters[id]);
-		content.removeAllViews();
-		content.addView(contentView);
-		// Displaying content type in the application title
-		activity.setTitle(activity.getResources().getStringArray(R.array.homepage_spinner_dropdown)[id]);
 	}
 
 	@Override
 	public void displayContent(ProjectsGridAdapter adapter) {
-		// TODO Auto-generated method stub
-		
+		if(!stopped) {
+			ProjectsTabEclair content = new ProjectsTabEclair(activity);
+			content.setAdapter(adapter);
+			content.display();
+			
+			activity.loadImages(adapter);
+		}
 	}
 }
