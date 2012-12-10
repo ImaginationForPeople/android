@@ -37,6 +37,9 @@ public abstract class BaseGetJson extends Thread {
 	
 	@Override
 	public void run() {
+		if(stop)
+			return;
+		
 		Message msg;
 		msg = handler.obtainMessage();
 		msg.arg1 = BaseHandler.STATUS_START;
@@ -55,6 +58,8 @@ public abstract class BaseGetJson extends Thread {
 			msg.arg1 = BaseHandler.STATUS_SUCCESS;
 			msg.arg2 = arg;
 			msg.obj = parsedJson;
+			if(stop)
+				return;
 			handler.sendMessage(msg);
 		} catch (HttpHostConnectException e) {
 			sendError(BaseHandler.ERROR_HTTP);

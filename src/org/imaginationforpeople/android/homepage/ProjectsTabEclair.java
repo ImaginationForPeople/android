@@ -43,4 +43,19 @@ public class ProjectsTabEclair implements TabContentFactory, ProjectsTab, OnItem
 		intent.putExtra("project_title", project.getTitle());
 		activity.startActivity(intent);
 	}
+
+	public void onProjectLoaded() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setActivity(Activity activity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setContentType(int contentType) {
+		// TODO Auto-generated method stub
+		
+	}
 }

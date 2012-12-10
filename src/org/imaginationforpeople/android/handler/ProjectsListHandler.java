@@ -5,11 +5,10 @@ import java.util.List;
 import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.activity.HomepageActivity;
 import org.imaginationforpeople.android.adapter.ProjectsGridAdapter;
-import org.imaginationforpeople.android.helper.DataHelper;
+import org.imaginationforpeople.android.homepage.SpinnerHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
@@ -18,59 +17,34 @@ public class ProjectsListHandler extends BaseHandler implements OnClickListener,
 	public final static int BEST_PROJECTS = 1001;
 	public final static int LATEST_PROJECTS = 1002;
 	
-	private int count = 0;
-	
 	private HomepageActivity activity;
-	private ProgressDialog progress;
-	private ProjectsGridAdapter[] adapters;
+	private SpinnerHelper helper;
+	private ProjectsGridAdapter adapter;
 	
-	public ProjectsListHandler(HomepageActivity ac, ProgressDialog pd, ProjectsGridAdapter[] a) {
+	public ProjectsListHandler(HomepageActivity ac, SpinnerHelper h, ProjectsGridAdapter a) {
 		activity = ac;
-		progress = pd;
-		adapters = a;
+		helper = h;
+		adapter = a;
 	}
 	
 	@Override
 	protected void onStart(int arg, Object obj) {
-		progress.setMessage(activity.getResources().getText(R.string.projectslist_loading));
-		if(!progress.isShowing())
-			progress.show();
-		
-		switch(arg) {
-		case BEST_PROJECTS:
-			adapters[DataHelper.CONTENT_BEST].clearProjects();
-			break;
-		case LATEST_PROJECTS:
-			adapters[DataHelper.CONTENT_LATEST].clearProjects();
-		}
+		adapter.clearProjects();
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onSuccess(int arg, Object obj) {
 		List<I4pProjectTranslation> projects = (List<I4pProjectTranslation>) obj;
-		ProjectsGridAdapter adapter = null;
-		switch(arg) {
-		case BEST_PROJECTS:
-			adapter = adapters[DataHelper.CONTENT_BEST];
-			break;
-		case LATEST_PROJECTS:
-			adapter = adapters[DataHelper.CONTENT_LATEST];
-		}
 		for(I4pProjectTranslation project : projects) {
 			adapter.addProject(project);
 		}
 		
-		if(++count >= 2) {
-			progress.dismiss();
-			activity.launchAsynchronousImageDownload();
-		}
+		helper.displayContent(adapter);
 	}
 	
 	@Override
 	protected void onError(int arg, Object obj) {
-		progress.dismiss();
-		
 		AlertDialog alert = new AlertDialog.Builder(activity).create();
 		switch(arg) {
 		case ERROR_TIMEOUT:

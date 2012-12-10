@@ -1,25 +1,34 @@
 package org.imaginationforpeople.android.homepage;
 
+import org.imaginationforpeople.android.activity.HomepageActivity;
 import org.imaginationforpeople.android.adapter.ProjectsGridAdapter;
 
-import android.app.Activity;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 
 public abstract class SpinnerHelper implements OnClickListener {
 	public final static String STATE_KEY = "selected";
 	
-	protected Activity activity;
-	protected ProjectsGridAdapter[] adapters;
+	protected HomepageActivity activity;
+	protected boolean stopped = false;
 	
-	public void setActivity(Activity activity) {
+	public void setActivity(HomepageActivity activity) {
 		this.activity = activity;
 	}
-	public void setAdapters(ProjectsGridAdapter[] a) {
-		adapters = a;
+	
+	public void init() {
+		startHandle();
 	}
 	
-	public abstract void init();
+	public abstract void displayContent(ProjectsGridAdapter adapter);
+	
+	public void startHandle() {
+		stopped = false;
+	}
+	
+	public void stopHandle() {
+		stopped = true;
+	}
 	
 	public abstract void saveCurrentSelection(Bundle outState);
 	public abstract void restoreCurrentSelection(int position);

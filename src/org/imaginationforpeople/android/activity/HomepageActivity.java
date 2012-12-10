@@ -22,7 +22,6 @@ import org.imaginationforpeople.android.thread.ProjectsListThread;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -44,13 +43,11 @@ import android.widget.Toast;
 public class HomepageActivity extends Activity implements OnClickListener,
 		OnCancelListener, ShakeEventListener.ShakeListener, AnimationListener, OnCheckedChangeListener {
 	private static ProjectsListThread[] threads = new ProjectsListThread[DataHelper.CONTENT_NUMBER];
-	private ProjectsListImagesThread[] imageThreads = new ProjectsListImagesThread[DataHelper.CONTENT_NUMBER];
+	private ProjectsListImagesThread imageThread;
 	private ArrayList<ArrayList<I4pProjectTranslation>> projects = new ArrayList<ArrayList<I4pProjectTranslation>>(DataHelper.CONTENT_NUMBER);
 	private ProjectsGridAdapter adapters[] = new ProjectsGridAdapter[DataHelper.CONTENT_NUMBER];
-	private static ProgressDialog progress;
 	private AlertDialog languagesDialog;
 	private SharedPreferences preferences;
-	private ProjectsListHandler handler;
 	private SpinnerHelper spinnerHelper;
 	private AlertDialog contentDialog;
 	private ShakeEventListener shaker;
@@ -121,22 +118,10 @@ public class HomepageActivity extends Activity implements OnClickListener,
 			spinnerHelper = new SpinnerHelperEclair();
 		
 		spinnerHelper.setActivity(this);
-		spinnerHelper.setAdapters(adapters);
 		spinnerHelper.init();
 		
 		if(savedInstanceState != null && savedInstanceState.containsKey(SpinnerHelper.STATE_KEY))
 			spinnerHelper.restoreCurrentSelection(savedInstanceState.getInt(SpinnerHelper.STATE_KEY));
-		
-		progress = new ProgressDialog(this);
-		progress.setOnCancelListener(this);
-		progress.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getText(R.string.cancel), this);
-		
-		handler = new ProjectsListHandler(this, progress, adapters);
-		
-		if(adapters[0].getCount() == 0 || adapters[1].getCount() == 0)
-			loadProjects();
-		else
-			launchAsynchronousImageDownload();
 		
 		// -- Initializing language chooser UI
 		int selectedLanguage = LanguageHelper.getPreferredLanguageInt();
@@ -155,13 +140,8 @@ public class HomepageActivity extends Activity implements OnClickListener,
 	}
 	
 	@Override
-	protected void onRestart() {
-		super.onRestart();
-		launchAsynchronousImageDownload();
-	}
-	
-	@Override
 	protected void onSaveInstanceState(Bundle outState) {
+		spinnerHelper.stopHandle();
 		spinnerHelper.saveCurrentSelection(outState);
 		for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++)
 			outState.putParcelableArrayList("projects_" + String.valueOf(i), projects.get(i));
@@ -177,16 +157,19 @@ public class HomepageActivity extends Activity implements OnClickListener,
 	@Override
 	protected void onResume() {
 		super.onResume();
+		spinnerHelper.startHandle();
 		shaker.registerListener();
+		
+		changeContent(spinnerHelper.getCurrentSelection());
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
+		spinnerHelper.stopHandle();
 		requestStopThreads();
 		if(languagesDialog.isShowing())
 			languagesDialog.cancel();
-		progress.dismiss();
 	}
 	
 	public void onClick(DialogInterface dialog, int which) {
@@ -196,8 +179,7 @@ public class HomepageActivity extends Activity implements OnClickListener,
 			Editor editor = preferences.edit();
 			editor.putInt("language", which);
 			editor.commit();
-			requestStopThreads();
-			loadProjects();
+			resetProjects();
 		}
 		dialog.dismiss();
 	}
@@ -206,31 +188,38 @@ public class HomepageActivity extends Activity implements OnClickListener,
 		finish();
 	}
 	
-	public void loadProjects() {
-		threads[0] = new ProjectsListThread(handler, ProjectsListHandler.BEST_PROJECTS);
-		threads[1] = new ProjectsListThread(handler, ProjectsListHandler.LATEST_PROJECTS);
-		threads[0].start();
-		threads[1].start();
+	public void changeContent(int content) {
+		requestStopThreads();
+		spinnerHelper.displayContent(adapters[content]);
+		if(projects.get(content).size() == 0) {
+			ProjectsListHandler handler = new ProjectsListHandler(this, spinnerHelper, adapters[content]);
+			threads[content] = new ProjectsListThread(handler, content);
+			threads[content].start();
+		} else
+			loadImages(adapters[content]);
 	}
 	
-	public void launchAsynchronousImageDownload() {
-		ProjectsListImageHandler handler = new ProjectsListImageHandler(adapters[DataHelper.CONTENT_BEST]);
-		if(imageThreads[0] == null || !imageThreads[0].isAlive()) {
-			imageThreads[0] = new ProjectsListImagesThread(handler, projects.get(0));
-			imageThreads[0].start();
-		}
-		if(imageThreads[1] == null || !imageThreads[1].isAlive()) {
-			imageThreads[1] = new ProjectsListImagesThread(handler, projects.get(1));
-			imageThreads[1].start();
-		}
+	public void loadImages(ProjectsGridAdapter adapter) {
+		if(imageThread != null && imageThread.isAlive())
+			imageThread.requestStop();
+		
+		ProjectsListImageHandler handler = new ProjectsListImageHandler(adapter);
+		imageThread = new ProjectsListImagesThread(handler, adapter.getProjects());
+		imageThread.start();
+	}
+	
+	public void resetProjects() {
+		for(ProjectsGridAdapter adapter : adapters)
+			adapter.clearProjects();
+		changeContent(spinnerHelper.getCurrentSelection());
 	}
 	
 	public void requestStopThreads() {
 		for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++) {
 			if(threads[i] != null)
 				threads[i].requestStop();
-			if(imageThreads[i] != null)
-				imageThreads[i].requestStop();
+			if(imageThread != null && imageThread.isAlive())
+				imageThread.requestStop();
 		}
 	}
 
@@ -241,11 +230,7 @@ public class HomepageActivity extends Activity implements OnClickListener,
 	}
 	
 	public void onLittleShake() {
-		if(
-			!threads[0].isAlive()
-		 && !threads[1].isAlive()
-		 && preferences.getBoolean("shake_hint", true)
-		)
+		if(preferences.getBoolean("shake_hint", true))
 			animation.showAnimation();
 	}
 	

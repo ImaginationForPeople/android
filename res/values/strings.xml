@@ -6,6 +6,9 @@
     <string name="close">Close</string>
     <string name="cant_be_undone">This action can\'t be undone!</string>
     
+    <!-- Loading keys -->
+    <string name="loading_projects">Loading projects</string>
+    
     <!-- Homepage keys -->
     <string name="homepage_shake_description">Shake it</string>
     <string name="homepage_menu_favorites">Favorites</string>
