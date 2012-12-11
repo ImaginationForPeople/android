@@ -75,5 +75,8 @@ public class ProjectsGridAdapter extends BaseAdapter {
 		
 		return convertView;
 	}
-
+	
+	public List<I4pProjectTranslation> getProjects() {
+		return projects;
+	}
 }

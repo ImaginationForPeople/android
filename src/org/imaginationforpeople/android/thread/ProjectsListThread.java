@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.imaginationforpeople.android.handler.ProjectsListHandler;
+import org.imaginationforpeople.android.helper.DataHelper;
 import org.imaginationforpeople.android.helper.UriHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.json.JSONArray;
@@ -21,10 +22,10 @@ public class ProjectsListThread extends BaseGetJson {
 		
 		arg = l;
 		switch(arg) {
-		case ProjectsListHandler.BEST_PROJECTS:
+		case DataHelper.CONTENT_BEST:
 			requestUri = UriHelper.getBestProjectsListUri();
 			break;
-		case ProjectsListHandler.LATEST_PROJECTS:
+		case DataHelper.CONTENT_LATEST:
 			requestUri = UriHelper.getLatestProjectsListUri();
 		}
 	}

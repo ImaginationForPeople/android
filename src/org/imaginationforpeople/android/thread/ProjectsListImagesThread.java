@@ -44,6 +44,8 @@ public class ProjectsListImagesThread extends Thread {
 					httpGet.addHeader("Accept-Encoding", "gzip");
 					
 					for(int i=0; i<=4; i++) {
+						if(stop)
+							return;
 						HttpResponse response = httpClient.execute(httpGet);
 						bitmap = BitmapFactory.decodeStream(response.getEntity().getContent());
 						if(bitmap != null) {
@@ -66,6 +68,9 @@ public class ProjectsListImagesThread extends Thread {
 				if(bitmap == null) {
 					project.getProject().setPictures(new ArrayList<Picture>());
 				}
+				
+				if(stop)
+					return;
 				
 				handler.sendEmptyMessage(0);
 			}

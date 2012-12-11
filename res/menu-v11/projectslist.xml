@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
-        android:id="@+id/homepage_content"
-        android:title="Change content"
-        android:icon="@android:drawable/ic_menu_slideshow"
-        android:showAsAction="never" />
-    <item
         android:id="@+id/homepage_favorites"
         android:title="@string/homepage_menu_favorites"
         android:icon="@drawable/ic_menu_star"
