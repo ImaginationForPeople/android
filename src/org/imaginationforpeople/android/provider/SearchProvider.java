@@ -83,7 +83,7 @@ public class SearchProvider extends ContentProvider {
 			for(int i = 0; i < jsonLength; i++) {
 				JsonParser parser = factory.createJsonParser(jsonProjects.getString(i));
 				I4pProjectTranslation project = mapper.readValue(parser, I4pProjectTranslation.class);
-				projects.addRow(new String[]{String.valueOf(i), project.getTitle(), String.valueOf(project.getId()), project.getTitle()});
+				projects.addRow(new String[]{String.valueOf(i), project.getTitle(), project.getLanguageCode() + "/" + project.getSlug(), project.getTitle()});
 			}
 			
 			return projects;

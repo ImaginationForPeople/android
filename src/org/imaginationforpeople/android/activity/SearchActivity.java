@@ -108,8 +108,10 @@ public class SearchActivity extends Activity implements OnItemClickListener {
 	
 	private void openProject() {
 		Intent intent = new Intent(this, ProjectViewActivity.class);
+		String[] data = getIntent().getDataString().split("/", 2);
+		intent.putExtra("project_lang", data[0]);
+		intent.putExtra("project_slug", data[1]);
 		intent.putExtra("project_title", getIntent().getStringExtra(SearchManager.EXTRA_DATA_KEY));
-		intent.putExtra("project_id", Integer.parseInt(getIntent().getDataString()));
 		startActivity(intent);
 	}
 	
@@ -143,7 +145,8 @@ public class SearchActivity extends Activity implements OnItemClickListener {
 		I4pProjectTranslation project = projects.get(position);
 		
 		Intent intent = new Intent(this, ProjectViewActivity.class);
-		intent.putExtra("project_id", project.getId());
+		intent.putExtra("project_lang", project.getLanguageCode());
+		intent.putExtra("project_slug", project.getSlug());
 		intent.putExtra("project_title", project.getTitle());
 		startActivity(intent);
 	}
