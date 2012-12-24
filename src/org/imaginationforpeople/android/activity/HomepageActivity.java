@@ -25,6 +25,8 @@ import org.imaginationforpeople.android.thread.ProjectsListThread;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -45,6 +47,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 public class HomepageActivity extends Activity implements OnClickListener,
@@ -60,11 +63,21 @@ public class HomepageActivity extends Activity implements OnClickListener,
 	private ShakeEventListener shaker;
 	private ShakeAnimation animation;
 	private LocationManager mLocationManager;
+	private SearchView searchView;
 	
+	@TargetApi(11)
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.projectslist, menu);
+		
+		if(Build.VERSION.SDK_INT >= 11) {
+			SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+			searchView = (SearchView) menu.findItem(R.id.homepage_search).getActionView();
+			searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+			searchView.setIconifiedByDefault(true);
+		}
+		
 		return super.onCreateOptionsMenu(menu);
 	}
 	
@@ -77,6 +90,8 @@ public class HomepageActivity extends Activity implements OnClickListener,
 			contentBuilder.setSingleChoiceItems(R.array.homepage_spinner_dropdown, spinnerHelper.getCurrentSelection()                                                                                                                                      , spinnerHelper);
 			contentDialog = contentBuilder.create();
 			contentDialog.show();
+		case R.id.homepage_search:
+			onSearchRequested();
 			break;
 		case R.id.homepage_favorites:
 			FavoriteSqlite db = new FavoriteSqlite(this);
@@ -146,6 +161,17 @@ public class HomepageActivity extends Activity implements OnClickListener,
 			animation = new ShakeAnimation(findViewById(R.id.homepage_shake), this);
 		else
 			animation = new ShakeAnimation(this, findViewById(R.id.homepage_shake), this);
+	}
+	
+	@TargetApi(11)
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		if(Build.VERSION.SDK_INT >= 11) {
+			// Calling twice: first empty text field, second iconify the view
+			searchView.setIconified(true);
+			searchView.setIconified(true);
+		}
 	}
 	
 	@Override

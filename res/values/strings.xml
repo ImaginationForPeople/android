@@ -2,6 +2,7 @@
     <!-- General keys -->
     <string name="app_name">Imagination for People</string>
     <string name="app_favorites">My favorite project</string>
+    <string name="search_hint">Search projects</string>
     <string name="cancel">Cancel</string>
     <string name="close">Close</string>
     <string name="cant_be_undone">This action can\'t be undone!</string>
@@ -12,6 +13,7 @@
     
     <!-- Homepage keys -->
     <string name="homepage_shake_description">Shake it</string>
+    <string name="homepage_menu_search">Search</string>
     <string name="homepage_menu_favorites">Favorites</string>
     <string name="homepage_menu_language">Change language</string>
     <string name="homepage_spinner_language_prompt">Choose a language</string>
@@ -73,6 +75,10 @@
     <string name="favorites_dialog_remove_all_title">Remove all favorites?</string>
     <string name="favorites_no">You don\'t have any favorite</string>
     <string name="favorites_no_anymore">You don\'t have any favorite anymore</string>
+    
+    <!-- Search keys -->
+    <string name="search_searching">Searching %1$s</string>
+    <string name="search_menu_search">Search</string>
     
     <!-- Error keys -->
     <string name="error_server">Problem with the server</string>
