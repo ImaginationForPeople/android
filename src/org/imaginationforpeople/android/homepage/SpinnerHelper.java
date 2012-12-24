@@ -20,7 +20,10 @@ public abstract class SpinnerHelper implements OnClickListener {
 		startHandle();
 	}
 	
-	public abstract void displayContent(ProjectsGridAdapter adapter);
+	public abstract void displayContent(ProjectsGridAdapter adapter, boolean isUpdated);
+	public void displayContent(ProjectsGridAdapter adapter) {
+		displayContent(adapter, false);
+	}
 	
 	public void startHandle() {
 		stopped = false;

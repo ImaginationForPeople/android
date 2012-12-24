@@ -19,7 +19,7 @@ import android.widget.GridView;
 
 @TargetApi(11)
 public class ProjectsTabHoneycomb extends Fragment implements ProjectsTab, OnItemClickListener {
-	private ProjectsGridAdapter adapter;
+	ProjectsGridAdapter adapter;
 	
 	public void setAdapter(ProjectsGridAdapter projectsGridAdapter) {
 		adapter = projectsGridAdapter;

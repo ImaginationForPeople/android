@@ -7,6 +7,7 @@
     <string name="cant_be_undone">This action can\'t be undone!</string>
     
     <!-- Loading keys -->
+    <string name="loading_location">Waiting for your location</string>
     <string name="loading_projects">Loading projects</string>
     
     <!-- Homepage keys -->
@@ -29,6 +30,7 @@
     <string-array name="homepage_spinner_dropdown">
         <item>To Discover</item>
         <item>Latest Projects</item>
+        <item>In My Country</item>
     </string-array>
     
     <!-- Shake dialog keys -->
@@ -80,4 +82,6 @@
     <string name="error_json_badanswer">It seems the server\'s answer is malformed because we cannot understand the JSON.</string>
     <string name="error_unknown">Unknown error</string>
     <string name="error_unknown_message">An unhandled error has occured. Please make a bug report :)</string>
+    <string name="error_location">Cannot get location</string>
+    <string name="error_location_message">We cannot get your location. Please verify if access location from Wi-Fi is enabled.</string>
 </resources>

@@ -17,8 +17,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
 public class ProjectsTabEclair implements ProjectsTab, OnItemClickListener {
-	private Activity activity;
-	private ProjectsGridAdapter adapter;
+	protected Activity activity;
+	protected ProjectsGridAdapter adapter;
 	
 	public ProjectsTabEclair(Activity a) {
 		activity = a;

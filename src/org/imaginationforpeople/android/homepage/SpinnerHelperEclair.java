@@ -1,6 +1,7 @@
 package org.imaginationforpeople.android.homepage;
 
 import org.imaginationforpeople.android.adapter.ProjectsGridAdapter;
+import org.imaginationforpeople.android.helper.DataHelper;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -21,8 +22,8 @@ public class SpinnerHelperEclair extends SpinnerHelper {
 
 	@Override
 	public void restoreCurrentSelection(int position) {
-		activity.changeContent(position);
 		selectedContent = position;
+		activity.changeContent(position);
 	}
 	
 	@Override
@@ -32,14 +33,22 @@ public class SpinnerHelperEclair extends SpinnerHelper {
 
 	public void onClick(DialogInterface dialog, int which) {
 		dialog.dismiss();
-		activity.changeContent(which);
 		selectedContent = which;
+		activity.changeContent(which);
 	}
-
+	
 	@Override
-	public void displayContent(ProjectsGridAdapter adapter) {
+	public void displayContent(ProjectsGridAdapter adapter, boolean isUpdated) {
 		if(!stopped) {
-			ProjectsTabEclair content = new ProjectsTabEclair(activity);
+			ProjectsTabEclair content;
+			switch(getCurrentSelection()) {
+			case DataHelper.CONTENT_COUNTRY:
+				content = new ProjectsCountryTabEclair(activity, isUpdated);
+				break;
+			default:
+				content = new ProjectsTabEclair(activity);
+				break;
+			}
 			content.setAdapter(adapter);
 			content.display();
 			

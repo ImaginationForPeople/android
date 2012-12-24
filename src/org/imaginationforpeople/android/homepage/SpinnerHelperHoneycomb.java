@@ -2,6 +2,7 @@ package org.imaginationforpeople.android.homepage;
 
 import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.adapter.ProjectsGridAdapter;
+import org.imaginationforpeople.android.helper.DataHelper;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
@@ -43,9 +44,16 @@ public class SpinnerHelperHoneycomb extends SpinnerHelper implements OnNavigatio
 	}
 	
 	@Override
-	public void displayContent(ProjectsGridAdapter adapter) {
+	public void displayContent(ProjectsGridAdapter adapter, boolean isUpdated) {
 		if(!stopped) {
-			ProjectsTabHoneycomb content = new ProjectsTabHoneycomb();
+			ProjectsTabHoneycomb content;
+			switch(getCurrentSelection()) {
+			case DataHelper.CONTENT_COUNTRY:
+				content = new ProjectsCountryTabHoneycomb(isUpdated);
+				break;
+			default:
+				content = new ProjectsTabHoneycomb();
+			}
 			content.setAdapter(adapter);
 			
 			FragmentTransaction ft = activity.getFragmentManager().beginTransaction();

@@ -60,4 +60,7 @@ public class ProjectViewHandler extends BaseHandler implements OnClickListener, 
 	public void onCancel(DialogInterface arg0) {
 		activity.finish();
 	}
+	
+	@Override
+	protected void onSpecificEvent(int arg, Object obj) {}
 }

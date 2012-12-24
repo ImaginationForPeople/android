@@ -51,4 +51,8 @@ public class ProjectsListThread extends BaseGetJson {
 		
 		return projects;
 	}
+	
+	// We do nothing when this thread starts
+	@Override
+	protected void onStart() throws IOException {}
 }

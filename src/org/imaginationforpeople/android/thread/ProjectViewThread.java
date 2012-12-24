@@ -111,4 +111,8 @@ public class ProjectViewThread extends BaseGetJson {
 		
 		return project;
 	}
+	
+	// We do nothing when this thread starts
+	@Override
+	protected void onStart() {}
 }

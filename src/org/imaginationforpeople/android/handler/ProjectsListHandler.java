@@ -32,6 +32,15 @@ public class ProjectsListHandler extends BaseHandler implements OnClickListener,
 		adapter.clearProjects();
 	}
 	
+	@Override
+	protected void onSpecificEvent(int arg, Object obj) {
+		switch(arg) {
+		case SPECIFIC_UPDATE:
+			activity.updateContent();
+			break;
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onSuccess(int arg, Object obj) {
@@ -62,6 +71,10 @@ public class ProjectsListHandler extends BaseHandler implements OnClickListener,
 		case ERROR_UNKNOWN:
 			alert.setTitle(R.string.error_unknown);
 			alert.setMessage(activity.getResources().getText(R.string.error_unknown_message));
+			break;
+		case ERROR_LOCATION:
+			alert.setTitle(R.string.error_location);
+			alert.setMessage(activity.getResources().getText(R.string.error_location_message));
 			break;
 		}
 		alert.setOnCancelListener(this);

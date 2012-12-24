@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.imaginationforpeople.android.R;
 import org.imaginationforpeople.android.adapter.ProjectsGridAdapter;
+import org.imaginationforpeople.android.handler.BaseHandler;
 import org.imaginationforpeople.android.handler.ProjectsListHandler;
 import org.imaginationforpeople.android.handler.ProjectsListImageHandler;
 import org.imaginationforpeople.android.helper.DataHelper;
@@ -16,6 +17,8 @@ import org.imaginationforpeople.android.shake.ShakeAnimation;
 import org.imaginationforpeople.android.shake.ShakeAnimation.AnimationListener;
 import org.imaginationforpeople.android.shake.ShakeEventListener;
 import org.imaginationforpeople.android.sqlite.FavoriteSqlite;
+import org.imaginationforpeople.android.thread.BaseGetJson;
+import org.imaginationforpeople.android.thread.ProjectsCountryListThread;
 import org.imaginationforpeople.android.thread.ProjectsListImagesThread;
 import org.imaginationforpeople.android.thread.ProjectsListThread;
 
@@ -29,8 +32,12 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.location.Geocoder;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -42,7 +49,7 @@ import android.widget.Toast;
 
 public class HomepageActivity extends Activity implements OnClickListener,
 		OnCancelListener, ShakeEventListener.ShakeListener, AnimationListener, OnCheckedChangeListener {
-	private static ProjectsListThread[] threads = new ProjectsListThread[DataHelper.CONTENT_NUMBER];
+	private static BaseGetJson[] threads = new BaseGetJson[DataHelper.CONTENT_NUMBER];
 	private ProjectsListImagesThread imageThread;
 	private ArrayList<ArrayList<I4pProjectTranslation>> projects = new ArrayList<ArrayList<I4pProjectTranslation>>(DataHelper.CONTENT_NUMBER);
 	private ProjectsGridAdapter adapters[] = new ProjectsGridAdapter[DataHelper.CONTENT_NUMBER];
@@ -52,6 +59,7 @@ public class HomepageActivity extends Activity implements OnClickListener,
 	private AlertDialog contentDialog;
 	private ShakeEventListener shaker;
 	private ShakeAnimation animation;
+	private LocationManager mLocationManager;
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -95,6 +103,7 @@ public class HomepageActivity extends Activity implements OnClickListener,
 		// -- Initializing application
 		preferences = getPreferences(Context.MODE_PRIVATE);
 		LanguageHelper.setSharedPreferences(preferences);
+		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		
 		// -- Initializing projects list
 		if(savedInstanceState != null)
@@ -151,6 +160,7 @@ public class HomepageActivity extends Activity implements OnClickListener,
 	@Override
 	protected void onPause() {
 		shaker.unregisterListener();
+		stopLocationListener();
 		super.onPause();
 	}
 
@@ -193,14 +203,40 @@ public class HomepageActivity extends Activity implements OnClickListener,
 		if(Build.VERSION.SDK_INT < 11)
 			setTitle(getResources().getStringArray(R.array.homepage_spinner_dropdown)[content]);
 		
+		stopLocationListener();
 		requestStopThreads();
 		spinnerHelper.displayContent(adapters[content]);
 		if(projects.get(content).size() == 0) {
 			ProjectsListHandler handler = new ProjectsListHandler(this, spinnerHelper, adapters[content]);
-			threads[content] = new ProjectsListThread(handler, content);
-			threads[content].start();
+			if(content == DataHelper.CONTENT_COUNTRY) {
+				ArrayList<String> providers = new ArrayList<String>();
+				if(mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+					providers.add(LocationManager.NETWORK_PROVIDER);
+				if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+					providers.add(LocationManager.GPS_PROVIDER);
+				
+				if(providers.size() == 0) {
+					Message msg = new Message();
+					msg.arg1 = BaseHandler.STATUS_ERROR;
+					msg.arg2 = BaseHandler.ERROR_LOCATION;
+					handler.sendMessage(msg);
+				}
+				
+				Geocoder mGeocoder = new Geocoder(this);
+				threads[content] = new ProjectsCountryListThread(handler, content, mLocationManager, mGeocoder);
+				
+				for(String provider : providers)
+					mLocationManager.requestLocationUpdates(provider, 0, 0, (LocationListener) threads[content]);
+			} else {
+				threads[content] = new ProjectsListThread(handler, content);
+				threads[content].start();
+			}
 		} else
 			loadImages(adapters[content]);
+	}
+	
+	public void updateContent() {
+		spinnerHelper.displayContent(adapters[spinnerHelper.getCurrentSelection()], true);
 	}
 	
 	public void loadImages(ProjectsGridAdapter adapter) {
@@ -225,6 +261,11 @@ public class HomepageActivity extends Activity implements OnClickListener,
 			if(imageThread != null && imageThread.isAlive())
 				imageThread.requestStop();
 		}
+	}
+	
+	private void stopLocationListener() {
+		if(threads[DataHelper.CONTENT_COUNTRY] != null)
+			mLocationManager.removeUpdates((LocationListener) threads[DataHelper.CONTENT_COUNTRY]);
 	}
 
 	public void onShake() {

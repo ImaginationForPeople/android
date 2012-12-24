@@ -48,6 +48,8 @@ public abstract class BaseGetJson extends Thread {
 		
 		String json;
 		try {
+			onStart();
+			
 			json = sendRequest();
 			if(stop)
 				return;
@@ -81,6 +83,9 @@ public abstract class BaseGetJson extends Thread {
 			e.printStackTrace();
 		}
 	}
+	
+	protected abstract void onStart()
+			throws IOException;
 	
 	private String sendRequest() throws ConnectTimeoutException, HttpHostConnectException, Exception {
 		BasicHttpParams basicHttpParams = new BasicHttpParams();
