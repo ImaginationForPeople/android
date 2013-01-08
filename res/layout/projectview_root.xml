@@ -9,7 +9,7 @@
         android:padding="10dip"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:background="#000000" />
+        android:background="#010101" />
     
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
