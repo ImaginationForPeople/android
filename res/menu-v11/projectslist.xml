@@ -7,11 +7,6 @@
         android:showAsAction="ifRoom"
         android:actionViewClass="android.widget.SearchView" />
     <item
-        android:id="@+id/homepage_content"
-        android:title="Change content"
-        android:icon="@android:drawable/ic_menu_slideshow"
-        android:showAsAction="never" />
-    <item
         android:id="@+id/homepage_favorites"
         android:title="@string/homepage_menu_favorites"
         android:icon="@drawable/ic_menu_star"

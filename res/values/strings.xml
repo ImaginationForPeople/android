@@ -1,15 +1,23 @@
 <resources>
     <!-- General keys -->
     <string name="app_name">Imagination for People</string>
-    <string name="app_favorites">My favorite project</string>
+    <string name="app_favorites">My favorites projects</string>
+    <string name="search_hint">Search projects</string>
     <string name="cancel">Cancel</string>
     <string name="close">Close</string>
     <string name="cant_be_undone">This action can\'t be undone!</string>
     
+    <!-- Loading keys -->
+    <string name="loading_location">Waiting for your location</string>
+    <string name="loading_projects">Loading projects</string>
+    
     <!-- Homepage keys -->
+    <string name="homepage_shake_description">Shake it</string>
+    <string name="homepage_menu_search">Search</string>
     <string name="homepage_menu_favorites">Favorites</string>
     <string name="homepage_menu_language">Change language</string>
-    <string name="homepage_spinner_prompt">Choose a language</string>
+    <string name="homepage_spinner_language_prompt">Choose a language</string>
+    <string name="homepage_spinner_content_prompt">Select projects to display</string>
     <string-array name="homepage_spinner_languages">
         <item>Chinese</item>
         <item>English</item>
@@ -21,8 +29,16 @@
         <item>Russian</item>
         <item>Spanish</item>
     </string-array>
-    <string name="homepage_tab_bestof">To discover</string>
-    <string name="homepage_tab_latest">Latest projects</string>
+    <string-array name="homepage_spinner_dropdown">
+        <item>To Discover</item>
+        <item>Latest Projects</item>
+        <item>In My Country</item>
+    </string-array>
+    
+    <!-- Shake dialog keys -->
+    <string name="shake_dialog_title">Just shake it!</string>
+    <string name="shake_dialog_message">Shake your device just a bit stronger and we\'ll show you a random project.\nDiscovery of new projects is now fun!</string>
+    <string name="shake_dialog_checkbox">Never show me this again</string>
     
     <!-- ProjectsList keys -->
     <string name="projectslist_loading">Loading projects…</string>
@@ -58,14 +74,20 @@
     <string name="favorites_menu_remove_all">Remove all favorites</string>
     <string name="favorites_dialog_remove_all_title">Remove all favorites?</string>
     <string name="favorites_no">You don\'t have any favorite</string>
-    <string name="favorites_no_anymore">You don\'t have any favorite anymore</string>
+    <string name="favorites_no_anymore">You have no more favorites</string>
+    
+    <!-- Search keys -->
+    <string name="search_searching">Searching %1$s</string>
+    <string name="search_menu_search">Search</string>
     
     <!-- Error keys -->
-    <string name="error_server">Problem with the server</string>
+    <string name="error_server">Server problem</string>
     <string name="error_server_timeout">The server didn\'t respond in time.</string>
     <string name="error_server_badanswer">Cannot understand server\'s answer.</string>
     <string name="error_json">JSON error</string>
     <string name="error_json_badanswer">It seems the server\'s answer is malformed because we cannot understand the JSON.</string>
     <string name="error_unknown">Unknown error</string>
-    <string name="error_unknown_message">An unhandled error has occured. Please make a bug report :)</string>
+    <string name="error_unknown_message">An unhandled error has occurred. Please make a bug report :)</string>
+    <string name="error_location">Cannot get location</string>
+    <string name="error_location_message">We cannot get your location. Please verify if access location from Wi-Fi is enabled.</string>
 </resources>

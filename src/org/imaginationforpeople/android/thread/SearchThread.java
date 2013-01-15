@@ -4,8 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.imaginationforpeople.android.handler.ProjectsListHandler;
-import org.imaginationforpeople.android.helper.DataHelper;
+import org.imaginationforpeople.android.handler.SearchHandler;
 import org.imaginationforpeople.android.helper.UriHelper;
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import org.json.JSONArray;
@@ -16,25 +15,18 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class ProjectsListThread extends BaseGetJson {
-	public ProjectsListThread(ProjectsListHandler h, int l) {
+public class SearchThread extends BaseGetJson {
+	private ArrayList<I4pProjectTranslation> projects;
+	
+	public SearchThread(String search, ArrayList<I4pProjectTranslation> p, SearchHandler h) {
+		requestUri = UriHelper.getFullSearchUrl(search);
+		projects = p;
 		handler = h;
-		
-		arg = l;
-		switch(arg) {
-		case DataHelper.CONTENT_BEST:
-			requestUri = UriHelper.getBestProjectsListUri();
-			break;
-		case DataHelper.CONTENT_LATEST:
-			requestUri = UriHelper.getLatestProjectsListUri();
-		}
 	}
 	
 	@Override
 	protected List<I4pProjectTranslation> parseJson(String json)
 			throws JSONException, JsonParseException, IOException {
-		ArrayList<I4pProjectTranslation> projects = new ArrayList<I4pProjectTranslation>();
-		
 		JsonFactory factory = new JsonFactory();
 		ObjectMapper mapper = new ObjectMapper();
 		
@@ -51,8 +43,8 @@ public class ProjectsListThread extends BaseGetJson {
 		
 		return projects;
 	}
-	
-	// We do nothing when this thread starts
-	@Override
-	protected void onStart() throws IOException {}
+
+    // We do nothing when this thread starts
+    @Override
+    protected void onStart() throws IOException {}
 }

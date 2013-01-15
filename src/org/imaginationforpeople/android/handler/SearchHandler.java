@@ -1,20 +1,18 @@
 package org.imaginationforpeople.android.handler;
 
 import org.imaginationforpeople.android.R;
-import org.imaginationforpeople.android.activity.ProjectViewActivity;
-import org.imaginationforpeople.android.model.I4pProjectTranslation;
+import org.imaginationforpeople.android.activity.SearchActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 
-
-public class ProjectViewHandler extends BaseHandler implements OnClickListener, OnCancelListener {
-	private ProjectViewActivity activity;
+public class SearchHandler extends BaseHandler implements OnCancelListener, OnClickListener {
+	private SearchActivity activity;
 	
-	public ProjectViewHandler(ProjectViewActivity a) {
-		activity = a;
+	public SearchHandler(SearchActivity ac) {
+		activity = ac;
 	}
 	
 	@Override
@@ -22,9 +20,7 @@ public class ProjectViewHandler extends BaseHandler implements OnClickListener, 
 	
 	@Override
 	protected void onSuccess(int arg, Object obj) {
-		I4pProjectTranslation project = (I4pProjectTranslation) obj;
-		activity.setProject(project);
-		activity.displayProject();
+		activity.displayResults();
 	}
 	
 	@Override
@@ -52,15 +48,15 @@ public class ProjectViewHandler extends BaseHandler implements OnClickListener, 
 		alert.setButton(DialogInterface.BUTTON_NEUTRAL, activity.getResources().getText(R.string.close), this);
 		alert.show();
 	}
+	
+	public void onCancel(DialogInterface arg0) {
+		activity.finish();
+	}
 
 	public void onClick(DialogInterface arg0, int arg1) {
 		activity.finish();
 	}
 
-	public void onCancel(DialogInterface arg0) {
-		activity.finish();
-	}
-	
-	@Override
-	protected void onSpecificEvent(int arg, Object obj) {}
+    @Override
+    protected void onSpecificEvent(int arg, Object obj) {}
 }

@@ -70,9 +70,13 @@ public class ProjectsGridAdapter extends BaseAdapter {
 		} else {
 			projectLoading.setVisibility(View.GONE);
 			projectImage.setImageResource(R.drawable.project_nophoto);
+			projectImage.setVisibility(View.VISIBLE);
 		}
 		
 		return convertView;
 	}
-
+	
+	public List<I4pProjectTranslation> getProjects() {
+		return projects;
+	}
 }

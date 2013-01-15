@@ -10,13 +10,15 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout.LayoutParams;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
-import android.widget.TabHost.TabContentFactory;
 
-public class ProjectsTabEclair implements TabContentFactory, ProjectsTab, OnItemClickListener {
-	private Activity activity;
-	private ProjectsGridAdapter adapter;
+public class ProjectsTabEclair implements ProjectsTab, OnItemClickListener {
+	protected Activity activity;
+	protected ProjectsGridAdapter adapter;
 	
 	public ProjectsTabEclair(Activity a) {
 		activity = a;
@@ -26,12 +28,23 @@ public class ProjectsTabEclair implements TabContentFactory, ProjectsTab, OnItem
 		this.adapter = adapter;
 	}
 	
-	public View createTabContent(String tag) {
-		View view = LayoutInflater.from(activity).inflate(R.layout.projectslist, null, false);
-		GridView grid = (GridView) view.findViewById(android.R.id.list);
-		grid.setAdapter(adapter);
-		grid.setOnItemClickListener(this);
-		return view;
+	public void display() {
+		LinearLayout content = (LinearLayout) activity.findViewById(R.id.homepage_content);
+		LayoutInflater inflater = activity.getLayoutInflater();
+		View contentView;
+		if(adapter.getCount() == 0) {
+			contentView = inflater.inflate(R.layout.loading, null);
+			contentView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+			TextView message = (TextView) contentView.findViewById(R.id.loading_text);
+			message.setText(activity.getResources().getString(R.string.loading_projects));
+		} else {
+			contentView = inflater.inflate(R.layout.projectslist, null); 
+			GridView grid = (GridView) contentView.findViewById(android.R.id.list);
+			grid.setAdapter(adapter);
+			grid.setOnItemClickListener(this);
+		}
+		content.removeAllViews();
+		content.addView(contentView);
 	}
 
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

@@ -1,6 +1,11 @@
 package org.imaginationforpeople.android.helper;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import org.imaginationforpeople.android.model.I4pProjectTranslation;
+
+import android.location.Address;
 
 public class UriHelper extends BaseHelper {
 	public final static String BASE_URL = "http://imaginationforpeople.org";
@@ -17,6 +22,10 @@ public class UriHelper extends BaseHelper {
 		return API_BASE_URL + "/project/latest/?format=json&lang=" + LanguageHelper.getPreferredLanguageCode();
 	}
 	
+	public static String getCurrentCountryProjectsListUri(Address address) {
+		return API_BASE_URL + "/project/by-country/" + address.getCountryCode() + "/?format=json";
+	}
+	
 	public static String getProjectViewUriById(int projectId) {
 		return API_BASE_URL + "/project/" + String.valueOf(projectId);
 	}
@@ -31,5 +40,23 @@ public class UriHelper extends BaseHelper {
 	
 	public static String getProjectUrl(I4pProjectTranslation project) {
 		return BASE_URL + "/" + project.getLanguageCode() + "/project/" + project.getSlug() + "/";
+	}
+	
+	public static String getQuickSearchUrl(String search) {
+		try {
+			return API_BASE_URL + "/search/project/?q=" + URLEncoder.encode(search, "UTF-8") + "&format=json&limit=3&lang=" + LanguageHelper.getPreferredLanguageCode();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return API_BASE_URL + "/search/project/?q=" + search + "&format=json&limit=3&lang=" + LanguageHelper.getPreferredLanguageCode();
+		}
+	}
+	
+	public static String getFullSearchUrl(String search) {
+		try {
+			return API_BASE_URL + "/search/project/?q=" + URLEncoder.encode(search, "UTF-8") + "&format=json&lang=" + LanguageHelper.getPreferredLanguageCode();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return API_BASE_URL + "/search/project/?q=" + search + "&format=json&lang=" + LanguageHelper.getPreferredLanguageCode();
+		}
 	}
 }

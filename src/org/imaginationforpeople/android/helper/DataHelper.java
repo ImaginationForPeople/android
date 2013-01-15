@@ -12,6 +12,12 @@ import java.util.Date;
 import android.content.Context;
 
 public class DataHelper extends BaseHelper {
+	public static final int CONTENT_NUMBER = 3;
+	
+	public static final int CONTENT_BEST = 0;
+	public static final int CONTENT_LATEST = 1;
+	public static final int CONTENT_COUNTRY = 2;
+	
 	public static final String BEST_PROJECTS_KEY = "bestProjects";
 	public static final String LATEST_PROJECTS_KEY = "latestProjects";
 	public static final String PROJECT_VIEW_KEY = "project";
