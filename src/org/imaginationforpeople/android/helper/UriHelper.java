@@ -8,7 +8,7 @@ import org.imaginationforpeople.android.model.I4pProjectTranslation;
 import android.location.Address;
 
 public class UriHelper extends BaseHelper {
-	public final static String BASE_URL = "http://192.168.1.164:8000";
+	public final static String BASE_URL = "http://imaginationforpeople.org";
 	public final static String API_BASE_URL = BASE_URL + "/api/v1";
 	
 	// Public class with private constructor prevent instantiations
