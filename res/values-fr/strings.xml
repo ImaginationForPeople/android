@@ -3,13 +3,20 @@
   <!--General keys-->
   <string name="app_name">Imagination for People</string>
   <string name="app_favorites">Mes projets favoris</string>
+  <string name="search_hint">Rechercher des projets</string>
   <string name="cancel">Annuler</string>
   <string name="close">Fermer</string>
   <string name="cant_be_undone">Cette action ne peut être annulée !</string>
+  <!--Loading keys-->
+  <string name="loading_location">En attente de votre emplacement</string>
+  <string name="loading_projects">Chargement des projets</string>
   <!--Homepage keys-->
+  <string name="homepage_shake_description">Secouez-le</string>
+  <string name="homepage_menu_search">Rechercher</string>
   <string name="homepage_menu_favorites">Favoris</string>
   <string name="homepage_menu_language">Changer la langue</string>
-  <string name="homepage_spinner_prompt">Choisissez une langue</string>
+  <string name="homepage_spinner_language_prompt">Choisissez une langue</string>
+  <string name="homepage_spinner_content_prompt">Sélectionnez les projets à afficher</string>
   <string-array name="homepage_spinner_languages">
     <item>Chinois</item>
     <item>Anglais</item>
@@ -21,8 +28,15 @@
     <item>Russe</item>
     <item>Espagnol</item>
   </string-array>
-  <string name="homepage_tab_bestof">À découvrir</string>
-  <string name="homepage_tab_latest">Derniers projets</string>
+  <string-array name="homepage_spinner_dropdown">
+    <item>À découvrir</item>
+    <item>Derniers projets</item>
+    <item>Dans mon pays</item>
+  </string-array>
+  <!--Shake dialog keys-->
+  <string name="shake_dialog_title">Secouez-le, tout simplement !</string>
+  <string name="shake_dialog_message">Secouez votre appareil juste un peu plus fort et nous vous montrerons un projet aléatoire.\nDécouvrir des nouveaux projets est maintenant amusant !</string>
+  <string name="shake_dialog_checkbox">Ne plus m\'afficher ceci</string>
   <!--ProjectsList keys-->
   <string name="projectslist_loading">Chargement des projets…</string>
   <string name="projectslist_item_image_description">Image du projet</string>
@@ -56,6 +70,9 @@
   <string name="favorites_dialog_remove_all_title">Supprimer tous les favoris ?</string>
   <string name="favorites_no">Vous n\'avez pas de favoris</string>
   <string name="favorites_no_anymore">Vous n\'avez plus de favoris</string>
+  <!--Search keys-->
+  <string name="search_searching">Recherche de %1$s</string>
+  <string name="search_menu_search">Rechercher</string>
   <!--Error keys-->
   <string name="error_server">Problème avec le serveur</string>
   <string name="error_server_timeout">Le serveur n\'a pas répondu dans les temps.</string>
@@ -64,4 +81,6 @@
   <string name="error_json_badanswer">Il semble que la réponse du serveur soit mal formée car nous n\'arrivons à comprendre le JSON.</string>
   <string name="error_unknown">Erreur inconnue</string>
   <string name="error_unknown_message">Une erreur non prise en charge s\'est produite. Merci de faire un rapport de bogue :) </string>
+  <string name="error_location">Impossible d\'obtenir l\'emplacement</string>
+  <string name="error_location_message">Nous ne pouvons pas obtenir votre emplacement. Veuillez vérifier si l\'accès à l\'emplacement depuis le Wi-Fi est activé.</string>
 </resources>
