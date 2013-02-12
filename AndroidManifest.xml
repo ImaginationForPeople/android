@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.imaginationforpeople.android"
+    package="org.imaginationforpeople.android2"
     android:versionCode="2013011501"
     android:versionName="1.0">
 
@@ -55,8 +55,8 @@
         </activity>
         
         <provider
-            android:authorities="org.imaginationforpeople.android.provider.SearchProvider"
-            android:name="org.imaginationforpeople.android.provider.SearchProvider" />
+            android:authorities="org.imaginationforpeople.android2.provider.SearchProvider"
+            android:name="org.imaginationforpeople.android2.provider.SearchProvider" />
     </application>
 
 </manifest>
