@@ -13,6 +13,7 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.util.EntityUtils;
 import org.imaginationforpeople.android2.handler.BaseHandler;
+import org.imaginationforpeople.android2.helper.ErrorHelper;
 import org.json.JSONException;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -64,21 +65,21 @@ public abstract class BaseGetJson extends Thread {
 				return;
 			handler.sendMessage(msg);
 		} catch (HttpHostConnectException e) {
-			sendError(BaseHandler.ERROR_HTTP);
+			sendError(ErrorHelper.ERROR_HTTP);
 			Log.e("error", "Error when communicating with the server", e);
 		} catch (ConnectTimeoutException e) {
-			sendError(BaseHandler.ERROR_TIMEOUT);
+			sendError(ErrorHelper.ERROR_TIMEOUT);
 			Log.e("error", "The connexion timed-out", e);
 		} catch (JSONException e) {
-			sendError(BaseHandler.ERROR_JSON);
+			sendError(ErrorHelper.ERROR_JSON);
 			Log.e("error", "Error when analyzing the JSON", e);
 			Log.e("error", "Request URL: " + requestUri, e);
 		} catch (JsonParseException e) {
-			sendError(BaseHandler.ERROR_JSON);
+			sendError(ErrorHelper.ERROR_JSON);
 			Log.e("error", "Error with Jackson library", e);
 			Log.e("error", "Request URL: " + requestUri, e);
 		} catch (Exception e) {
-			sendError(BaseHandler.ERROR_UNKNOWN);
+			sendError(ErrorHelper.ERROR_UNKNOWN);
 			Log.e("error", "An unknown error has occured", e);
 			e.printStackTrace();
 		}

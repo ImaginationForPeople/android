@@ -3,13 +3,12 @@ package org.imaginationforpeople.android2.activity;
 import java.util.ArrayList;
 
 import org.imaginationforpeople.android2.R;
-import org.imaginationforpeople.android2.adapter.ProjectsGridAdapter;
-import org.imaginationforpeople.android2.handler.BaseHandler;
-import org.imaginationforpeople.android2.handler.ProjectsListHandler;
-import org.imaginationforpeople.android2.handler.ProjectsListImageHandler;
+import org.imaginationforpeople.android2.fragment.LoadingFragment;
+import org.imaginationforpeople.android2.fragment.ProjectListFragment;
 import org.imaginationforpeople.android2.helper.DataHelper;
 import org.imaginationforpeople.android2.helper.LanguageHelper;
 import org.imaginationforpeople.android2.homepage.SpinnerHelper;
+import org.imaginationforpeople.android2.homepage.SpinnerHelper.OnSpinnerItemSelectedListener;
 import org.imaginationforpeople.android2.homepage.SpinnerHelperEclair;
 import org.imaginationforpeople.android2.homepage.SpinnerHelperHoneycomb;
 import org.imaginationforpeople.android2.model.I4pProjectTranslation;
@@ -17,13 +16,8 @@ import org.imaginationforpeople.android2.shake.ShakeAnimation;
 import org.imaginationforpeople.android2.shake.ShakeEventListener;
 import org.imaginationforpeople.android2.shake.ShakeAnimation.AnimationListener;
 import org.imaginationforpeople.android2.sqlite.FavoriteSqlite;
-import org.imaginationforpeople.android2.thread.BaseGetJson;
-import org.imaginationforpeople.android2.thread.ProjectsCountryListThread;
-import org.imaginationforpeople.android2.thread.ProjectsListImagesThread;
-import org.imaginationforpeople.android2.thread.ProjectsListThread;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -33,12 +27,11 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.location.Geocoder;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Message;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -49,19 +42,16 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-public class HomepageActivity extends Activity implements OnClickListener,
-		OnCancelListener, ShakeEventListener.ShakeListener, AnimationListener, OnCheckedChangeListener {
-	private static BaseGetJson[] threads = new BaseGetJson[DataHelper.CONTENT_NUMBER];
-	private ProjectsListImagesThread imageThread;
+public class HomepageActivity extends FragmentActivity implements OnClickListener,
+		OnCancelListener, ShakeEventListener.ShakeListener, AnimationListener,
+		OnCheckedChangeListener, LoadingFragment.OnContentLoadedListener, OnSpinnerItemSelectedListener {
 	private ArrayList<ArrayList<I4pProjectTranslation>> projects = new ArrayList<ArrayList<I4pProjectTranslation>>(DataHelper.CONTENT_NUMBER);
-	private ProjectsGridAdapter adapters[] = new ProjectsGridAdapter[DataHelper.CONTENT_NUMBER];
 	private AlertDialog languagesDialog;
 	private SharedPreferences preferences;
 	private SpinnerHelper spinnerHelper;
 	private AlertDialog contentDialog;
 	private ShakeEventListener shaker;
 	private ShakeAnimation animation;
-	private LocationManager mLocationManager;
 	private SearchView searchView;
 	
 	@TargetApi(11)
@@ -89,6 +79,7 @@ public class HomepageActivity extends Activity implements OnClickListener,
 			contentBuilder.setSingleChoiceItems(R.array.homepage_spinner_dropdown, spinnerHelper.getCurrentSelection()                                                                                                                                      , spinnerHelper);
 			contentDialog = contentBuilder.create();
 			contentDialog.show();
+			break;
 		case R.id.homepage_search:
 			onSearchRequested();
 			break;
@@ -117,7 +108,6 @@ public class HomepageActivity extends Activity implements OnClickListener,
 		// -- Initializing application
 		preferences = getPreferences(Context.MODE_PRIVATE);
 		LanguageHelper.setSharedPreferences(preferences);
-		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		
 		// -- Initializing projects list
 		if(savedInstanceState != null)
@@ -130,17 +120,13 @@ public class HomepageActivity extends Activity implements OnClickListener,
 				projects.add(i, new ArrayList<I4pProjectTranslation>());
 			}
 		
-		adapters = new ProjectsGridAdapter[DataHelper.CONTENT_NUMBER];
-		for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++) {
-			adapters[i] = new ProjectsGridAdapter(this, projects.get(i));
+		if(Build.VERSION.SDK_INT >= 11) {
+			spinnerHelper = new SpinnerHelperHoneycomb(this);
 		}
-		
-		if(Build.VERSION.SDK_INT >= 11)
-			spinnerHelper = new SpinnerHelperHoneycomb();
 		else
 			spinnerHelper = new SpinnerHelperEclair();
 		
-		spinnerHelper.setActivity(this);
+		spinnerHelper.setListener(this);
 		spinnerHelper.init();
 		
 		if(savedInstanceState != null && savedInstanceState.containsKey(SpinnerHelper.STATE_KEY))
@@ -175,34 +161,27 @@ public class HomepageActivity extends Activity implements OnClickListener,
 	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		spinnerHelper.stopHandle();
-		spinnerHelper.saveCurrentSelection(outState);
 		for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++)
 			outState.putParcelableArrayList("projects_" + String.valueOf(i), projects.get(i));
+		spinnerHelper.saveCurrentSelection(outState);
 		super.onSaveInstanceState(outState);
 	}
 
 	@Override
 	protected void onPause() {
 		shaker.unregisterListener();
-		stopLocationListener();
 		super.onPause();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		spinnerHelper.startHandle();
 		shaker.registerListener();
-		
-		changeContent(spinnerHelper.getCurrentSelection());
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		spinnerHelper.stopHandle();
-		requestStopThreads();
 		if(languagesDialog.isShowing())
 			languagesDialog.cancel();
 	}
@@ -223,74 +202,10 @@ public class HomepageActivity extends Activity implements OnClickListener,
 		finish();
 	}
 	
-	public void changeContent(int content) {
-		// Setting title on Android 2.x
-		if(Build.VERSION.SDK_INT < 11)
-			setTitle(getResources().getStringArray(R.array.homepage_spinner_dropdown)[content]);
-		
-		stopLocationListener();
-		requestStopThreads();
-		spinnerHelper.displayContent(adapters[content]);
-		if(projects.get(content).size() == 0) {
-			ProjectsListHandler handler = new ProjectsListHandler(this, spinnerHelper, adapters[content]);
-			if(content == DataHelper.CONTENT_COUNTRY) {
-				ArrayList<String> providers = new ArrayList<String>();
-				if(mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
-					providers.add(LocationManager.NETWORK_PROVIDER);
-				if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-					providers.add(LocationManager.GPS_PROVIDER);
-				
-				if(providers.size() == 0) {
-					Message msg = new Message();
-					msg.arg1 = BaseHandler.STATUS_ERROR;
-					msg.arg2 = BaseHandler.ERROR_LOCATION;
-					handler.sendMessage(msg);
-				}
-				
-				Geocoder mGeocoder = new Geocoder(this);
-				threads[content] = new ProjectsCountryListThread(handler, content, mLocationManager, mGeocoder);
-				
-				for(String provider : providers)
-					mLocationManager.requestLocationUpdates(provider, 0, 0, (LocationListener) threads[content]);
-			} else {
-				threads[content] = new ProjectsListThread(handler, content);
-				threads[content].start();
-			}
-		} else
-			loadImages(adapters[content]);
-	}
-	
-	public void updateContent() {
-		spinnerHelper.displayContent(adapters[spinnerHelper.getCurrentSelection()], true);
-	}
-	
-	public void loadImages(ProjectsGridAdapter adapter) {
-		if(imageThread != null && imageThread.isAlive())
-			imageThread.requestStop();
-		
-		ProjectsListImageHandler handler = new ProjectsListImageHandler(adapter);
-		imageThread = new ProjectsListImagesThread(handler, adapter.getProjects());
-		imageThread.start();
-	}
-	
 	public void resetProjects() {
-		for(ProjectsGridAdapter adapter : adapters)
-			adapter.clearProjects();
-		changeContent(spinnerHelper.getCurrentSelection());
-	}
-	
-	public void requestStopThreads() {
-		for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++) {
-			if(threads[i] != null)
-				threads[i].requestStop();
-			if(imageThread != null && imageThread.isAlive())
-				imageThread.requestStop();
-		}
-	}
-	
-	private void stopLocationListener() {
-		if(threads[DataHelper.CONTENT_COUNTRY] != null)
-			mLocationManager.removeUpdates((LocationListener) threads[DataHelper.CONTENT_COUNTRY]);
+		for(ArrayList<I4pProjectTranslation> array : projects)
+			array.clear();
+		onSpinnerItemSelected(spinnerHelper.getCurrentSelection());
 	}
 
 	public void onShake() {
@@ -323,5 +238,51 @@ public class HomepageActivity extends Activity implements OnClickListener,
 		Editor editor = preferences.edit();
 		editor.putBoolean("shake_hint", !isChecked);
 		editor.commit();
+	}
+
+	@Override
+	public void onContentLoaded(int contentType, Bundle bundle) {
+		switch(contentType) {
+		case LoadingFragment.LOAD_BESTOF_PROJECTS:
+		case LoadingFragment.LOAD_LATEST_PROJECTS:
+		case LoadingFragment.LOAD_MYCOUNTRY_PROJECTS:
+			ArrayList<I4pProjectTranslation> projectsList = bundle.getParcelableArrayList(ProjectListFragment.PROJECTS_KEY);
+			projects.set(contentType, projectsList);
+			Fragment fragment = new ProjectListFragment();
+			fragment.setArguments(bundle);
+			FragmentManager fm = getSupportFragmentManager();
+			fm.beginTransaction().replace(R.id.homepage_content, fragment).commit();
+			break;
+		}
+	}
+
+	@Override
+	public void onSpinnerItemSelected(int itemId) {
+		if(Build.VERSION.SDK_INT >= 11)
+			setTitle("");
+		else
+			setTitle(getResources().getStringArray(R.array.homepage_spinner_dropdown)[itemId]);
+		
+		Bundle data = new Bundle();
+		data.putParcelableArrayList(ProjectListFragment.PROJECTS_KEY, projects.get(itemId));
+		Fragment fragment;
+		if(projects.get(itemId).size() > 0)
+			fragment = new ProjectListFragment();
+		else {
+			fragment = new LoadingFragment();
+			data.putInt(LoadingFragment.CONTENT_TO_LOAD, itemId);
+			switch(itemId) {
+			case LoadingFragment.LOAD_MYCOUNTRY_PROJECTS:
+				data.putInt(LoadingFragment.TEXT_RESID, R.string.loading_location);
+				break;
+			case LoadingFragment.LOAD_BESTOF_PROJECTS:
+			case LoadingFragment.LOAD_LATEST_PROJECTS:
+				data.putInt(LoadingFragment.TEXT_RESID, R.string.loading_projects);
+				break;
+			}
+		}
+		fragment.setArguments(data);
+		FragmentManager fm = getSupportFragmentManager();
+		fm.beginTransaction().replace(R.id.homepage_content, fragment).commit();
 	}
 }

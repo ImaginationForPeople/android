@@ -2,6 +2,7 @@ package org.imaginationforpeople.android2.handler;
 
 import org.imaginationforpeople.android2.R;
 import org.imaginationforpeople.android2.activity.SearchActivity;
+import org.imaginationforpeople.android2.helper.ErrorHelper;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -27,19 +28,19 @@ public class SearchHandler extends BaseHandler implements OnCancelListener, OnCl
 	protected void onError(int arg, Object obj) {
 		AlertDialog alert = new AlertDialog.Builder(activity).create();
 		switch(arg) {
-		case ERROR_TIMEOUT:
+		case ErrorHelper.ERROR_TIMEOUT:
 			alert.setTitle(R.string.error_server);
 			alert.setMessage(activity.getResources().getText(R.string.error_server_timeout));
 			break;
-		case ERROR_HTTP:
+		case ErrorHelper.ERROR_HTTP:
 			alert.setTitle(R.string.error_server);
 			alert.setMessage(activity.getResources().getText(R.string.error_server_badanswer));
 			break;
-		case ERROR_JSON:
+		case ErrorHelper.ERROR_JSON:
 			alert.setTitle(R.string.error_json);
 			alert.setMessage(activity.getResources().getText(R.string.error_json_badanswer));
 			break;
-		case ERROR_UNKNOWN:
+		case ErrorHelper.ERROR_UNKNOWN:
 			alert.setTitle(R.string.error_unknown);
 			alert.setMessage(activity.getResources().getText(R.string.error_unknown_message));
 			break;
