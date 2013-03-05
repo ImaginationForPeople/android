@@ -21,7 +21,7 @@ public class SpinnerHelperHoneycomb extends SpinnerHelper implements OnNavigatio
 	
 	@Override
 	public void init() {
-		SpinnerAdapter spinner = ArrayAdapter.createFromResource(activity, R.array.homepage_spinner_dropdown, android.R.layout.simple_spinner_dropdown_item);;
+		SpinnerAdapter spinner = ArrayAdapter.createFromResource(activity, R.array.homepage_spinner_dropdown, android.R.layout.simple_spinner_dropdown_item);
 		
 		activity.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		activity.getActionBar().setListNavigationCallbacks(spinner, this);
@@ -35,6 +35,11 @@ public class SpinnerHelperHoneycomb extends SpinnerHelper implements OnNavigatio
 	@Override
 	public void restoreCurrentSelection(int position) {
 		activity.getActionBar().setSelectedNavigationItem(position);
+	}
+	
+	@Override
+	public void displayCurrentContent() {
+		activity.getActionBar().setSelectedNavigationItem(getCurrentSelection());
 	}
 	
 	@Override

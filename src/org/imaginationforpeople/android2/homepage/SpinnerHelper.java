@@ -19,5 +19,6 @@ public abstract class SpinnerHelper implements OnClickListener {
 	public abstract void init();
 	public abstract void saveCurrentSelection(Bundle outState);
 	public abstract void restoreCurrentSelection(int position);
+	public abstract void displayCurrentContent();
 	public abstract int getCurrentSelection();
 }

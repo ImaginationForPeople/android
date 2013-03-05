@@ -17,6 +17,10 @@ import org.imaginationforpeople.android2.shake.ShakeEventListener;
 import org.imaginationforpeople.android2.shake.ShakeAnimation.AnimationListener;
 import org.imaginationforpeople.android2.sqlite.FavoriteSqlite;
 
+import com.darvds.ribbonmenu.OnRibbonChangeListener;
+import com.darvds.ribbonmenu.RibbonMenuView;
+import com.darvds.ribbonmenu.iRibbonMenuCallback;
+
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.SearchManager;
@@ -44,7 +48,8 @@ import android.widget.Toast;
 
 public class HomepageActivity extends FragmentActivity implements OnClickListener,
 		OnCancelListener, ShakeEventListener.ShakeListener, AnimationListener,
-		OnCheckedChangeListener, LoadingFragment.OnContentLoadedListener, OnSpinnerItemSelectedListener {
+		OnCheckedChangeListener, LoadingFragment.OnContentLoadedListener, OnSpinnerItemSelectedListener,
+		iRibbonMenuCallback, OnRibbonChangeListener {
 	private ArrayList<ArrayList<I4pProjectTranslation>> projects = new ArrayList<ArrayList<I4pProjectTranslation>>(DataHelper.CONTENT_NUMBER);
 	private AlertDialog languagesDialog;
 	private SharedPreferences preferences;
@@ -53,6 +58,7 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 	private ShakeEventListener shaker;
 	private ShakeAnimation animation;
 	private SearchView searchView;
+	private RibbonMenuView rbm;
 	
 	@TargetApi(11)
 	@Override
@@ -71,12 +77,29 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		if(Build.VERSION.SDK_INT < 11) {
+			MenuItem ribbon = menu.getItem(2);
+			if(rbm.isMenuVisible())
+				ribbon.setTitle(R.string.homepage_menu_ribbon_close);
+			else
+				ribbon.setTitle(R.string.homepage_menu_ribbon_open);
+		}
+		
+		return super.onPrepareOptionsMenu(menu);
+	}
+	
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
+		case android.R.id.home:
+		case R.id.homepage_ribbon_button:
+			rbm.toggleMenu();
+			break;
 		case R.id.homepage_content:
 			AlertDialog.Builder contentBuilder = new AlertDialog.Builder(this);
 			contentBuilder.setTitle(R.string.homepage_spinner_content_prompt);
-			contentBuilder.setSingleChoiceItems(R.array.homepage_spinner_dropdown, spinnerHelper.getCurrentSelection()                                                                                                                                      , spinnerHelper);
+			contentBuilder.setSingleChoiceItems(R.array.homepage_spinner_dropdown, spinnerHelper.getCurrentSelection(), spinnerHelper);
 			contentDialog = contentBuilder.create();
 			contentDialog.show();
 			break;
@@ -100,6 +123,16 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 		return super.onOptionsItemSelected(item);
 	}
 	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@Override
+	public void RibbonMenuItemClick(int itemId) {
+		switch(itemId) {
+		case R.id.ribbon_menu_projects:
+			spinnerHelper.displayCurrentContent();
+			break;
+		}
+	}
+	
 	@TargetApi(11)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +141,16 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 		// -- Initializing application
 		preferences = getPreferences(Context.MODE_PRIVATE);
 		LanguageHelper.setSharedPreferences(preferences);
+		
+		// -- Initializing ribbon menu
+		rbm = (RibbonMenuView) findViewById(R.id.homepage_ribbon);
+		rbm.setListener(this);
+		rbm.setMenuClickCallback(this);
+		rbm.setMenuItems(R.menu.homepage_ribbon);
+		rbm.setActiveItem(R.id.ribbon_menu_projects);
+		
+		if(Build.VERSION.SDK_INT >= 11)
+			getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		// -- Initializing projects list
 		if(savedInstanceState != null)
@@ -186,6 +229,14 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 			languagesDialog.cancel();
 	}
 	
+	@Override
+	public void onBackPressed() {
+		if(rbm.isMenuVisible())
+			rbm.hideMenu();
+		else
+			super.onBackPressed();
+	}
+
 	public void onClick(DialogInterface dialog, int which) {
 		if(which == DialogInterface.BUTTON_NEGATIVE) {
 			finish();
@@ -284,5 +335,19 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 		fragment.setArguments(data);
 		FragmentManager fm = getSupportFragmentManager();
 		fm.beginTransaction().replace(R.id.homepage_content, fragment).commit();
+	}
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@Override
+	public void onRibbonOpen() {
+		if(Build.VERSION.SDK_INT >= 11)
+			getActionBar().setDisplayHomeAsUpEnabled(false);
+	}
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@Override
+	public void onRibbonClose() {
+		if(Build.VERSION.SDK_INT >= 11)
+			getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 }

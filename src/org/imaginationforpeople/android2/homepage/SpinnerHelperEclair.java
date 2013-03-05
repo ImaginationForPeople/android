@@ -23,6 +23,11 @@ public class SpinnerHelperEclair extends SpinnerHelper {
 	}
 	
 	@Override
+	public void displayCurrentContent() {
+		listener.onSpinnerItemSelected(selectedContent);
+	}
+	
+	@Override
 	public int getCurrentSelection() {
 		return selectedContent;
 	}
