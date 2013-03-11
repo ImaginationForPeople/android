@@ -74,11 +74,13 @@ public class DataHelper extends BaseHelper {
 	}
 	
 	public static void removeOldFiles() {
-		long oneday = new Date().getTime() - 86400; // One day
-		for(String path : getContext().fileList()) {
-			File file = new File(getContext().getFilesDir(), path);
-			if(file.lastModified() < oneday) {
-				getContext().deleteFile(path);
+		if(getContext().fileList() != null) {
+			long oneday = new Date().getTime() - 86400; // One day
+			for(String path : getContext().fileList()) {
+				File file = new File(getContext().getFilesDir(), path);
+				if(file.lastModified() < oneday) {
+					getContext().deleteFile(path);
+				}
 			}
 		}
 	}
