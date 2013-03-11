@@ -39,6 +39,7 @@
     
     <!-- Homepage ribbon keys -->
     <string name="homepage_ribbon_projects">Projects</string>
+    <string name="homepage_ribbon_favorites">Favorites</string>
     
     <!-- Shake dialog keys -->
     <string name="shake_dialog_title">Just shake it!</string>

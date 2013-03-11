@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 	<item android:id="@+id/ribbon_menu_projects" android:title="@string/homepage_ribbon_projects" android:icon="@drawable/ic_menu_projects" />
+	<item android:id="@+id/ribbon_menu_favorites" android:title="@string/homepage_ribbon_favorites" android:icon="@drawable/ic_menu_favorites" />
 </menu>

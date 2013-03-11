@@ -3,6 +3,7 @@ package org.imaginationforpeople.android2.activity;
 import java.util.ArrayList;
 
 import org.imaginationforpeople.android2.R;
+import org.imaginationforpeople.android2.fragment.FavoritesFragment;
 import org.imaginationforpeople.android2.fragment.LoadingFragment;
 import org.imaginationforpeople.android2.fragment.ProjectListFragment;
 import org.imaginationforpeople.android2.helper.DataHelper;
@@ -15,13 +16,13 @@ import org.imaginationforpeople.android2.model.I4pProjectTranslation;
 import org.imaginationforpeople.android2.shake.ShakeAnimation;
 import org.imaginationforpeople.android2.shake.ShakeEventListener;
 import org.imaginationforpeople.android2.shake.ShakeAnimation.AnimationListener;
-import org.imaginationforpeople.android2.sqlite.FavoriteSqlite;
 
 import com.darvds.ribbonmenu.OnRibbonChangeListener;
 import com.darvds.ribbonmenu.RibbonMenuView;
 import com.darvds.ribbonmenu.iRibbonMenuCallback;
 
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -44,7 +45,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 public class HomepageActivity extends FragmentActivity implements OnClickListener,
 		OnCancelListener, ShakeEventListener.ShakeListener, AnimationListener,
@@ -59,18 +59,27 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 	private ShakeAnimation animation;
 	private SearchView searchView;
 	private RibbonMenuView rbm;
+	private int activeRibonItem = R.id.ribbon_menu_projects;
 	
 	@TargetApi(11)
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.projectslist, menu);
-		
-		if(Build.VERSION.SDK_INT >= 11) {
-			SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-			searchView = (SearchView) menu.findItem(R.id.homepage_search).getActionView();
-			searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-			searchView.setIconifiedByDefault(true);
+		switch(activeRibonItem) {
+		case R.id.ribbon_menu_projects:
+			inflater.inflate(R.menu.projectslist, menu);
+			
+			if(Build.VERSION.SDK_INT >= 11) {
+				SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+				searchView = (SearchView) menu.findItem(R.id.homepage_search).getActionView();
+				searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+				searchView.setIconifiedByDefault(true);
+			}
+			break;
+		case R.id.ribbon_menu_favorites:
+			if(Build.VERSION.SDK_INT < 11)
+				inflater.inflate(R.menu.ribbon_controller, menu);
+			break;
 		}
 		
 		return super.onCreateOptionsMenu(menu);
@@ -79,13 +88,21 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if(Build.VERSION.SDK_INT < 11) {
-			MenuItem ribbon = menu.getItem(2);
+			MenuItem ribbon = null;
+			switch(activeRibonItem) {
+			case R.id.ribbon_menu_projects:
+				ribbon = menu.getItem(2);
+				break;
+			default:
+				ribbon = menu.getItem(0);
+				break;
+			}
+			
 			if(rbm.isMenuVisible())
 				ribbon.setTitle(R.string.homepage_menu_ribbon_close);
 			else
 				ribbon.setTitle(R.string.homepage_menu_ribbon_open);
-		}
-		
+		}		
 		return super.onPrepareOptionsMenu(menu);
 	}
 	
@@ -106,16 +123,6 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 		case R.id.homepage_search:
 			onSearchRequested();
 			break;
-		case R.id.homepage_favorites:
-			FavoriteSqlite db = new FavoriteSqlite(this);
-			if(db.hasFavorites()) {
-				Intent intent = new Intent(this, FavoritesActivity.class);
-				startActivity(intent);
-			} else {
-				Toast t = Toast.makeText(this, R.string.favorites_no, Toast.LENGTH_SHORT);
-				t.show();
-			}
-			break;
 		case R.id.homepage_lang:
 			languagesDialog.show();
 			break;
@@ -126,9 +133,19 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public void RibbonMenuItemClick(int itemId) {
+		activeRibonItem = itemId;
+		Fragment fragment;
+		FragmentManager fm = getSupportFragmentManager();
 		switch(itemId) {
 		case R.id.ribbon_menu_projects:
-			spinnerHelper.displayCurrentContent();
+			spinnerHelper.init();
+			onSpinnerItemSelected(spinnerHelper.getCurrentSelection());
+			break;
+		case R.id.ribbon_menu_favorites:
+			if(Build.VERSION.SDK_INT >= 11)
+				getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+			fragment = new FavoritesFragment();
+			fm.beginTransaction().replace(R.id.homepage_content, fragment).commit();
 			break;
 		}
 	}

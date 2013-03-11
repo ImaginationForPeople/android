@@ -30,7 +30,7 @@ public class ProjectListFragment extends Fragment implements OnItemClickListener
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		projects = getArguments().getParcelableArrayList(PROJECTS_KEY);		
+		projects = getArguments().getParcelableArrayList(PROJECTS_KEY);
 		adapter = new ProjectsGridAdapter(getActivity(), projects);
 	}
 	
