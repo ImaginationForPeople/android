@@ -2,6 +2,7 @@
     <!-- General keys -->
     <string name="app_name">Imagination for People</string>
     <string name="app_favorites">My favorites projects</string>
+    <string name="app_groups">Groups</string>
     <string name="search_hint">Search projects</string>
     <string name="cancel">Cancel</string>
     <string name="close">Close</string>
@@ -10,6 +11,7 @@
     <!-- Loading keys -->
     <string name="loading_location">Waiting for your location</string>
     <string name="loading_projects">Loading projects</string>
+    <string name="loading_groups">Loading groups</string>
     
     <!-- Homepage keys -->
     <string name="homepage_shake_description">Shake it</string>
@@ -39,6 +41,7 @@
     
     <!-- Homepage ribbon keys -->
     <string name="homepage_ribbon_projects">Projects</string>
+    <string name="homepage_ribbon_workgroups">Groups</string>
     <string name="homepage_ribbon_favorites">Favorites</string>
     
     <!-- Shake dialog keys -->

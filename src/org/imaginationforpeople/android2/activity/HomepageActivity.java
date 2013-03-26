@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.imaginationforpeople.android2.R;
 import org.imaginationforpeople.android2.fragment.FavoritesFragment;
+import org.imaginationforpeople.android2.fragment.GroupListFragment;
 import org.imaginationforpeople.android2.fragment.LoadingFragment;
 import org.imaginationforpeople.android2.fragment.ProjectListFragment;
 import org.imaginationforpeople.android2.helper.DataHelper;
@@ -12,6 +13,7 @@ import org.imaginationforpeople.android2.homepage.SpinnerHelper;
 import org.imaginationforpeople.android2.homepage.SpinnerHelper.OnSpinnerItemSelectedListener;
 import org.imaginationforpeople.android2.homepage.SpinnerHelperEclair;
 import org.imaginationforpeople.android2.homepage.SpinnerHelperHoneycomb;
+import org.imaginationforpeople.android2.model.Group;
 import org.imaginationforpeople.android2.model.I4pProjectTranslation;
 import org.imaginationforpeople.android2.shake.ShakeAnimation;
 import org.imaginationforpeople.android2.shake.ShakeEventListener;
@@ -51,6 +53,7 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 		OnCheckedChangeListener, LoadingFragment.OnContentLoadedListener, OnSpinnerItemSelectedListener,
 		iRibbonMenuCallback, OnRibbonChangeListener {
 	private ArrayList<ArrayList<I4pProjectTranslation>> projects = new ArrayList<ArrayList<I4pProjectTranslation>>(DataHelper.CONTENT_NUMBER);
+	private ArrayList<Group> groups = new ArrayList<Group>();
 	private AlertDialog languagesDialog;
 	private SharedPreferences preferences;
 	private SpinnerHelper spinnerHelper;
@@ -77,6 +80,7 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 			}
 			break;
 		case R.id.ribbon_menu_favorites:
+		case R.id.ribbon_menu_workgroups:
 			if(Build.VERSION.SDK_INT < 11)
 				inflater.inflate(R.menu.ribbon_controller, menu);
 			break;
@@ -141,6 +145,26 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 			spinnerHelper.init();
 			onSpinnerItemSelected(spinnerHelper.getCurrentSelection());
 			break;
+		case R.id.ribbon_menu_workgroups:
+			setTitle(R.string.app_groups);
+			if(Build.VERSION.SDK_INT >= 11) {
+				getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+				invalidateOptionsMenu();
+			}
+			Bundle data = new Bundle();
+			if(groups.size() > 0) {
+				data.putParcelableArrayList(GroupListFragment.GROUPS_KEY, groups);
+				fragment = new GroupListFragment();
+				fragment.setArguments(data);
+				fm.beginTransaction().replace(R.id.homepage_content, fragment).commit();
+			} else {
+				data.putInt(LoadingFragment.CONTENT_TO_LOAD, LoadingFragment.LOAD_GROUPS);
+				data.putInt(LoadingFragment.TEXT_RESID, R.string.loading_groups);
+				fragment = new LoadingFragment();
+				fragment.setArguments(data);
+				fm.beginTransaction().replace(R.id.homepage_content, fragment).commit();
+			}
+			break;
 		case R.id.ribbon_menu_favorites:
 			if(Build.VERSION.SDK_INT >= 11)
 				getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
@@ -170,15 +194,20 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		// -- Initializing projects list
-		if(savedInstanceState != null)
+		if(savedInstanceState != null) {
 			for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++) {
 				ArrayList<I4pProjectTranslation> project = savedInstanceState.getParcelableArrayList("projects_" + String.valueOf(i)); 
 				projects.add(i, project); 
 			}
-		else
+			ArrayList<Group> groups = savedInstanceState.getParcelableArrayList("groups");
+			this.groups = groups;
+		} else
 			for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++) {
 				projects.add(i, new ArrayList<I4pProjectTranslation>());
 			}
+		
+		if(savedInstanceState != null)
+			RibbonMenuItemClick(savedInstanceState.getInt("ribbon_item"));
 		
 		if(Build.VERSION.SDK_INT >= 11) {
 			spinnerHelper = new SpinnerHelperHoneycomb(this);
@@ -187,10 +216,12 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 			spinnerHelper = new SpinnerHelperEclair();
 		
 		spinnerHelper.setListener(this);
-		spinnerHelper.init();
-		
-		if(savedInstanceState != null && savedInstanceState.containsKey(SpinnerHelper.STATE_KEY))
-			spinnerHelper.restoreCurrentSelection(savedInstanceState.getInt(SpinnerHelper.STATE_KEY));
+		if(activeRibonItem == R.id.ribbon_menu_projects) {
+			spinnerHelper.init();
+			
+			if(savedInstanceState != null && savedInstanceState.containsKey(SpinnerHelper.STATE_KEY))
+				spinnerHelper.restoreCurrentSelection(savedInstanceState.getInt(SpinnerHelper.STATE_KEY));
+		}
 		
 		// -- Initializing language chooser UI
 		int selectedLanguage = LanguageHelper.getPreferredLanguageInt();
@@ -223,7 +254,9 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 	protected void onSaveInstanceState(Bundle outState) {
 		for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++)
 			outState.putParcelableArrayList("projects_" + String.valueOf(i), projects.get(i));
+		outState.putParcelableArrayList("groups", groups);
 		spinnerHelper.saveCurrentSelection(outState);
+		outState.putInt("ribbon_item", activeRibonItem);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -310,18 +343,23 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 
 	@Override
 	public void onContentLoaded(int contentType, Bundle bundle) {
+		Fragment fragment = null;
 		switch(contentType) {
 		case LoadingFragment.LOAD_BESTOF_PROJECTS:
 		case LoadingFragment.LOAD_LATEST_PROJECTS:
 		case LoadingFragment.LOAD_MYCOUNTRY_PROJECTS:
 			ArrayList<I4pProjectTranslation> projectsList = bundle.getParcelableArrayList(ProjectListFragment.PROJECTS_KEY);
 			projects.set(contentType, projectsList);
-			Fragment fragment = new ProjectListFragment();
+			fragment = new ProjectListFragment();
 			fragment.setArguments(bundle);
-			FragmentManager fm = getSupportFragmentManager();
-			fm.beginTransaction().replace(R.id.homepage_content, fragment).commit();
 			break;
+		case LoadingFragment.LOAD_GROUPS:
+			groups = bundle.getParcelableArrayList(GroupListFragment.GROUPS_KEY);
+			fragment = new GroupListFragment();
+			fragment.setArguments(bundle);
 		}
+		FragmentManager fm = getSupportFragmentManager();
+		fm.beginTransaction().replace(R.id.homepage_content, fragment).commit();
 	}
 
 	@Override

@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 import org.imaginationforpeople.android2.R;
 import org.imaginationforpeople.android2.handler.BaseHandler;
+import org.imaginationforpeople.android2.handler.GroupsListHandler;
 import org.imaginationforpeople.android2.handler.ProjectsListHandler;
 import org.imaginationforpeople.android2.helper.DataHelper;
 import org.imaginationforpeople.android2.helper.ErrorHelper;
 import org.imaginationforpeople.android2.thread.BaseGetJson;
+import org.imaginationforpeople.android2.thread.GroupsListThread;
 import org.imaginationforpeople.android2.thread.ProjectsCountryListThread;
 import org.imaginationforpeople.android2.thread.ProjectsListThread;
 
@@ -41,6 +43,7 @@ public class LoadingFragment extends Fragment {
 	public static final int LOAD_BESTOF_PROJECTS = 0;
 	public static final int LOAD_LATEST_PROJECTS = 1;
 	public static final int LOAD_MYCOUNTRY_PROJECTS = 2;
+	public static final int LOAD_GROUPS = 3;
 	
 	private BaseGetJson thread;
 	private LocationManager mLocationManager;
@@ -90,6 +93,11 @@ public class LoadingFragment extends Fragment {
 		case LOAD_BESTOF_PROJECTS:
 		case LOAD_LATEST_PROJECTS:
 			thread = new ProjectsListThread(handler, contentToLoad);
+			thread.start();
+			break;
+		case LOAD_GROUPS:
+			GroupsListHandler groupHandler = new GroupsListHandler((OnContentLoadedListener) getActivity(), errorListener);
+			thread = new GroupsListThread(groupHandler);
 			thread.start();
 			break;
 		}

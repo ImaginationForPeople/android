@@ -59,4 +59,8 @@ public class UriHelper extends BaseHelper {
 			return API_BASE_URL + "/search/project/?q=" + search + "&format=json&lang=" + LanguageHelper.getPreferredLanguageCode();
 		}
 	}
+	
+	public static String getGroupsListUri() {
+		return API_BASE_URL + "/workgroup/?format=json";
+	}
 }
