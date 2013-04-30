@@ -20,6 +20,7 @@ public class Group implements Parcelable {
 	private int id;
 	private String name;
 	private String description;
+	private String article;
 	private String slug;
 	private String language;
 	@JsonProperty("resource_uri")
@@ -53,6 +54,12 @@ public class Group implements Parcelable {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public String getArticle() {
+		return article;
+	}
+	public void setArticle(String article) {
+		this.article = article;
 	}
 	public String getSlug() {
 		return slug;

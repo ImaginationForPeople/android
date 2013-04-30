@@ -21,6 +21,7 @@ public class DataHelper extends BaseHelper {
 	public static final String BEST_PROJECTS_KEY = "bestProjects";
 	public static final String LATEST_PROJECTS_KEY = "latestProjects";
 	public static final String PROJECT_VIEW_KEY = "project";
+	public static final String GROUP_VIEW_KEY = "group";
 	
 	public static final String FILE_PREFIX_PROJECT_THUMB = "projectThumb_";
 	public static final String FILE_PREFIX_PROJECT_IMAGE = "projectImage_";

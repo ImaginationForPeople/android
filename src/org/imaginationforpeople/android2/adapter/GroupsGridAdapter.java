@@ -67,7 +67,7 @@ public class GroupsGridAdapter extends BaseAdapter {
 			}
 		} else {
 			groupLoading.setVisibility(View.GONE);
-			groupImage.setImageResource(R.drawable.project_nophoto);
+			groupImage.setImageResource(R.drawable.group_nophoto);
 			groupImage.setVisibility(View.VISIBLE);
 		}
 		

@@ -79,6 +79,14 @@
     <string name="projectview_gallery_slider_content_author">Author: %1$s</string>
     <string name="projectview_gallery_slider_content_source">Source: %1$s</string>
     
+    <!-- GroupView keys -->
+    <string name="groupview_menu_share">Share group</string>
+    <string name="groupview_menu_share_dialog">Share group with…</string>
+    <string name="groupview_root_info">INFORMATION</string>
+    <string name="groupview_description_image_description">Group image</string>
+    <string name="groupview_description_themes">THEMES</string>
+    <string name="groupview_description_about">ABOUT THE GROUP</string>
+    
     <!-- Favorites keys -->
     <string name="favorites_menu_remove_all">Remove all favorites</string>
     <string name="favorites_dialog_remove_all_title">Remove all favorites?</string>

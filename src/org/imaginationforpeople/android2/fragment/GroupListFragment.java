@@ -3,19 +3,23 @@
 import java.util.ArrayList;
 
 import org.imaginationforpeople.android2.R;
+import org.imaginationforpeople.android2.activity.GroupViewActivity;
 import org.imaginationforpeople.android2.adapter.GroupsGridAdapter;
 import org.imaginationforpeople.android2.handler.GroupsListImageHandler;
 import org.imaginationforpeople.android2.model.Group;
 import org.imaginationforpeople.android2.thread.GroupsListImagesThread;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
-public class GroupListFragment extends Fragment {
+public class GroupListFragment extends Fragment implements OnItemClickListener {
 	public static final String GROUPS_KEY = "GROUPS_KEY";
 	
 	private ArrayList<Group> groups;
@@ -34,6 +38,7 @@ public class GroupListFragment extends Fragment {
 		View view = inflater.inflate(R.layout.projectslist, container, false);
 		GridView grid = (GridView) view.findViewById(android.R.id.list);
 		grid.setAdapter(adapter);
+		grid.setOnItemClickListener(this);
 		return view;
 	}
 	
@@ -51,5 +56,15 @@ public class GroupListFragment extends Fragment {
 		if(imageThread != null && imageThread.isAlive())
 			imageThread.requestStop();
 		super.onStop();
+	}
+	
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		Group group = adapter.getItem(position);
+		
+		Intent intent = new Intent(getActivity(), GroupViewActivity.class);
+		intent.putExtra("group_slug", group.getSlug());
+		intent.putExtra("group_title", group.getName());
+		startActivity(intent);
 	}
 }
