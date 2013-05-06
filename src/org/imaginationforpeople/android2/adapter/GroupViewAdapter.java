@@ -2,6 +2,7 @@ package org.imaginationforpeople.android2.adapter;
 
 import org.imaginationforpeople.android2.R;
 import org.imaginationforpeople.android2.groupview.InfoGroupViewFragment;
+import org.imaginationforpeople.android2.groupview.ProjectsGroupViewFragment;
 import org.imaginationforpeople.android2.helper.DataHelper;
 import org.imaginationforpeople.android2.model.Group;
 
@@ -14,9 +15,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 public class GroupViewAdapter extends FragmentPagerAdapter {
 	private static int[] fragmentsName = {
 		R.string.groupview_root_info,
+		R.string.groupview_root_projects,
 	};
 	private static Fragment[] fragments = {
-		new InfoGroupViewFragment()
+		new InfoGroupViewFragment(),
+		new ProjectsGroupViewFragment(),
 	};
 	private static Resources resources;
 

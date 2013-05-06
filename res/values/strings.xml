@@ -8,6 +8,9 @@
     <string name="close">Close</string>
     <string name="cant_be_undone">This action can\'t be undone!</string>
     
+    <!-- Information keys -->
+    <string name="information_description">Information:</string>
+    
     <!-- Loading keys -->
     <string name="loading_location">Waiting for your location</string>
     <string name="loading_projects">Loading projects</string>
@@ -83,9 +86,11 @@
     <string name="groupview_menu_share">Share group</string>
     <string name="groupview_menu_share_dialog">Share group with…</string>
     <string name="groupview_root_info">INFORMATION</string>
+    <string name="groupview_root_projects">PROJECTS</string>
     <string name="groupview_description_image_description">Group image</string>
     <string name="groupview_description_themes">THEMES</string>
     <string name="groupview_description_about">ABOUT THE GROUP</string>
+    <string name="groupview_projects_noprojects">There is not any related projects in this group</string>
     
     <!-- Favorites keys -->
     <string name="favorites_menu_remove_all">Remove all favorites</string>
