@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.imaginationforpeople.android2.widget.SquareRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="130dp"
+    android:id="@+id/userslist_item_layout">
+    
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/userslist_item_loading" />
+    
+    <ImageView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/user_nophoto"
+        android:contentDescription="@string/userslist_item_image_description"
+        android:id="@+id/userslist_item_image"
+        android:layout_alignParentTop="true" />
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="2dp"
+        android:background="@android:color/black"
+        android:textColor="@android:color/white"
+        android:height="40dp"
+        android:id="@+id/userslist_item_text" />    
+</org.imaginationforpeople.android2.widget.SquareRelativeLayout>
