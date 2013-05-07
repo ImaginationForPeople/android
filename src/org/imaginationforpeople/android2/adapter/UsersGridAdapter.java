@@ -6,7 +6,10 @@ import org.imaginationforpeople.android2.R;
 import org.imaginationforpeople.android2.model.User;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -17,6 +20,7 @@ import android.widget.TextView;
 public class UsersGridAdapter extends BaseAdapter {
 	private Activity activity;
 	private List<User> users;
+	private LayoutInflater inflater;
 	
 	public UsersGridAdapter(Activity a, List<User> u) {
 		activity = a;
@@ -36,8 +40,13 @@ public class UsersGridAdapter extends BaseAdapter {
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
+		if(inflater == null) {
+			Context darkTheme = new ContextThemeWrapper(activity, R.style.AppThemeBlack);
+			inflater = (LayoutInflater) darkTheme.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		}
+		
 		if(convertView == null)
-			convertView = activity.getLayoutInflater().inflate(R.layout.userslist_item, parent, false);
+			convertView = inflater.inflate(R.layout.userslist_item, parent, false);
 		
 		User user = getItem(position);
 		TextView userTitle = (TextView) convertView.findViewById(R.id.userslist_item_text);
