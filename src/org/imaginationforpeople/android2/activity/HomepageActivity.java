@@ -208,14 +208,13 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 				projects.add(i, new ArrayList<I4pProjectTranslation>());
 			}
 		
-		if(savedInstanceState != null)
-			RibbonMenuItemClick(savedInstanceState.getInt("ribbon_item"));
-		
-		if(Build.VERSION.SDK_INT >= 11) {
+		if(Build.VERSION.SDK_INT >= 11)
 			spinnerHelper = new SpinnerHelperHoneycomb(this);
-		}
 		else
 			spinnerHelper = new SpinnerHelperEclair();
+		
+		if(savedInstanceState != null)
+			RibbonMenuItemClick(savedInstanceState.getInt("ribbon_item"));
 		
 		spinnerHelper.setListener(this);
 		if(activeRibonItem == R.id.ribbon_menu_projects) {
