@@ -6,4 +6,5 @@
     android:numColumns="auto_fit"
     android:columnWidth="140dp"
     android:stretchMode="columnWidth"
-    android:id="@android:id/list" />
+    android:id="@android:id/list"
+    android:background="#010101" />
