@@ -144,6 +144,8 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 		case R.id.ribbon_menu_projects:
 			spinnerHelper.init();
 			onSpinnerItemSelected(spinnerHelper.getCurrentSelection());
+			if(Build.VERSION.SDK_INT >= 11)
+				invalidateOptionsMenu();
 			break;
 		case R.id.ribbon_menu_workgroups:
 			setTitle(R.string.app_groups);
