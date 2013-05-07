@@ -11,7 +11,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.imaginationforpeople.android2.handler.ProjectsListImageHandler;
+import org.imaginationforpeople.android2.handler.ListImageHandler;
 import org.imaginationforpeople.android2.helper.DataHelper;
 import org.imaginationforpeople.android2.model.I4pProjectTranslation;
 import org.imaginationforpeople.android2.model.Picture;
@@ -21,12 +21,12 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 public class ProjectsListImagesThread extends Thread {
-	private ProjectsListImageHandler handler;
+	private ListImageHandler handler;
 	private List<I4pProjectTranslation> projects;
 	
 	private boolean stop = false;
 	
-	public ProjectsListImagesThread(ProjectsListImageHandler h, List<I4pProjectTranslation> p) {
+	public ProjectsListImagesThread(ListImageHandler h, List<I4pProjectTranslation> p) {
 		handler = h;
 		projects = p;
 	}

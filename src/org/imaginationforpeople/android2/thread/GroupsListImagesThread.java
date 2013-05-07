@@ -10,7 +10,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.imaginationforpeople.android2.handler.GroupsListImageHandler;
+import org.imaginationforpeople.android2.handler.ListImageHandler;
 import org.imaginationforpeople.android2.helper.DataHelper;
 import org.imaginationforpeople.android2.model.Group;
 
@@ -19,12 +19,12 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 public class GroupsListImagesThread extends Thread {
-	private GroupsListImageHandler handler;
+	private ListImageHandler handler;
 	private List<Group> groups;
 	
 	private boolean stop = false;
 	
-	public GroupsListImagesThread(GroupsListImageHandler h, List<Group> p) {
+	public GroupsListImagesThread(ListImageHandler h, List<Group> p) {
 		handler = h;
 		groups = p;
 	}

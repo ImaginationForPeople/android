@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.imaginationforpeople.android2.R;
 import org.imaginationforpeople.android2.activity.ProjectViewActivity;
 import org.imaginationforpeople.android2.adapter.ProjectsGridAdapter;
-import org.imaginationforpeople.android2.handler.ProjectsListImageHandler;
+import org.imaginationforpeople.android2.handler.ListImageHandler;
 import org.imaginationforpeople.android2.model.I4pProjectTranslation;
 import org.imaginationforpeople.android2.thread.ProjectsListImagesThread;
 
@@ -47,7 +47,7 @@ public class ProjectListFragment extends Fragment implements OnItemClickListener
 	public void onStart() {
 		super.onStart();
 		
-		ProjectsListImageHandler handler = new ProjectsListImageHandler(adapter);
+		ListImageHandler handler = new ListImageHandler(adapter);
 		imageThread = new ProjectsListImagesThread(handler, adapter.getProjects());
 		imageThread.start();
 	}

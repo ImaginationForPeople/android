@@ -3,7 +3,7 @@ package org.imaginationforpeople.android2.groupview;
 import org.imaginationforpeople.android2.R;
 import org.imaginationforpeople.android2.activity.ProjectViewActivity;
 import org.imaginationforpeople.android2.adapter.ProjectsGridAdapter;
-import org.imaginationforpeople.android2.handler.ProjectsListImageHandler;
+import org.imaginationforpeople.android2.handler.ListImageHandler;
 import org.imaginationforpeople.android2.helper.DataHelper;
 import org.imaginationforpeople.android2.model.Group;
 import org.imaginationforpeople.android2.model.I4pProjectTranslation;
@@ -50,7 +50,7 @@ public class ProjectsGroupViewFragment extends Fragment implements OnItemClickLi
 		super.onStart();
 		
 		if(!group.getProjects().isEmpty()) {
-			ProjectsListImageHandler handler = new ProjectsListImageHandler(adapter);
+			ListImageHandler handler = new ListImageHandler(adapter);
 			thread = new ProjectsListImagesThread(handler, group.getProjects());
 			thread.start();
 		}

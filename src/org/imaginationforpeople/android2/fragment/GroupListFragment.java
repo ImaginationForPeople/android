@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.imaginationforpeople.android2.R;
 import org.imaginationforpeople.android2.activity.GroupViewActivity;
 import org.imaginationforpeople.android2.adapter.GroupsGridAdapter;
-import org.imaginationforpeople.android2.handler.GroupsListImageHandler;
+import org.imaginationforpeople.android2.handler.ListImageHandler;
 import org.imaginationforpeople.android2.model.Group;
 import org.imaginationforpeople.android2.thread.GroupsListImagesThread;
 
@@ -46,7 +46,7 @@ public class GroupListFragment extends Fragment implements OnItemClickListener {
 	public void onStart() {
 		super.onStart();
 		
-		GroupsListImageHandler handler = new GroupsListImageHandler(adapter);
+		ListImageHandler handler = new ListImageHandler(adapter);
 		imageThread = new GroupsListImagesThread(handler, adapter.getGroups());
 		imageThread.start();
 	}
