@@ -57,7 +57,7 @@ public class UsersGridAdapter extends BaseAdapter {
 			}
 		} else {
 			userLoading.setVisibility(View.GONE);
-			userImage.setImageResource(R.drawable.project_nophoto);
+			userImage.setImageResource(R.drawable.user_nophoto);
 			userImage.setVisibility(View.VISIBLE);
 		}
 		
