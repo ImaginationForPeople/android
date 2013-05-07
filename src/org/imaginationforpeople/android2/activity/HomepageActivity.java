@@ -245,7 +245,7 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		if(Build.VERSION.SDK_INT >= 11) {
+		if(Build.VERSION.SDK_INT >= 11 && searchView != null) {
 			// Calling twice: first empty text field, second iconify the view
 			searchView.setIconified(true);
 			searchView.setIconified(true);
