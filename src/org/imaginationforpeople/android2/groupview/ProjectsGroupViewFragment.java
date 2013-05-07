@@ -38,7 +38,7 @@ public class ProjectsGroupViewFragment extends Fragment implements OnItemClickLi
 		} else {
 			adapter = new ProjectsGridAdapter(getActivity(), group.getProjects());
 			
-			GridView projectsLayout = (GridView) inflater.inflate(R.layout.projectslist, null);
+			GridView projectsLayout = (GridView) inflater.inflate(R.layout.list, null);
 			projectsLayout.setAdapter(adapter);
 			projectsLayout.setOnItemClickListener(this);
 			return projectsLayout;

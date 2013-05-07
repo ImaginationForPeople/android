@@ -33,7 +33,7 @@ public class MembersGroupViewFragment extends Fragment {
 		} else {
 			adapter = new UsersGridAdapter(getActivity(), group.getSubscribers());
 			
-			GridView projectsLayout = (GridView) inflater.inflate(R.layout.projectslist, null);
+			GridView projectsLayout = (GridView) inflater.inflate(R.layout.list, null);
 			projectsLayout.setAdapter(adapter);
 			return projectsLayout;
 		}

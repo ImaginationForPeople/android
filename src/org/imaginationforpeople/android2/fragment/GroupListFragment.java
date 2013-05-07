@@ -36,7 +36,7 @@ public class GroupListFragment extends Fragment implements OnItemClickListener {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.projectslist, container, false);
+		View view = inflater.inflate(R.layout.list, container, false);
 		GridView grid = (GridView) view.findViewById(android.R.id.list);
 		grid.setAdapter(adapter);
 		grid.setOnItemClickListener(this);
