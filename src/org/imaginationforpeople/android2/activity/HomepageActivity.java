@@ -63,6 +63,7 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 	private SearchView searchView;
 	private RibbonMenuView rbm;
 	private int activeRibonItem = R.id.ribbon_menu_projects;
+	private boolean isStopping = false;
 	
 	@TargetApi(11)
 	@Override
@@ -253,6 +254,7 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
+		isStopping = true;
 		for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++)
 			outState.putParcelableArrayList("projects_" + String.valueOf(i), projects.get(i));
 		outState.putParcelableArrayList("groups", groups);
@@ -344,6 +346,8 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 
 	@Override
 	public void onContentLoaded(int contentType, Bundle bundle) {
+		if(isStopping)
+			return;
 		Fragment fragment = null;
 		switch(contentType) {
 		case LoadingFragment.LOAD_BESTOF_PROJECTS:
@@ -360,6 +364,8 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 			fragment.setArguments(bundle);
 		}
 		FragmentManager fm = getSupportFragmentManager();
+		if(isStopping)
+			return;
 		fm.beginTransaction().replace(R.id.homepage_content, fragment).commit();
 	}
 
