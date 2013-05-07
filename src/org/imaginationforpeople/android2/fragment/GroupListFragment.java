@@ -29,6 +29,7 @@ public class GroupListFragment extends Fragment implements OnItemClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 		groups = getArguments().getParcelableArrayList(GROUPS_KEY);
 		adapter = new GroupsGridAdapter(getActivity(), groups);
 	}

@@ -52,6 +52,7 @@ public class LoadingFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 		mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 	}
 
