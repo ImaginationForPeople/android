@@ -158,7 +158,7 @@ public class ProjectViewActivity extends FragmentActivity {
 	
 	@TargetApi(11)
 	public void displayProject() {
-		setContentView(R.layout.projectview_root);
+		setContentView(R.layout.view_root);
 		displayMenu = true;
 		if(Build.VERSION.SDK_INT >= 11)
 			invalidateOptionsMenu(); // Rebuild the menu

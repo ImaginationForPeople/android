@@ -11,12 +11,6 @@ public abstract class BaseHandler extends Handler {
 	
 	public final static int SPECIFIC_UPDATE = 20;
 	
-	public final static int ERROR_HTTP = 10;
-	public final static int ERROR_TIMEOUT = 11;
-	public final static int ERROR_JSON = 12;
-	public final static int ERROR_UNKNOWN = 13;
-	public final static int ERROR_LOCATION = 14;
-	
 	@Override
 	public void handleMessage(Message msg) {
 		super.handleMessage(msg);

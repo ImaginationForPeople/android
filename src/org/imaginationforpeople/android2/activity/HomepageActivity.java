@@ -3,27 +3,28 @@ package org.imaginationforpeople.android2.activity;
 import java.util.ArrayList;
 
 import org.imaginationforpeople.android2.R;
-import org.imaginationforpeople.android2.adapter.ProjectsGridAdapter;
-import org.imaginationforpeople.android2.handler.BaseHandler;
-import org.imaginationforpeople.android2.handler.ProjectsListHandler;
-import org.imaginationforpeople.android2.handler.ProjectsListImageHandler;
+import org.imaginationforpeople.android2.fragment.FavoritesFragment;
+import org.imaginationforpeople.android2.fragment.GroupListFragment;
+import org.imaginationforpeople.android2.fragment.LoadingFragment;
+import org.imaginationforpeople.android2.fragment.ProjectListFragment;
 import org.imaginationforpeople.android2.helper.DataHelper;
 import org.imaginationforpeople.android2.helper.LanguageHelper;
 import org.imaginationforpeople.android2.homepage.SpinnerHelper;
+import org.imaginationforpeople.android2.homepage.SpinnerHelper.OnSpinnerItemSelectedListener;
 import org.imaginationforpeople.android2.homepage.SpinnerHelperEclair;
 import org.imaginationforpeople.android2.homepage.SpinnerHelperHoneycomb;
+import org.imaginationforpeople.android2.model.Group;
 import org.imaginationforpeople.android2.model.I4pProjectTranslation;
 import org.imaginationforpeople.android2.shake.ShakeAnimation;
 import org.imaginationforpeople.android2.shake.ShakeEventListener;
 import org.imaginationforpeople.android2.shake.ShakeAnimation.AnimationListener;
-import org.imaginationforpeople.android2.sqlite.FavoriteSqlite;
-import org.imaginationforpeople.android2.thread.BaseGetJson;
-import org.imaginationforpeople.android2.thread.ProjectsCountryListThread;
-import org.imaginationforpeople.android2.thread.ProjectsListImagesThread;
-import org.imaginationforpeople.android2.thread.ProjectsListThread;
+
+import com.darvds.ribbonmenu.OnRibbonChangeListener;
+import com.darvds.ribbonmenu.RibbonMenuView;
+import com.darvds.ribbonmenu.iRibbonMenuCallback;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -33,12 +34,11 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.location.Geocoder;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Message;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -47,66 +47,134 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.SearchView;
-import android.widget.Toast;
 
-public class HomepageActivity extends Activity implements OnClickListener,
-		OnCancelListener, ShakeEventListener.ShakeListener, AnimationListener, OnCheckedChangeListener {
-	private static BaseGetJson[] threads = new BaseGetJson[DataHelper.CONTENT_NUMBER];
-	private ProjectsListImagesThread imageThread;
+public class HomepageActivity extends FragmentActivity implements OnClickListener,
+		OnCancelListener, ShakeEventListener.ShakeListener, AnimationListener,
+		OnCheckedChangeListener, LoadingFragment.OnContentLoadedListener, OnSpinnerItemSelectedListener,
+		iRibbonMenuCallback, OnRibbonChangeListener {
 	private ArrayList<ArrayList<I4pProjectTranslation>> projects = new ArrayList<ArrayList<I4pProjectTranslation>>(DataHelper.CONTENT_NUMBER);
-	private ProjectsGridAdapter adapters[] = new ProjectsGridAdapter[DataHelper.CONTENT_NUMBER];
+	private ArrayList<Group> groups = new ArrayList<Group>();
 	private AlertDialog languagesDialog;
 	private SharedPreferences preferences;
 	private SpinnerHelper spinnerHelper;
 	private AlertDialog contentDialog;
 	private ShakeEventListener shaker;
 	private ShakeAnimation animation;
-	private LocationManager mLocationManager;
 	private SearchView searchView;
+	private RibbonMenuView rbm;
+	private int activeRibonItem = R.id.ribbon_menu_projects;
+	private boolean isStopping = false;
 	
 	@TargetApi(11)
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.projectslist, menu);
-		
-		if(Build.VERSION.SDK_INT >= 11) {
-			SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-			searchView = (SearchView) menu.findItem(R.id.homepage_search).getActionView();
-			searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-			searchView.setIconifiedByDefault(true);
+		switch(activeRibonItem) {
+		case R.id.ribbon_menu_projects:
+			inflater.inflate(R.menu.projectslist, menu);
+			
+			if(Build.VERSION.SDK_INT >= 11) {
+				SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+				searchView = (SearchView) menu.findItem(R.id.homepage_search).getActionView();
+				searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+				searchView.setIconifiedByDefault(true);
+			}
+			break;
+		case R.id.ribbon_menu_favorites:
+		case R.id.ribbon_menu_workgroups:
+			if(Build.VERSION.SDK_INT < 11)
+				inflater.inflate(R.menu.ribbon_controller, menu);
+			break;
 		}
 		
 		return super.onCreateOptionsMenu(menu);
 	}
 	
 	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		if(Build.VERSION.SDK_INT < 11) {
+			MenuItem ribbon = null;
+			switch(activeRibonItem) {
+			case R.id.ribbon_menu_projects:
+				ribbon = menu.getItem(2);
+				break;
+			default:
+				ribbon = menu.getItem(0);
+				break;
+			}
+			
+			if(rbm.isMenuVisible())
+				ribbon.setTitle(R.string.homepage_menu_ribbon_close);
+			else
+				ribbon.setTitle(R.string.homepage_menu_ribbon_open);
+		}		
+		return super.onPrepareOptionsMenu(menu);
+	}
+	
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
+		case android.R.id.home:
+		case R.id.homepage_ribbon_button:
+			rbm.toggleMenu();
+			break;
 		case R.id.homepage_content:
 			AlertDialog.Builder contentBuilder = new AlertDialog.Builder(this);
 			contentBuilder.setTitle(R.string.homepage_spinner_content_prompt);
-			contentBuilder.setSingleChoiceItems(R.array.homepage_spinner_dropdown, spinnerHelper.getCurrentSelection()                                                                                                                                      , spinnerHelper);
+			contentBuilder.setSingleChoiceItems(R.array.homepage_spinner_dropdown, spinnerHelper.getCurrentSelection(), spinnerHelper);
 			contentDialog = contentBuilder.create();
 			contentDialog.show();
+			break;
 		case R.id.homepage_search:
 			onSearchRequested();
-			break;
-		case R.id.homepage_favorites:
-			FavoriteSqlite db = new FavoriteSqlite(this);
-			if(db.hasFavorites()) {
-				Intent intent = new Intent(this, FavoritesActivity.class);
-				startActivity(intent);
-			} else {
-				Toast t = Toast.makeText(this, R.string.favorites_no, Toast.LENGTH_SHORT);
-				t.show();
-			}
 			break;
 		case R.id.homepage_lang:
 			languagesDialog.show();
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@Override
+	public void RibbonMenuItemClick(int itemId) {
+		activeRibonItem = itemId;
+		Fragment fragment;
+		FragmentManager fm = getSupportFragmentManager();
+		switch(itemId) {
+		case R.id.ribbon_menu_projects:
+			spinnerHelper.init();
+			onSpinnerItemSelected(spinnerHelper.getCurrentSelection());
+			if(Build.VERSION.SDK_INT >= 11)
+				invalidateOptionsMenu();
+			break;
+		case R.id.ribbon_menu_workgroups:
+			setTitle(R.string.app_groups);
+			if(Build.VERSION.SDK_INT >= 11) {
+				getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+				invalidateOptionsMenu();
+			}
+			Bundle data = new Bundle();
+			if(groups.size() > 0) {
+				data.putParcelableArrayList(GroupListFragment.GROUPS_KEY, groups);
+				fragment = new GroupListFragment();
+				fragment.setArguments(data);
+				fm.beginTransaction().replace(R.id.homepage_content, fragment).commit();
+			} else {
+				data.putInt(LoadingFragment.CONTENT_TO_LOAD, LoadingFragment.LOAD_GROUPS);
+				data.putInt(LoadingFragment.TEXT_RESID, R.string.loading_groups);
+				fragment = new LoadingFragment();
+				fragment.setArguments(data);
+				fm.beginTransaction().replace(R.id.homepage_content, fragment).commit();
+			}
+			break;
+		case R.id.ribbon_menu_favorites:
+			if(Build.VERSION.SDK_INT >= 11)
+				getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+			fragment = new FavoritesFragment();
+			fm.beginTransaction().replace(R.id.homepage_content, fragment).commit();
+			break;
+		}
 	}
 	
 	@TargetApi(11)
@@ -117,34 +185,46 @@ public class HomepageActivity extends Activity implements OnClickListener,
 		// -- Initializing application
 		preferences = getPreferences(Context.MODE_PRIVATE);
 		LanguageHelper.setSharedPreferences(preferences);
-		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		
+		// -- Initializing ribbon menu
+		rbm = (RibbonMenuView) findViewById(R.id.homepage_ribbon);
+		rbm.setListener(this);
+		rbm.setMenuClickCallback(this);
+		rbm.setMenuItems(R.menu.homepage_ribbon);
+		rbm.setActiveItem(R.id.ribbon_menu_projects);
+		
+		if(Build.VERSION.SDK_INT >= 11)
+			getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		// -- Initializing projects list
-		if(savedInstanceState != null)
+		if(savedInstanceState != null) {
 			for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++) {
 				ArrayList<I4pProjectTranslation> project = savedInstanceState.getParcelableArrayList("projects_" + String.valueOf(i)); 
 				projects.add(i, project); 
 			}
-		else
+			ArrayList<Group> groups = savedInstanceState.getParcelableArrayList("groups");
+			this.groups = groups;
+		} else
 			for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++) {
 				projects.add(i, new ArrayList<I4pProjectTranslation>());
 			}
 		
-		adapters = new ProjectsGridAdapter[DataHelper.CONTENT_NUMBER];
-		for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++) {
-			adapters[i] = new ProjectsGridAdapter(this, projects.get(i));
-		}
-		
 		if(Build.VERSION.SDK_INT >= 11)
-			spinnerHelper = new SpinnerHelperHoneycomb();
+			spinnerHelper = new SpinnerHelperHoneycomb(this);
 		else
 			spinnerHelper = new SpinnerHelperEclair();
 		
-		spinnerHelper.setActivity(this);
-		spinnerHelper.init();
+		spinnerHelper.setListener(this);
 		
-		if(savedInstanceState != null && savedInstanceState.containsKey(SpinnerHelper.STATE_KEY))
-			spinnerHelper.restoreCurrentSelection(savedInstanceState.getInt(SpinnerHelper.STATE_KEY));
+		if(savedInstanceState != null)
+			RibbonMenuItemClick(savedInstanceState.getInt("ribbon_item"));
+		
+		if(activeRibonItem == R.id.ribbon_menu_projects) {
+			spinnerHelper.init();
+			
+			if(savedInstanceState != null && savedInstanceState.containsKey(SpinnerHelper.STATE_KEY))
+				spinnerHelper.restoreCurrentSelection(savedInstanceState.getInt(SpinnerHelper.STATE_KEY));
+		}
 		
 		// -- Initializing language chooser UI
 		int selectedLanguage = LanguageHelper.getPreferredLanguageInt();
@@ -166,7 +246,7 @@ public class HomepageActivity extends Activity implements OnClickListener,
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		if(Build.VERSION.SDK_INT >= 11) {
+		if(Build.VERSION.SDK_INT >= 11 && searchView != null) {
 			// Calling twice: first empty text field, second iconify the view
 			searchView.setIconified(true);
 			searchView.setIconified(true);
@@ -175,38 +255,42 @@ public class HomepageActivity extends Activity implements OnClickListener,
 	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		spinnerHelper.stopHandle();
-		spinnerHelper.saveCurrentSelection(outState);
+		isStopping = true;
 		for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++)
 			outState.putParcelableArrayList("projects_" + String.valueOf(i), projects.get(i));
+		outState.putParcelableArrayList("groups", groups);
+		spinnerHelper.saveCurrentSelection(outState);
+		outState.putInt("ribbon_item", activeRibonItem);
 		super.onSaveInstanceState(outState);
 	}
 
 	@Override
 	protected void onPause() {
 		shaker.unregisterListener();
-		stopLocationListener();
 		super.onPause();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		spinnerHelper.startHandle();
 		shaker.registerListener();
-		
-		changeContent(spinnerHelper.getCurrentSelection());
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		spinnerHelper.stopHandle();
-		requestStopThreads();
 		if(languagesDialog.isShowing())
 			languagesDialog.cancel();
 	}
 	
+	@Override
+	public void onBackPressed() {
+		if(rbm.isMenuVisible())
+			rbm.hideMenu();
+		else
+			super.onBackPressed();
+	}
+
 	public void onClick(DialogInterface dialog, int which) {
 		if(which == DialogInterface.BUTTON_NEGATIVE) {
 			finish();
@@ -223,74 +307,10 @@ public class HomepageActivity extends Activity implements OnClickListener,
 		finish();
 	}
 	
-	public void changeContent(int content) {
-		// Setting title on Android 2.x
-		if(Build.VERSION.SDK_INT < 11)
-			setTitle(getResources().getStringArray(R.array.homepage_spinner_dropdown)[content]);
-		
-		stopLocationListener();
-		requestStopThreads();
-		spinnerHelper.displayContent(adapters[content]);
-		if(projects.get(content).size() == 0) {
-			ProjectsListHandler handler = new ProjectsListHandler(this, spinnerHelper, adapters[content]);
-			if(content == DataHelper.CONTENT_COUNTRY) {
-				ArrayList<String> providers = new ArrayList<String>();
-				if(mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
-					providers.add(LocationManager.NETWORK_PROVIDER);
-				if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-					providers.add(LocationManager.GPS_PROVIDER);
-				
-				if(providers.size() == 0) {
-					Message msg = new Message();
-					msg.arg1 = BaseHandler.STATUS_ERROR;
-					msg.arg2 = BaseHandler.ERROR_LOCATION;
-					handler.sendMessage(msg);
-				}
-				
-				Geocoder mGeocoder = new Geocoder(this);
-				threads[content] = new ProjectsCountryListThread(handler, content, mLocationManager, mGeocoder);
-				
-				for(String provider : providers)
-					mLocationManager.requestLocationUpdates(provider, 0, 0, (LocationListener) threads[content]);
-			} else {
-				threads[content] = new ProjectsListThread(handler, content);
-				threads[content].start();
-			}
-		} else
-			loadImages(adapters[content]);
-	}
-	
-	public void updateContent() {
-		spinnerHelper.displayContent(adapters[spinnerHelper.getCurrentSelection()], true);
-	}
-	
-	public void loadImages(ProjectsGridAdapter adapter) {
-		if(imageThread != null && imageThread.isAlive())
-			imageThread.requestStop();
-		
-		ProjectsListImageHandler handler = new ProjectsListImageHandler(adapter);
-		imageThread = new ProjectsListImagesThread(handler, adapter.getProjects());
-		imageThread.start();
-	}
-	
 	public void resetProjects() {
-		for(ProjectsGridAdapter adapter : adapters)
-			adapter.clearProjects();
-		changeContent(spinnerHelper.getCurrentSelection());
-	}
-	
-	public void requestStopThreads() {
-		for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++) {
-			if(threads[i] != null)
-				threads[i].requestStop();
-			if(imageThread != null && imageThread.isAlive())
-				imageThread.requestStop();
-		}
-	}
-	
-	private void stopLocationListener() {
-		if(threads[DataHelper.CONTENT_COUNTRY] != null)
-			mLocationManager.removeUpdates((LocationListener) threads[DataHelper.CONTENT_COUNTRY]);
+		for(ArrayList<I4pProjectTranslation> array : projects)
+			array.clear();
+		onSpinnerItemSelected(spinnerHelper.getCurrentSelection());
 	}
 
 	public void onShake() {
@@ -323,5 +343,74 @@ public class HomepageActivity extends Activity implements OnClickListener,
 		Editor editor = preferences.edit();
 		editor.putBoolean("shake_hint", !isChecked);
 		editor.commit();
+	}
+
+	@Override
+	public void onContentLoaded(int contentType, Bundle bundle) {
+		if(isStopping)
+			return;
+		Fragment fragment = null;
+		switch(contentType) {
+		case LoadingFragment.LOAD_BESTOF_PROJECTS:
+		case LoadingFragment.LOAD_LATEST_PROJECTS:
+		case LoadingFragment.LOAD_MYCOUNTRY_PROJECTS:
+			ArrayList<I4pProjectTranslation> projectsList = bundle.getParcelableArrayList(ProjectListFragment.PROJECTS_KEY);
+			projects.set(contentType, projectsList);
+			fragment = new ProjectListFragment();
+			fragment.setArguments(bundle);
+			break;
+		case LoadingFragment.LOAD_GROUPS:
+			groups = bundle.getParcelableArrayList(GroupListFragment.GROUPS_KEY);
+			fragment = new GroupListFragment();
+			fragment.setArguments(bundle);
+		}
+		FragmentManager fm = getSupportFragmentManager();
+		if(isStopping)
+			return;
+		fm.beginTransaction().replace(R.id.homepage_content, fragment).commit();
+	}
+
+	@Override
+	public void onSpinnerItemSelected(int itemId) {
+		if(Build.VERSION.SDK_INT >= 11)
+			setTitle("");
+		else
+			setTitle(getResources().getStringArray(R.array.homepage_spinner_dropdown)[itemId]);
+		
+		Bundle data = new Bundle();
+		data.putParcelableArrayList(ProjectListFragment.PROJECTS_KEY, projects.get(itemId));
+		Fragment fragment;
+		if(projects.get(itemId).size() > 0)
+			fragment = new ProjectListFragment();
+		else {
+			fragment = new LoadingFragment();
+			data.putInt(LoadingFragment.CONTENT_TO_LOAD, itemId);
+			switch(itemId) {
+			case LoadingFragment.LOAD_MYCOUNTRY_PROJECTS:
+				data.putInt(LoadingFragment.TEXT_RESID, R.string.loading_location);
+				break;
+			case LoadingFragment.LOAD_BESTOF_PROJECTS:
+			case LoadingFragment.LOAD_LATEST_PROJECTS:
+				data.putInt(LoadingFragment.TEXT_RESID, R.string.loading_projects);
+				break;
+			}
+		}
+		fragment.setArguments(data);
+		FragmentManager fm = getSupportFragmentManager();
+		fm.beginTransaction().replace(R.id.homepage_content, fragment).commit();
+	}
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@Override
+	public void onRibbonOpen() {
+		if(Build.VERSION.SDK_INT >= 11)
+			getActionBar().setDisplayHomeAsUpEnabled(false);
+	}
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@Override
+	public void onRibbonClose() {
+		if(Build.VERSION.SDK_INT >= 11)
+			getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 }

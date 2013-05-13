@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:numColumns="auto_fit"
-    android:columnWidth="130dp"
+    android:columnWidth="140dp"
     android:stretchMode="columnWidth"
-    android:id="@android:id/list" />
+    android:id="@android:id/list"
+    android:background="#010101" />

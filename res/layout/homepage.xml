@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-	<LinearLayout
+	<FrameLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:orientation="vertical"
@@ -12,4 +12,8 @@
        	android:id="@+id/homepage_shake"
         android:src="@drawable/shake_phone"
         android:contentDescription="@string/homepage_shake_description" />
+	<com.darvds.ribbonmenu.RibbonMenuView
+        android:id="@+id/homepage_ribbon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </FrameLayout>

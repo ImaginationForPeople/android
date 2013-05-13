@@ -47,8 +47,11 @@ public class User implements Parcelable {
 			String path;
 			try {
 				path = new URL(avatarUrl).getPath();
-				FileInputStream file = DataHelper.openFileInput(DataHelper.FILE_PREFIX_USER_AVATAR + path.substring(path.lastIndexOf('/') + 1));
-				avatarDrawable = Drawable.createFromStream(file, null);
+				if(DataHelper.checkAvatarFile(avatarUrl)) {
+					FileInputStream file = DataHelper.openFileInput(DataHelper.FILE_PREFIX_USER_AVATAR + path.substring(path.lastIndexOf('/') + 1));
+					avatarDrawable = Drawable.createFromStream(file, null);
+				} else
+					return null;
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 				return null;

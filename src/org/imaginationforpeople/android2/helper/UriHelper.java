@@ -3,6 +3,7 @@ package org.imaginationforpeople.android2.helper;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import org.imaginationforpeople.android2.model.Group;
 import org.imaginationforpeople.android2.model.I4pProjectTranslation;
 
 import android.location.Address;
@@ -58,5 +59,17 @@ public class UriHelper extends BaseHelper {
 			e.printStackTrace();
 			return API_BASE_URL + "/search/project/?q=" + search + "&format=json&lang=" + LanguageHelper.getPreferredLanguageCode();
 		}
+	}
+	
+	public static String getGroupsListUri() {
+		return API_BASE_URL + "/workgroup/?format=json";
+	}
+	
+	public static String getGroupViewUriBySlug(String slug) {
+		return API_BASE_URL + "/workgroup/" + slug + "/?format=json";
+	}
+	
+	public static String getGroupUrl(Group group) {
+		return BASE_URL + "/group/" + group.getSlug() + "/";
 	}
 }
