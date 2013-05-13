@@ -214,10 +214,11 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 		else
 			spinnerHelper = new SpinnerHelperEclair();
 		
+		spinnerHelper.setListener(this);
+		
 		if(savedInstanceState != null)
 			RibbonMenuItemClick(savedInstanceState.getInt("ribbon_item"));
 		
-		spinnerHelper.setListener(this);
 		if(activeRibonItem == R.id.ribbon_menu_projects) {
 			spinnerHelper.init();
 			
