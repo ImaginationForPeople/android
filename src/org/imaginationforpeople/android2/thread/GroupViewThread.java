@@ -4,10 +4,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.imaginationforpeople.android2.handler.GroupViewHandler;
 import org.imaginationforpeople.android2.helper.DataHelper;
 import org.imaginationforpeople.android2.helper.UriHelper;
@@ -42,16 +38,11 @@ public class GroupViewThread extends BaseGetJson {
 		if(group.getThumbUrl() != null) {
 			if(isStopped())
 				return null;
-			HttpClient httpClient;
-			HttpGet httpGet;
+			URI uri;
 			if(!DataHelper.checkThumbFile(group.getThumbUrl())) {
-				httpClient = new DefaultHttpClient();
-				httpGet = new HttpGet();
 				try {
-					httpGet.setURI(new URI(group.getThumbUrl()));
-					httpGet.addHeader("Accept-Encoding", "gzip");
-					HttpResponse response = httpClient.execute(httpGet);
-					Bitmap bitmap = BitmapFactory.decodeStream(response.getEntity().getContent());
+					uri = new URI(group.getThumbUrl());
+					Bitmap bitmap = BitmapFactory.decodeStream(download(uri));
 					group.setThumbBitmap(bitmap);
 				} catch (URISyntaxException e) {
 					Log.w("Thumbnail", "Unable to load URI " + group.getThumbUrl());
@@ -59,13 +50,9 @@ public class GroupViewThread extends BaseGetJson {
 				}
 			}
 			if(!DataHelper.checkGroupFile(group.getImageUrl())) {
-				httpClient = new DefaultHttpClient();
-				httpGet = new HttpGet();
 				try {
-					httpGet.setURI(new URI(group.getImageUrl()));
-					httpGet.addHeader("Accept-Encoding", "gzip");
-					HttpResponse response = httpClient.execute(httpGet);
-					Bitmap bitmap = BitmapFactory.decodeStream(response.getEntity().getContent());
+					uri = new URI(group.getImageUrl());
+					Bitmap bitmap = BitmapFactory.decodeStream(download(uri));
 					group.setImageBitmap(bitmap);
 				} catch (URISyntaxException e) {
 					Log.w("Thumbnail", "Unable to load URI " + group.getImageUrl());

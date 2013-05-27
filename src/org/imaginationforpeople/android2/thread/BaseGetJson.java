@@ -1,6 +1,7 @@
 package org.imaginationforpeople.android2.thread;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 
 import org.apache.http.HttpResponse;
@@ -113,5 +114,14 @@ public abstract class BaseGetJson extends Thread {
 		msg.arg1 = BaseHandler.STATUS_ERROR;
 		msg.arg2 = errorCode;
 		handler.sendMessage(msg);
+	}
+	
+	protected InputStream download(URI uri) throws IOException {
+		HttpClient httpClient = new DefaultHttpClient();
+		HttpGet httpGet = new HttpGet();
+		httpGet.setURI(uri);
+		httpGet.addHeader("Accept-Encoding", "gzip");
+		HttpResponse response = httpClient.execute(httpGet);
+		return response.getEntity().getContent();
 	}
 }

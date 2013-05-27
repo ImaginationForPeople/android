@@ -4,10 +4,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.imaginationforpeople.android2.handler.ProjectViewHandler;
 import org.imaginationforpeople.android2.helper.DataHelper;
 import org.imaginationforpeople.android2.helper.UriHelper;
@@ -55,16 +51,11 @@ public class ProjectViewThread extends BaseGetJson {
 			for(Picture picture : project.getProject().getPictures()) {
 				if(isStopped())
 					return null;
-				HttpClient httpClient;
-				HttpGet httpGet;
+				URI uri;
 				if(!DataHelper.checkThumbFile(picture.getThumbUrl())) {
-					httpClient = new DefaultHttpClient();
-					httpGet = new HttpGet();
 					try {
-						httpGet.setURI(new URI(picture.getThumbUrl()));
-						httpGet.addHeader("Accept-Encoding", "gzip");
-						HttpResponse response = httpClient.execute(httpGet);
-						Bitmap bitmap = BitmapFactory.decodeStream(response.getEntity().getContent());
+						uri = new URI(picture.getThumbUrl());
+						Bitmap bitmap = BitmapFactory.decodeStream(download(uri));
 						picture.setThumbBitmap(bitmap);
 					} catch (URISyntaxException e) {
 						Log.w("Thumbnail", "Unable to load URI " + picture.getThumbUrl());
@@ -72,13 +63,9 @@ public class ProjectViewThread extends BaseGetJson {
 					}
 				}
 				if(!DataHelper.checkImageFile(picture.getImageUrl())) {
-					httpClient = new DefaultHttpClient();
-					httpGet = new HttpGet();
 					try {
-						httpGet.setURI(new URI(picture.getImageUrl()));
-						httpGet.addHeader("Accept-Encoding", "gzip");
-						HttpResponse response = httpClient.execute(httpGet);
-						Bitmap bitmap = BitmapFactory.decodeStream(response.getEntity().getContent());
+						uri = new URI(picture.getImageUrl());
+						Bitmap bitmap = BitmapFactory.decodeStream(download(uri));
 						picture.setImageBitmap(bitmap);
 					} catch (URISyntaxException e) {
 						Log.w("Thumbnail", "Unable to load URI " + picture.getImageUrl());
@@ -93,13 +80,9 @@ public class ProjectViewThread extends BaseGetJson {
 				if(isStopped())
 					return null;
 				if(!DataHelper.checkAvatarFile(member.getAvatarUrl())) {
-					HttpClient httpClient = new DefaultHttpClient();
-					HttpGet httpGet = new HttpGet();
 					try {
-						httpGet.setURI(new URI(member.getAvatarUrl()));
-						httpGet.addHeader("Accept-Encoding", "gzip");
-						HttpResponse response = httpClient.execute(httpGet);
-						Drawable drawable = Drawable.createFromStream(response.getEntity().getContent(), null);
+						URI uri = new URI(member.getAvatarUrl());
+						Drawable drawable = Drawable.createFromStream(download(uri), null);
 						member.setAvatarDrawable(drawable);
 					} catch (URISyntaxException e) {
 						Log.w("Thumbnail", "Unable to load URI " + member.getAvatarUrl());
