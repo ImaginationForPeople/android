@@ -94,7 +94,7 @@
     <string name="groupview_description_image_description">Group image</string>
     <string name="groupview_description_themes">THEMES</string>
     <string name="groupview_description_about">ABOUT THE GROUP</string>
-    <string name="groupview_projects_noprojects">There is not any related projects in this group</string>
+    <string name="groupview_projects_noprojects">There are no related projects in this group</string>
     <string name="groupview_subscribers_nosubscribers">Nobody has subscribed to this group</string>
     
     <!-- Favorites keys -->
