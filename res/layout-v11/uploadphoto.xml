@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="5dp">
+    
+    <RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content">
+	    
+	    <ImageView
+	        android:layout_alignParentTop="true"
+	        android:layout_alignParentRight="true"
+	        android:layout_width="65dp"
+	        android:layout_height="65dp"
+	        android:layout_gravity="right"
+	        android:scaleType="centerCrop"
+	        android:id="@+id/uploadphoto_thumb"
+	        android:contentDescription="@string/uploadphoto_thumb_description" />
+	    
+	    <LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:orientation="vertical" >
+		    
+		    <TextView
+		        android:layout_width="wrap_content"
+		        android:layout_height="50dp"
+		        android:layout_marginRight="70dp"
+		        android:gravity="center_vertical"
+		        android:textSize="20sp"
+		        android:textStyle="bold"
+		        android:id="@+id/uploadphoto_project" />
+		    
+		    <TextView
+		        style="@style/colorTitle"
+		        android:text="@string/uploadphoto_description"
+		        android:textColor="@color/i4p_1" />
+		    
+		    <View 
+	            style="@style/colorLine"
+	            android:background="@color/i4p_1" />
+		
+		    <EditText
+		        android:id="@+id/uploadphoto_description"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:background="@drawable/edit_text_i4p_1" />
+		    
+		    <TextView
+		        style="@style/colorTitle"
+		        android:text="@string/uploadphoto_license_title"
+		        android:textColor="@color/i4p_2" />
+		    
+		    <View 
+	            style="@style/colorLine"
+	            android:background="@color/i4p_2" />
+		
+		    <Spinner
+		        android:id="@+id/uploadphoto_license"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:entries="@array/uploadphoto_license_content" />
+		    
+		    <TextView
+		        style="@style/colorTitle"
+		        android:text="@string/uploadphoto_author"
+		        android:textColor="@color/i4p_3" />
+		    <View 
+	            style="@style/colorLine"
+	            android:background="@color/i4p_3" />
+		    
+		    <EditText
+		        android:id="@+id/uploadphoto_author"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:background="@drawable/edit_text_i4p_3" />
+		    
+		    <TextView
+		        style="@style/colorTitle"
+		        android:text="@string/uploadphoto_source"
+		        android:textColor="@color/i4p_4" />
+		    
+		    <View 
+	            style="@style/colorLine"
+	            android:background="@color/i4p_4" />
+		    
+		    <EditText
+		        android:id="@+id/uploadphoto_source"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:background="@drawable/edit_text_i4p_4" />
+		    
+		</LinearLayout>
+	    
+	</RelativeLayout>
+    
+</ScrollView>
