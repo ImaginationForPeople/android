@@ -7,6 +7,9 @@ import org.imaginationforpeople.android2.helper.DisplayHelper;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -22,6 +25,11 @@ public class UploadPhotoActivity extends Activity {
 	public final static String PROJECT_LANG = "project_lang";
 	public final static String PROJECT_SLUG = "project_slug";
 	public final static String PROJECT_NAME = "project_name";
+	
+	private final static String AUTHOR_NAME = "author_name";
+	private final static String SOURCE_NAME = "source_name";
+	
+	private SharedPreferences preferences;
 
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	@Override
@@ -55,14 +63,25 @@ public class UploadPhotoActivity extends Activity {
 
 		Spinner license = (Spinner) findViewById(R.id.uploadphoto_license);
 		license.setSelection(1);
+		
+		preferences = getPreferences(Context.MODE_PRIVATE);
+		if(preferences.contains(AUTHOR_NAME)) {
+			EditText author = (EditText) findViewById(R.id.uploadphoto_author);
+			author.setText(preferences.getString(AUTHOR_NAME, ""));
+		}
 
-		String manufacturer = Build.MANUFACTURER.toUpperCase(Locale.US);
-		String model = Build.MODEL;
-		String device = model.startsWith(manufacturer) ?
-				model
-			  : manufacturer + " " + model;
+		String sourceText;
+		if(preferences.contains(SOURCE_NAME)) {
+			sourceText = preferences.getString(SOURCE_NAME, "");
+		} else {
+			String manufacturer = Build.MANUFACTURER.toUpperCase(Locale.US);
+			String model = Build.MODEL;
+			sourceText = model.startsWith(manufacturer) ?
+					model
+				  : manufacturer + " " + model;
+		}
 		EditText source = (EditText) findViewById(R.id.uploadphoto_source);
-		source.setText(device);
+		source.setText(sourceText);
 	}
 
 	@Override
@@ -76,6 +95,14 @@ public class UploadPhotoActivity extends Activity {
 		switch(item.getItemId()) {
 		case android.R.id.home:
 			finish();
+			break;
+		case R.id.uploadphoto_menu_send:
+			EditText author = (EditText) findViewById(R.id.uploadphoto_author);
+			EditText source = (EditText) findViewById(R.id.uploadphoto_source);
+			Editor edit = preferences.edit();
+			edit.putString(AUTHOR_NAME, author.getText().toString().trim());
+			edit.putString(SOURCE_NAME, source.getText().toString().trim());
+			edit.commit();
 			break;
 		}
 		return super.onMenuItemSelected(featureId, item);
