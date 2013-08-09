@@ -19,3 +19,6 @@ local.properties
 .classpath
 .project
 .settings/
+
+# Android project configuration file
+src/org/imaginationforpeople/android2/helper/ConfigHelper.java
