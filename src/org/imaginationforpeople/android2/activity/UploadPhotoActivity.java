@@ -158,7 +158,9 @@ public class UploadPhotoActivity extends Activity implements OnClickListener {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if(!blockBack) {
-			getMenuInflater().inflate(R.menu.uploadphoto, menu);
+			if(menu.size() == 0)
+				getMenuInflater().inflate(R.menu.uploadphoto, menu);
+
 			return true;
 		}
 		return false;
