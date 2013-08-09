@@ -7,7 +7,6 @@ import java.util.Locale;
 import org.imaginationforpeople.android2.R;
 
 import android.content.SharedPreferences;
-import android.util.Log;
 
 public class LanguageHelper extends BaseHelper {
 	private static List<String> languagesCodes;
@@ -45,7 +44,6 @@ public class LanguageHelper extends BaseHelper {
 	public static String getPreferredLanguageCode() {
 		String languageCode;
 		
-		Log.w("warn", preferences.toString());
 		int intLanguage = preferences.getInt("language", -1);
 		if(intLanguage == -1) {
 			if(getAllLanguagesCodes().contains(Locale.getDefault().getLanguage()))

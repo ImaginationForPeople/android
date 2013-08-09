@@ -16,6 +16,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.imaginationforpeople.android2.handler.BaseHandler;
 import org.imaginationforpeople.android2.helper.ErrorHelper;
+import org.imaginationforpeople.android2.helper.NetworkHelper;
 import org.json.JSONException;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -97,6 +98,7 @@ public abstract class BaseGetJson extends Thread {
 		HttpClient httpClient = new DefaultHttpClient(basicHttpParams);
 		
 		HttpGet httpGet = new HttpGet();
+		NetworkHelper.addBasicHttpAuth(httpGet);
 		httpGet.setHeader("Accept", "application/json");
 		URI uri = new URI(requestUri);
 		httpGet.setURI(uri);

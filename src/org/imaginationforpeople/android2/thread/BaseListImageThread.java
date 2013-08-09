@@ -10,6 +10,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.imaginationforpeople.android2.helper.NetworkHelper;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,6 +30,7 @@ public abstract class BaseListImageThread extends Thread {
 		try {
 			URI uri = new URI(url);
 			httpGet.setURI(uri);
+			NetworkHelper.addBasicHttpAuth(httpGet);
 			httpGet.addHeader("Accept-Encoding", "gzip");
 			HttpResponse response = httpClient.execute(httpGet);
 			return response.getEntity().getContent();
