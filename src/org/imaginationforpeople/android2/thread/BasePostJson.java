@@ -16,6 +16,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.imaginationforpeople.android2.handler.BaseHandler;
 import org.imaginationforpeople.android2.helper.ErrorHelper;
+import org.imaginationforpeople.android2.helper.NetworkHelper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -94,6 +95,7 @@ public abstract class BasePostJson extends Thread {
 		HttpClient httpClient = new DefaultHttpClient(basicHttpParams);
 
 		httpPost = new HttpPost();
+		NetworkHelper.addBasicHttpAuth(httpPost);
 		httpPost.setHeader("Accept", "application/json");
 		httpPost.setHeader("Content-Type", "application/json");
 		URI uri = new URI(requestUri);

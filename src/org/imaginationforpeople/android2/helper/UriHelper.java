@@ -33,7 +33,7 @@ public class UriHelper extends BaseHelper {
 	}
 	
 	public static String getPictureUploadUri() {
-		return API_BASE_URL + "/picture/";
+		return ConfigHelper.API_BASE_URL + "/picture/";
 	}
 	
 	public static String getRandomProjectViewUri() {
