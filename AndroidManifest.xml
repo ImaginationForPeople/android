@@ -55,8 +55,7 @@
         <activity
             android:name=".activity.UploadPhotoActivity"
             android:label="@string/app_uploadphoto"
-            android:theme="@style/AppThemeWhite"
-            android:windowSoftInputMode="adjustResize|stateVisible" />
+            android:theme="@style/AppThemeWhite" />
         <activity
             android:name=".activity.SearchActivity"
             android:theme="@style/AppThemeWhite"

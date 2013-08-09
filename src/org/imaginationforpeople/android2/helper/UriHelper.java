@@ -35,6 +35,10 @@ public class UriHelper extends BaseHelper {
 		return API_BASE_URL + "/project/" + language_code + "/" + slug;
 	}
 	
+	public static String getPictureUploadUri() {
+		return API_BASE_URL + "/picture/";
+	}
+	
 	public static String getRandomProjectViewUri() {
 		return API_BASE_URL + "/project/random/?format=json&lang=" + LanguageHelper.getPreferredLanguageCode();
 	}

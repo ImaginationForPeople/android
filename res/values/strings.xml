@@ -17,6 +17,9 @@
     <string name="loading_projects">Loading projects</string>
     <string name="loading_groups">Loading groups</string>
     
+    <!-- Error keys -->
+    <string name="error_image">An error has occurred!</string>
+    
     <!-- Homepage keys -->
     <string name="homepage_shake_description">Shake it</string>
     <string name="homepage_menu_search">Search</string>
@@ -107,6 +110,13 @@
     </string-array>
     <string name="uploadphoto_author">Author</string>
     <string name="uploadphoto_source">Photo source</string>
+    <string name="uploadphoto_error_unknown_image_1">We can\'t find the image you\'ve just selected</string>
+    <string name="uploadphoto_error_unknown_image_2">Try again and make sure you have selected an image</string>
+    <string name="uploadphoto_error_unsupported_application_1">Unsupported application</string>
+    <string name="uploadphoto_error_unsupported_application_2">The application you tried to use to send a picture is unsupported. Please make a bug report with the name of the used application.</string>
+    <string name="uploadphoto_loading">Uploading photo to server…</string>
+    <string name="uploadphoto_cancel_title">Cancel photo uploading?</string>
+    <string name="uploadphoto_cancel_message">Your photo won\'t be available online!</string>
     
     <!-- GroupView keys -->
     <string name="groupview_menu_share">Share group</string>
