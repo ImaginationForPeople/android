@@ -5,16 +5,16 @@ import java.util.List;
 import org.imaginationforpeople.android2.R;
 import org.imaginationforpeople.android2.model.Picture;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.UnderlinePageIndicator;
 
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.view.MenuItem;
 
-public class FullImageProjectViewActivity extends FragmentActivity {
+public class FullImageProjectViewActivity extends SherlockFragmentActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {

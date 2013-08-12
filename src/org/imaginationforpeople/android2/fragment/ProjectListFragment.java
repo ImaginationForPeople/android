@@ -9,9 +9,10 @@ import org.imaginationforpeople.android2.handler.ListImageHandler;
 import org.imaginationforpeople.android2.model.I4pProjectTranslation;
 import org.imaginationforpeople.android2.thread.ProjectsListImagesThread;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
-public class ProjectListFragment extends Fragment implements OnItemClickListener {
+public class ProjectListFragment extends SherlockFragment implements OnItemClickListener {
 	public final static String PROJECTS_KEY = "PROJECTS_KEY";
 	
 	private ArrayList<I4pProjectTranslation> projects;

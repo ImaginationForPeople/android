@@ -1,6 +1,4 @@
 <resources>
-
-    <style name="AppThemeWhite" parent="android:Theme.Holo.Light.DarkActionBar" />
     
     <style name="questionTitle" parent="blackBackground">
         <item name="android:layout_height">wrap_content</item>

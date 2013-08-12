@@ -7,7 +7,7 @@
     android:id="@+id/userslist_item_layout">
     
     <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
+        style="@style/Widget.Sherlock.ProgressBar"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_centerHorizontal="true"

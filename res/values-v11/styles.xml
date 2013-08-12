@@ -1,6 +1,0 @@
-<resources>
-
-    <style name="AppThemeWhite" parent="android:Theme.Holo.Light" />
-    <style name="AppThemeBlack" parent="android:Theme.Holo" />
-
-</resources>
