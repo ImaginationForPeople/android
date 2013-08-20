@@ -6,9 +6,10 @@ import org.imaginationforpeople.android2.model.I4pProjectTranslation;
 import org.imaginationforpeople.android2.projectview.GalleryProjectViewFragment;
 import org.imaginationforpeople.android2.projectview.InfoProjectViewFragment;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
@@ -17,7 +18,7 @@ public class ProjectViewAdapter extends FragmentPagerAdapter {
 		R.string.projectview_root_info,
 		R.string.projectview_root_gallery
 	};
-	private static Fragment[] fragments = {
+	private static SherlockFragment[] fragments = {
 		new InfoProjectViewFragment(),
 		new GalleryProjectViewFragment()
 	};
@@ -28,13 +29,13 @@ public class ProjectViewAdapter extends FragmentPagerAdapter {
 		resources = r;
 		Bundle data = new Bundle();
 		data.putParcelable(DataHelper.PROJECT_VIEW_KEY, project);
-		for(Fragment fragment : fragments) {
+		for(SherlockFragment fragment : fragments) {
 			fragment.setArguments(data);
 		}
 	}
 
 	@Override
-	public Fragment getItem(int position) {
+	public SherlockFragment getItem(int position) {
 		return fragments[position];
 	}
 

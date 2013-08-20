@@ -11,37 +11,33 @@ import org.imaginationforpeople.android2.model.I4pProjectTranslation;
 import org.imaginationforpeople.android2.sqlite.FavoriteSqlite;
 import org.imaginationforpeople.android2.thread.ProjectViewThread;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.PageIndicator;
 import com.viewpagerindicator.TitlePageIndicator;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.Window;
 import android.widget.Toast;
 
-public class ProjectViewActivity extends FragmentActivity {
+public class ProjectViewActivity extends SherlockFragmentActivity {
 	private boolean displayMenu = false;
 	private Intent shareIntent;
 	private FavoriteSqlite db;
 	private ProjectViewThread thread;
 	private I4pProjectTranslation project;
 	
-	@TargetApi(14)
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if(displayMenu) {
 			// Inflate menu only if it hasn't been done before
 			if(menu.size() == 0) {
 				// Inflating the menu
-				MenuInflater inflater = getMenuInflater();
+				MenuInflater inflater = getSupportMenuInflater();
 				inflater.inflate(R.menu.projectview, menu);
 				
 				// Creating share intent
@@ -91,16 +87,12 @@ public class ProjectViewActivity extends FragmentActivity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	@TargetApi(11)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if(Build.VERSION.SDK_INT < 11)
-			requestWindowFeature(Window.FEATURE_NO_TITLE);
 		db = new FavoriteSqlite(this);
 		
-		if(Build.VERSION.SDK_INT >= 11)
-			getActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		if(savedInstanceState != null && savedInstanceState.containsKey(DataHelper.PROJECT_VIEW_KEY)) {
 			project = savedInstanceState.getParcelable(DataHelper.PROJECT_VIEW_KEY);
@@ -156,12 +148,10 @@ public class ProjectViewActivity extends FragmentActivity {
 		project = p;
 	}
 	
-	@TargetApi(11)
 	public void displayProject() {
 		setContentView(R.layout.view_root);
 		displayMenu = true;
-		if(Build.VERSION.SDK_INT >= 11)
-			invalidateOptionsMenu(); // Rebuild the menu
+		supportInvalidateOptionsMenu(); // Rebuild the menu
 		
 		setTitle(project.getTitle());
 		

@@ -6,13 +6,14 @@ import org.imaginationforpeople.android2.helper.DataHelper;
 import org.imaginationforpeople.android2.model.I4pProjectTranslation;
 import org.imaginationforpeople.android2.model.Video;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -22,7 +23,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
-public class GalleryProjectViewFragment extends Fragment implements OnItemClickListener {
+public class GalleryProjectViewFragment extends SherlockFragment implements OnItemClickListener {
 	private I4pProjectTranslation project;
 	private ProjectGalleryGridAdapter adapter;
 	
