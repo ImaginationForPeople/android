@@ -9,9 +9,10 @@ import org.imaginationforpeople.android2.model.Group;
 import org.imaginationforpeople.android2.model.I4pProjectTranslation;
 import org.imaginationforpeople.android2.thread.ProjectsListImagesThread;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class ProjectsGroupViewFragment extends Fragment implements OnItemClickListener {
+public class ProjectsGroupViewFragment extends SherlockFragment implements OnItemClickListener {
 	private Group group;
 	private ProjectsGridAdapter adapter;
 	private ProjectsListImagesThread thread;

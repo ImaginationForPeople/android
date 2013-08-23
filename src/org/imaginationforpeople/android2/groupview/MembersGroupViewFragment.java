@@ -7,8 +7,9 @@ import org.imaginationforpeople.android2.helper.DataHelper;
 import org.imaginationforpeople.android2.model.Group;
 import org.imaginationforpeople.android2.thread.UsersListImagesThread;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,7 @@ import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class MembersGroupViewFragment extends Fragment {
+public class MembersGroupViewFragment extends SherlockFragment {
 	private Group group;
 	private UsersGridAdapter adapter;
 	private UsersListImagesThread thread;
