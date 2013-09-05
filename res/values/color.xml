@@ -2,4 +2,8 @@
 <resources>
     <color name="objectives">#1db641</color>
     <color name="themes">#0cb2ca</color>
+    <color name="i4p_1">#05bed3</color>
+    <color name="i4p_2">#0bbcac</color>
+    <color name="i4p_3">#08ba86</color>
+    <color name="i4p_4">#05ba69</color>
 </resources>

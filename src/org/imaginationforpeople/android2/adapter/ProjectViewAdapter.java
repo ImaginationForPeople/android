@@ -10,18 +10,19 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
-public class ProjectViewAdapter extends FragmentPagerAdapter {
+public class ProjectViewAdapter extends FragmentStatePagerAdapter {
 	private static int[] fragmentsName = {
 		R.string.projectview_root_info,
 		R.string.projectview_root_gallery
 	};
-	private static Fragment[] fragments = {
+	private static Resources resources;
+
+	private Fragment[] fragments = {
 		new InfoProjectViewFragment(),
 		new GalleryProjectViewFragment()
-	};
-	private static Resources resources;
+	};	
 
 	public ProjectViewAdapter(FragmentManager fm, I4pProjectTranslation project, Resources r) {
 		super(fm);

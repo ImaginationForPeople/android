@@ -12,6 +12,7 @@ import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.imaginationforpeople.android2.handler.BaseHandler;
 import org.imaginationforpeople.android2.helper.ErrorHelper;
@@ -103,7 +104,7 @@ public abstract class BaseGetJson extends Thread {
 		httpGet.setURI(uri);
 		
 		HttpResponse response = httpClient.execute(httpGet);
-		return EntityUtils.toString(response.getEntity()); 
+		return EntityUtils.toString(response.getEntity(), HTTP.UTF_8); 
 	}
 	
 	protected abstract Object parseJson(String json)
