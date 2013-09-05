@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 
-
 public class ProjectViewHandler extends BaseHandler implements OnClickListener, OnCancelListener {
 	private ProjectViewActivity activity;
 	

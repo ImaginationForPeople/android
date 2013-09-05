@@ -17,7 +17,7 @@ public class ErrorFragment extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.error, container, false);
+		View view = inflater.inflate(R.layout.error_black, container, false);
 		TextView text1 = (TextView) view.findViewById(R.id.error_text1);
 		TextView text2 = (TextView) view.findViewById(R.id.error_text2);
 		switch(getArguments().getInt(ERROR_CODE)) {

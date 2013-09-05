@@ -3,6 +3,7 @@
     <string name="app_name">Imagination for People</string>
     <string name="app_favorites">My favorites projects</string>
     <string name="app_groups">Groups</string>
+    <string name="app_uploadphoto">Upload a photo</string>
     <string name="search_hint">Search projects</string>
     <string name="cancel">Cancel</string>
     <string name="close">Close</string>
@@ -15,6 +16,9 @@
     <string name="loading_location">Waiting for your location</string>
     <string name="loading_projects">Loading projects</string>
     <string name="loading_groups">Loading groups</string>
+    
+    <!-- Error keys -->
+    <string name="error_image">An error has occurred!</string>
     
     <!-- Homepage keys -->
     <string name="homepage_shake_description">Shake it</string>
@@ -60,13 +64,18 @@
     <string name="userslist_item_image_description">User avatar</string>
     
     <!-- ProjectView keys -->
-    <string name="projectview_menu_video">Watch video</string>
+    <string name="projectview_menu_addphoto">Add a photo</string>
     <string name="projectview_menu_favorites_add">Add to favorites</string>
     <string name="projectview_menu_favorites_remove">Remove from favorites</string>
     <string name="projectview_menu_share">Share project</string>
     <string name="projectview_menu_share_dialog">Share project with…</string>
     <string name="projectview_toast_favorites_add">%1$s added to favorites</string>
     <string name="projectview_toast_favorites_remove">%1$s removed from favorites</string>
+    <string name="projectview_dialog_addphoto_title">Add a photo to project…</string>
+    <string-array name="projectview_dialog_addphoto_items">
+        <item>Using the camera</item>
+        <item>By selecting a file</item>
+    </string-array>
     <string name="projectview_root_info">INFORMATION</string>
     <string name="projectview_root_gallery">GALLERY</string>
     <string name="projectview_description_image_description">Project image</string>
@@ -84,6 +93,30 @@
     <string name="projectview_gallery_slider_content_description">Description: %1$s</string>
     <string name="projectview_gallery_slider_content_author">Author: %1$s</string>
     <string name="projectview_gallery_slider_content_source">Source: %1$s</string>
+    
+    <!-- UploadPhoto keys -->
+    <string name="uploadphoto_send">Send photo</string>
+    <string name="uploadphoto_thumb_description">Image to upload</string>
+    <string name="uploadphoto_description">Photo description</string>
+    <string name="uploadphoto_license_title">Photo license</string>
+    <string-array name="uploadphoto_license_content">
+        <item>CC BY-SA 2.0</item>
+        <item>CC BY-SA 3.0 (recommended)</item>
+        <item>Copyright (to avoid)</item>
+        <item>FreeArt</item>
+        <item>GNU Free License</item>
+        <item>Public domain</item>
+        <item>Warning - Uncertain license</item>
+    </string-array>
+    <string name="uploadphoto_author">Author</string>
+    <string name="uploadphoto_source">Photo source</string>
+    <string name="uploadphoto_error_unknown_image_1">We can\'t find the image you\'ve just selected</string>
+    <string name="uploadphoto_error_unknown_image_2">Try again and make sure you have selected an image</string>
+    <string name="uploadphoto_error_unsupported_application_1">Unsupported application</string>
+    <string name="uploadphoto_error_unsupported_application_2">The application you tried to use to send a picture is unsupported. Please make a bug report with the name of the used application.</string>
+    <string name="uploadphoto_loading">Uploading photo to server…</string>
+    <string name="uploadphoto_cancel_title">Cancel photo uploading?</string>
+    <string name="uploadphoto_cancel_message">Your photo won\'t be available online!</string>
     
     <!-- GroupView keys -->
     <string name="groupview_menu_share">Share group</string>
