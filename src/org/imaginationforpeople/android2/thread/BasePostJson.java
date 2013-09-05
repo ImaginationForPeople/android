@@ -101,6 +101,7 @@ public abstract class BasePostJson extends Thread {
 		URI uri = new URI(requestUri);
 		httpPost.setURI(uri);
 		httpPost.setEntity(json);
+		NetworkHelper.addApiAuthentification(httpPost);
 
 		return httpClient.execute(httpPost);
 	}
