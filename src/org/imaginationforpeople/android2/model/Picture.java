@@ -7,12 +7,12 @@ import java.net.URL;
 
 import org.imaginationforpeople.android2.helper.DataHelper;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Picture implements Parcelable {
 	private int id;
@@ -27,9 +27,9 @@ public class Picture implements Parcelable {
 	@JsonProperty("url")
 	private String imageUrl;
 	private Bitmap imageBitmap;
-	
+
 	public Picture() {}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -70,7 +70,13 @@ public class Picture implements Parcelable {
 		return thumbUrl;
 	}
 	public void setThumbUrl(String thumbUrl) {
+		setThumbUrl(thumbUrl, true);
+	}
+	public void setThumbUrl(String thumbUrl, boolean forceReparse) {
 		this.thumbUrl = thumbUrl;
+
+		if(forceReparse)
+			this.thumbBitmap = null;
 	}
 	public Bitmap getThumbBitmap() {
 		if(thumbBitmap == null) {
@@ -129,33 +135,37 @@ public class Picture implements Parcelable {
 		}
 		this.imageBitmap = imageBitmap;
 	}
-	
+
+	@Override
 	public int describeContents() {
 		return 0;
 	}
+	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeInt(id);
 		dest.writeStringArray(new String[] {
-			author,
-			created,
-			desc,
-			license,
-			source,
-			thumbUrl,
-			imageUrl
+				author,
+				created,
+				desc,
+				license,
+				source,
+				thumbUrl,
+				imageUrl
 		});
 	}
-	
+
 	public static final Parcelable.Creator<Picture> CREATOR = new Parcelable.Creator<Picture>() {
+		@Override
 		public Picture createFromParcel(Parcel source) {
 			return new Picture(source);
 		}
-		
+
+		@Override
 		public Picture[] newArray(int size) {
 			return new Picture[size];
 		}
 	};
-	
+
 	private Picture(Parcel in) {
 		id = in.readInt();
 		String[] stringData = new String[7];

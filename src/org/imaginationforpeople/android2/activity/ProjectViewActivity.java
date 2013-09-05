@@ -8,15 +8,13 @@ import java.util.Locale;
 
 import org.imaginationforpeople.android2.R;
 import org.imaginationforpeople.android2.adapter.ProjectViewAdapter;
+import org.imaginationforpeople.android2.fragment.ProjectListFragment;
 import org.imaginationforpeople.android2.handler.ProjectViewHandler;
 import org.imaginationforpeople.android2.helper.DataHelper;
 import org.imaginationforpeople.android2.helper.UriHelper;
 import org.imaginationforpeople.android2.model.I4pProjectTranslation;
 import org.imaginationforpeople.android2.sqlite.FavoriteSqlite;
 import org.imaginationforpeople.android2.thread.ProjectViewThread;
-
-import com.viewpagerindicator.PageIndicator;
-import com.viewpagerindicator.TitlePageIndicator;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -37,22 +35,26 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.viewpagerindicator.PageIndicator;
+import com.viewpagerindicator.TitlePageIndicator;
+
 public class ProjectViewActivity extends FragmentActivity implements OnClickListener {
 	public final static int USE_CAMERA = 0;
 	public final static int SELECT_FILE = 1;
-	
+
 	private final static int CAPTURE_IMAGE_REQUEST_CODE = 1000;
 	private final static int SELECT_FILE_REQUEST_CODE = 1001;
 	private final static int UPLOAD_IMAGE_REQUEST_CODE = 1002;
-	
+
 	private boolean displayMenu = false;
 	private boolean permitLoading = true;
+	private boolean updateParent = false;
 	private Intent shareIntent;
 	private FavoriteSqlite db;
 	private ProjectViewThread thread;
 	private I4pProjectTranslation project;
 	private Uri fileUri;
-	
+
 	@TargetApi(14)
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
@@ -62,7 +64,7 @@ public class ProjectViewActivity extends FragmentActivity implements OnClickList
 				// Inflating the menu
 				MenuInflater inflater = getMenuInflater();
 				inflater.inflate(R.menu.projectview, menu);
-				
+
 				// Creating share intent
 				Intent prepareShareIntent = new Intent(Intent.ACTION_SEND);
 				prepareShareIntent.putExtra(Intent.EXTRA_TEXT, UriHelper.getProjectUrl(project));
@@ -70,7 +72,7 @@ public class ProjectViewActivity extends FragmentActivity implements OnClickList
 				prepareShareIntent.setType("text/plain");
 				shareIntent = Intent.createChooser(prepareShareIntent, getResources().getText(R.string.projectview_menu_share_dialog));
 			}
-			
+
 			// Defining favorite state
 			MenuItem favoriteItem = menu.getItem(1);
 			if(db.isFavorite(project))
@@ -89,7 +91,7 @@ public class ProjectViewActivity extends FragmentActivity implements OnClickList
 				Intent intent = new Intent(this, HomepageActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 				startActivity(intent);
-			} else 
+			} else
 				finish();
 			break;
 		case R.id.projectview_addphoto:
@@ -120,7 +122,7 @@ public class ProjectViewActivity extends FragmentActivity implements OnClickList
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	@TargetApi(11)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -128,10 +130,10 @@ public class ProjectViewActivity extends FragmentActivity implements OnClickList
 		if(Build.VERSION.SDK_INT < 11)
 			requestWindowFeature(Window.FEATURE_NO_TITLE);
 		db = new FavoriteSqlite(this);
-		
+
 		if(Build.VERSION.SDK_INT >= 11)
 			getActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
 		if(savedInstanceState != null && savedInstanceState.containsKey(DataHelper.PROJECT_VIEW_KEY)) {
 			project = savedInstanceState.getParcelable(DataHelper.PROJECT_VIEW_KEY);
 			displayProject();
@@ -139,74 +141,84 @@ public class ProjectViewActivity extends FragmentActivity implements OnClickList
 			loadProject();
 		}
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		if(thread == null || !thread.isAlive())
 			outState.putParcelable(DataHelper.PROJECT_VIEW_KEY, project);
 		super.onSaveInstanceState(outState);
 	}
-	
+
 	@Override
 	protected void onStop() {
 		if(thread != null)
 			thread.requestStop();
 		super.onStop();
 	}
-	
+
 	public void setProject(I4pProjectTranslation p) {
 		project = p;
 	}
-	
+
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void loadProject() {
 		if(permitLoading) {
 			displayMenu = false;
 			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 				invalidateOptionsMenu();
-			
+
 			setContentView(R.layout.loading);
 			ProjectViewHandler handler = new ProjectViewHandler(this);
-			
+
 			Uri data = getIntent().getData();
 			if(data != null) {
 				List<String> path = data.getPathSegments();
 				thread = new ProjectViewThread(handler, path.get(0), path.get(2));
 			} else {
 				Bundle extras = getIntent().getExtras();
-				
+
 				if(extras.containsKey("project_title"))
 					setTitle(extras.getString("project_title"));
-				
+
 				if(extras.containsKey("project_id")) // Mostly used if we want a random project
 					thread = new ProjectViewThread(handler, extras.getInt("project_id"));
 				else
 					thread = new ProjectViewThread(handler, extras.getString("project_lang"), extras.getString("project_slug"));
 			}
-			
+
 			thread.start();
 			permitLoading = false;
 		}
 	}
-	
+
 	@TargetApi(11)
 	public void displayProject() {
+		if(updateParent) {
+			Intent resultData = new Intent();
+			String slug = project.getSlug();
+			resultData.putExtra(ProjectListFragment.PROJECT_RESULT_EXTRA_SLUG, slug);
+			String url = project.getProject().getPictures().get(0).getThumbUrl();
+			resultData.putExtra(ProjectListFragment.PROJECT_RESULT_EXTRA_IMG_URL, url);
+			setResult(RESULT_OK, resultData);
+			updateParent = false;
+		}
+
 		setContentView(R.layout.view_root);
 		displayMenu = true;
 		if(Build.VERSION.SDK_INT >= 11)
 			invalidateOptionsMenu(); // Rebuild the menu
-		
-		setTitle(project.getTitle());
-		
-		ProjectViewAdapter adapter = new ProjectViewAdapter(getSupportFragmentManager(), project, getResources());
-		
-		ViewPager pager = (ViewPager)findViewById(R.id.pager);
-        pager.setAdapter(adapter);
 
-        PageIndicator indicator = (TitlePageIndicator)findViewById(R.id.indicator);
-        indicator.setViewPager(pager);
+		setTitle(project.getTitle());
+
+		ProjectViewAdapter adapter = new ProjectViewAdapter(getSupportFragmentManager(), project, getResources());
+
+		ViewPager pager = (ViewPager)findViewById(R.id.pager);
+		pager.setAdapter(adapter);
+
+		PageIndicator indicator = (TitlePageIndicator)findViewById(R.id.indicator);
+		indicator.setViewPager(pager);
 	}
-	
+
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		Intent intent;
@@ -216,7 +228,7 @@ public class ProjectViewActivity extends FragmentActivity implements OnClickList
 			File dirName = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
 			String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
 			fileUri = Uri.parse("file://" + dirName.getPath() + "/i4p_" + project.getSlug() + "_" + timeStamp + ".jpg");
-			
+
 			intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 			intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
 			startActivityForResult(intent, CAPTURE_IMAGE_REQUEST_CODE);
@@ -228,7 +240,7 @@ public class ProjectViewActivity extends FragmentActivity implements OnClickList
 			break;
 		}
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(resultCode == RESULT_OK) {
@@ -251,6 +263,7 @@ public class ProjectViewActivity extends FragmentActivity implements OnClickList
 				break;
 			case UPLOAD_IMAGE_REQUEST_CODE:
 				permitLoading = true;
+				updateParent = true;
 				loadProject();
 				break;
 			}
