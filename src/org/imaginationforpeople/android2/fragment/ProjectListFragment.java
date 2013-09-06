@@ -13,7 +13,6 @@ import org.imaginationforpeople.android2.thread.ProjectsListImagesThread;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
-public class ProjectListFragment extends Fragment implements OnItemClickListener {
+import com.actionbarsherlock.app.SherlockFragment;
+
+public class ProjectListFragment extends SherlockFragment implements OnItemClickListener {
 	public final static String PROJECTS_KEY = "PROJECTS_KEY";
 
 	public final static int PROJECT_VIEW_REQUEST_CODE = 1000;

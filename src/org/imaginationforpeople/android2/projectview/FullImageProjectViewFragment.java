@@ -4,9 +4,10 @@ import org.imaginationforpeople.android2.R;
 import org.imaginationforpeople.android2.helper.DisplayHelper;
 import org.imaginationforpeople.android2.model.Picture;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 import android.annotation.TargetApi;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,7 @@ import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
 
-public class FullImageProjectViewFragment extends Fragment {
+public class FullImageProjectViewFragment extends SherlockFragment {
 	@TargetApi(11)
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

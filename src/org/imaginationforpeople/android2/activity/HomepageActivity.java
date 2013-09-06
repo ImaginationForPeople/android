@@ -9,22 +9,24 @@ import org.imaginationforpeople.android2.fragment.LoadingFragment;
 import org.imaginationforpeople.android2.fragment.ProjectListFragment;
 import org.imaginationforpeople.android2.helper.DataHelper;
 import org.imaginationforpeople.android2.helper.LanguageHelper;
-import org.imaginationforpeople.android2.homepage.SpinnerHelper;
-import org.imaginationforpeople.android2.homepage.SpinnerHelper.OnSpinnerItemSelectedListener;
-import org.imaginationforpeople.android2.homepage.SpinnerHelperEclair;
-import org.imaginationforpeople.android2.homepage.SpinnerHelperHoneycomb;
 import org.imaginationforpeople.android2.model.Group;
 import org.imaginationforpeople.android2.model.I4pProjectTranslation;
 import org.imaginationforpeople.android2.shake.ShakeAnimation;
 import org.imaginationforpeople.android2.shake.ShakeEventListener;
 import org.imaginationforpeople.android2.shake.ShakeAnimation.AnimationListener;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
 import com.darvds.ribbonmenu.OnRibbonChangeListener;
 import com.darvds.ribbonmenu.RibbonMenuView;
 import com.darvds.ribbonmenu.iRibbonMenuCallback;
 
-import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -36,27 +38,24 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.SpinnerAdapter;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.SearchView;
 
-public class HomepageActivity extends FragmentActivity implements OnClickListener,
+public class HomepageActivity extends SherlockFragmentActivity implements OnClickListener,
 		OnCancelListener, ShakeEventListener.ShakeListener, AnimationListener,
-		OnCheckedChangeListener, LoadingFragment.OnContentLoadedListener, OnSpinnerItemSelectedListener,
-		iRibbonMenuCallback, OnRibbonChangeListener {
+		OnCheckedChangeListener, LoadingFragment.OnContentLoadedListener,
+		iRibbonMenuCallback, OnRibbonChangeListener, OnNavigationListener {
+	public final static String STATE_KEY = "selected";
+	
 	private ArrayList<ArrayList<I4pProjectTranslation>> projects = new ArrayList<ArrayList<I4pProjectTranslation>>(DataHelper.CONTENT_NUMBER);
 	private ArrayList<Group> groups = new ArrayList<Group>();
 	private AlertDialog languagesDialog;
 	private SharedPreferences preferences;
-	private SpinnerHelper spinnerHelper;
 	private AlertDialog contentDialog;
 	private ShakeEventListener shaker;
 	private ShakeAnimation animation;
@@ -65,25 +64,17 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 	private int activeRibonItem = R.id.ribbon_menu_projects;
 	private boolean isStopping = false;
 	
-	@TargetApi(11)
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
+		MenuInflater inflater = getSupportMenuInflater();
 		switch(activeRibonItem) {
 		case R.id.ribbon_menu_projects:
 			inflater.inflate(R.menu.projectslist, menu);
 			
-			if(Build.VERSION.SDK_INT >= 11) {
-				SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-				searchView = (SearchView) menu.findItem(R.id.homepage_search).getActionView();
-				searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-				searchView.setIconifiedByDefault(true);
-			}
-			break;
-		case R.id.ribbon_menu_favorites:
-		case R.id.ribbon_menu_workgroups:
-			if(Build.VERSION.SDK_INT < 11)
-				inflater.inflate(R.menu.ribbon_controller, menu);
+			SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+			searchView = (SearchView) menu.findItem(R.id.homepage_search).getActionView();
+			searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+			searchView.setIconifiedByDefault(true);
 			break;
 		}
 		
@@ -91,37 +82,15 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		if(Build.VERSION.SDK_INT < 11) {
-			MenuItem ribbon = null;
-			switch(activeRibonItem) {
-			case R.id.ribbon_menu_projects:
-				ribbon = menu.getItem(2);
-				break;
-			default:
-				ribbon = menu.getItem(0);
-				break;
-			}
-			
-			if(rbm.isMenuVisible())
-				ribbon.setTitle(R.string.homepage_menu_ribbon_close);
-			else
-				ribbon.setTitle(R.string.homepage_menu_ribbon_open);
-		}		
-		return super.onPrepareOptionsMenu(menu);
-	}
-	
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 		case android.R.id.home:
-		case R.id.homepage_ribbon_button:
 			rbm.toggleMenu();
 			break;
 		case R.id.homepage_content:
 			AlertDialog.Builder contentBuilder = new AlertDialog.Builder(this);
 			contentBuilder.setTitle(R.string.homepage_spinner_content_prompt);
-			contentBuilder.setSingleChoiceItems(R.array.homepage_spinner_dropdown, spinnerHelper.getCurrentSelection(), spinnerHelper);
+			contentBuilder.setSingleChoiceItems(R.array.homepage_spinner_dropdown, getSupportActionBar().getSelectedNavigationIndex(), this);
 			contentDialog = contentBuilder.create();
 			contentDialog.show();
 			break;
@@ -135,25 +104,22 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 		return super.onOptionsItemSelected(item);
 	}
 	
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public void RibbonMenuItemClick(int itemId) {
 		activeRibonItem = itemId;
-		Fragment fragment;
+		SherlockFragment fragment;
 		FragmentManager fm = getSupportFragmentManager();
 		switch(itemId) {
 		case R.id.ribbon_menu_projects:
-			spinnerHelper.init();
-			onSpinnerItemSelected(spinnerHelper.getCurrentSelection());
-			if(Build.VERSION.SDK_INT >= 11)
-				invalidateOptionsMenu();
+			initActionBarSpinner();
+			onNavigationItemSelected(0, getSupportActionBar().getSelectedNavigationIndex());
+			
+			supportInvalidateOptionsMenu();
 			break;
 		case R.id.ribbon_menu_workgroups:
 			setTitle(R.string.app_groups);
-			if(Build.VERSION.SDK_INT >= 11) {
-				getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-				invalidateOptionsMenu();
-			}
+			getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+			supportInvalidateOptionsMenu();
 			Bundle data = new Bundle();
 			if(groups.size() > 0) {
 				data.putParcelableArrayList(GroupListFragment.GROUPS_KEY, groups);
@@ -169,15 +135,13 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 			}
 			break;
 		case R.id.ribbon_menu_favorites:
-			if(Build.VERSION.SDK_INT >= 11)
-				getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+			getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 			fragment = new FavoritesFragment();
 			fm.beginTransaction().replace(R.id.homepage_content, fragment).commit();
 			break;
 		}
 	}
 	
-	@TargetApi(11)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -193,8 +157,7 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 		rbm.setMenuItems(R.menu.homepage_ribbon);
 		rbm.setActiveItem(R.id.ribbon_menu_projects);
 		
-		if(Build.VERSION.SDK_INT >= 11)
-			getActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		// -- Initializing projects list
 		if(savedInstanceState != null) {
@@ -209,21 +172,13 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 				projects.add(i, new ArrayList<I4pProjectTranslation>());
 			}
 		
-		if(Build.VERSION.SDK_INT >= 11)
-			spinnerHelper = new SpinnerHelperHoneycomb(this);
-		else
-			spinnerHelper = new SpinnerHelperEclair();
-		
-		spinnerHelper.setListener(this);
-		
 		if(savedInstanceState != null)
 			RibbonMenuItemClick(savedInstanceState.getInt("ribbon_item"));
 		
 		if(activeRibonItem == R.id.ribbon_menu_projects) {
-			spinnerHelper.init();
-			
-			if(savedInstanceState != null && savedInstanceState.containsKey(SpinnerHelper.STATE_KEY))
-				spinnerHelper.restoreCurrentSelection(savedInstanceState.getInt(SpinnerHelper.STATE_KEY));
+			initActionBarSpinner();
+			if(savedInstanceState != null && savedInstanceState.containsKey(STATE_KEY))
+				getSupportActionBar().setSelectedNavigationItem(savedInstanceState.getInt(STATE_KEY));
 		}
 		
 		// -- Initializing language chooser UI
@@ -242,11 +197,10 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 			animation = new ShakeAnimation(this, findViewById(R.id.homepage_shake), this);
 	}
 	
-	@TargetApi(11)
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		if(Build.VERSION.SDK_INT >= 11 && searchView != null) {
+		if(searchView != null) {
 			// Calling twice: first empty text field, second iconify the view
 			searchView.setIconified(true);
 			searchView.setIconified(true);
@@ -259,7 +213,7 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 		for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++)
 			outState.putParcelableArrayList("projects_" + String.valueOf(i), projects.get(i));
 		outState.putParcelableArrayList("groups", groups);
-		spinnerHelper.saveCurrentSelection(outState);
+		outState.putInt(STATE_KEY, getSupportActionBar().getSelectedNavigationIndex());
 		outState.putInt("ribbon_item", activeRibonItem);
 		super.onSaveInstanceState(outState);
 	}
@@ -310,7 +264,7 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 	public void resetProjects() {
 		for(ArrayList<I4pProjectTranslation> array : projects)
 			array.clear();
-		onSpinnerItemSelected(spinnerHelper.getCurrentSelection());
+		onNavigationItemSelected(0, getSupportActionBar().getSelectedNavigationIndex());
 	}
 
 	public void onShake() {
@@ -349,7 +303,7 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 	public void onContentLoaded(int contentType, Bundle bundle) {
 		if(isStopping)
 			return;
-		Fragment fragment = null;
+		SherlockFragment fragment = null;
 		switch(contentType) {
 		case LoadingFragment.LOAD_BESTOF_PROJECTS:
 		case LoadingFragment.LOAD_LATEST_PROJECTS:
@@ -369,23 +323,31 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 			return;
 		fm.beginTransaction().replace(R.id.homepage_content, fragment).commit();
 	}
+	
+	@Override
+	public void onRibbonOpen() {
+		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+	}
+	
+	@Override
+	public void onRibbonClose() {
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	}
 
 	@Override
-	public void onSpinnerItemSelected(int itemId) {
-		if(Build.VERSION.SDK_INT >= 11)
-			setTitle("");
-		else
-			setTitle(getResources().getStringArray(R.array.homepage_spinner_dropdown)[itemId]);
+	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+		int id = (int) itemId;
+		setTitle("");
 		
 		Bundle data = new Bundle();
-		data.putParcelableArrayList(ProjectListFragment.PROJECTS_KEY, projects.get(itemId));
-		Fragment fragment;
-		if(projects.get(itemId).size() > 0)
+		data.putParcelableArrayList(ProjectListFragment.PROJECTS_KEY, projects.get(id));
+		SherlockFragment fragment;
+		if(projects.get(id).size() > 0)
 			fragment = new ProjectListFragment();
 		else {
 			fragment = new LoadingFragment();
-			data.putInt(LoadingFragment.CONTENT_TO_LOAD, itemId);
-			switch(itemId) {
+			data.putInt(LoadingFragment.CONTENT_TO_LOAD, id);
+			switch(id) {
 			case LoadingFragment.LOAD_MYCOUNTRY_PROJECTS:
 				data.putInt(LoadingFragment.TEXT_RESID, R.string.loading_location);
 				break;
@@ -398,19 +360,13 @@ public class HomepageActivity extends FragmentActivity implements OnClickListene
 		fragment.setArguments(data);
 		FragmentManager fm = getSupportFragmentManager();
 		fm.beginTransaction().replace(R.id.homepage_content, fragment).commit();
+		return true;
 	}
 	
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	@Override
-	public void onRibbonOpen() {
-		if(Build.VERSION.SDK_INT >= 11)
-			getActionBar().setDisplayHomeAsUpEnabled(false);
-	}
-	
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	@Override
-	public void onRibbonClose() {
-		if(Build.VERSION.SDK_INT >= 11)
-			getActionBar().setDisplayHomeAsUpEnabled(true);
+	private void initActionBarSpinner() {
+		SpinnerAdapter spinner = ArrayAdapter.createFromResource(this, R.array.homepage_spinner_dropdown, com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item);
+		
+		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		getSupportActionBar().setListNavigationCallbacks(spinner, this);
 	}
 }

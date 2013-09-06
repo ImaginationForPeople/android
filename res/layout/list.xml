@@ -7,4 +7,5 @@
     android:columnWidth="130dp"
     android:stretchMode="columnWidth"
     android:id="@android:id/list"
-    android:background="#010101" />
+    android:background="#010101"
+    android:listSelector="@null" />

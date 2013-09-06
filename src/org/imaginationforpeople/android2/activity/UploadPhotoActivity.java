@@ -27,8 +27,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -38,7 +36,11 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class UploadPhotoActivity extends Activity implements OnClickListener {
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
+public class UploadPhotoActivity extends SherlockActivity implements OnClickListener {
 	public final static String PROJECT_LANG = "project_lang";
 	public final static String PROJECT_SLUG = "project_slug";
 	public final static String PROJECT_NAME = "project_name";
@@ -50,21 +52,19 @@ public class UploadPhotoActivity extends Activity implements OnClickListener {
 	private boolean blockBack = false;
 	private static ProjectsUploadImageThread thread;
 
-	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-			getActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		Uri intentData = getIntent().getData();
-		
+
 		if(thread != null && thread.isAlive()) {
 			ProjectsUploadPhotoHandler handler = new ProjectsUploadPhotoHandler(this);
 			thread.setHandler(handler);
 			blockBack = true;
-			
+
 			setContentView(R.layout.uploadphoto);
 			final RelativeLayout loadingLayout = (RelativeLayout) findViewById(R.id.uploadphoto_view_loading);
 			final ScrollView contentLayout = (ScrollView) findViewById(R.id.uploadphoto_view_form);
@@ -72,16 +72,16 @@ public class UploadPhotoActivity extends Activity implements OnClickListener {
 			contentLayout.setVisibility(View.GONE);
 		} else {
 			if(!intentData.getScheme().equalsIgnoreCase("file")
-			&& !intentData.getScheme().equalsIgnoreCase("content")) {
+					&& !intentData.getScheme().equalsIgnoreCase("content")) {
 				setContentView(R.layout.error_white);
 				TextView error1 = (TextView) findViewById(R.id.error_text1);
 				TextView error2 = (TextView) findViewById(R.id.error_text2);
 				error1.setText(R.string.uploadphoto_error_unsupported_application_1);
 				error2.setText(R.string.uploadphoto_error_unsupported_application_2);
-	
+
 				Log.e("error", "Unsupported scheme sent to activity");
 			} else {
-				Bitmap photo = null;		
+				Bitmap photo = null;
 				BitmapFactory.Options options = new BitmapFactory.Options();
 				options.inJustDecodeBounds = true;
 				try {
@@ -93,26 +93,26 @@ public class UploadPhotoActivity extends Activity implements OnClickListener {
 					Log.w("warn", "File not found when trying to open content: " + intentData.toString());
 					e.printStackTrace();
 				}
-		
+
 				if(photo != null) {
 					Bundle data = getIntent().getExtras();
 					setContentView(R.layout.uploadphoto);
-					
+
 					TextView project = (TextView) findViewById(R.id.uploadphoto_project);
 					project.setText(data.getString(PROJECT_NAME));
-					
+
 					ImageView thumb = (ImageView) findViewById(R.id.uploadphoto_thumb);
 					thumb.setImageBitmap(photo);
-			
+
 					Spinner license = (Spinner) findViewById(R.id.uploadphoto_license);
 					license.setSelection(1);
-				
+
 					preferences = getPreferences(Context.MODE_PRIVATE);
 					if(preferences.contains(AUTHOR_NAME)) {
 						EditText author = (EditText) findViewById(R.id.uploadphoto_author);
 						author.setText(preferences.getString(AUTHOR_NAME, ""));
 					}
-		
+
 					String sourceText;
 					if(preferences.contains(SOURCE_NAME)) {
 						sourceText = preferences.getString(SOURCE_NAME, "");
@@ -121,27 +121,27 @@ public class UploadPhotoActivity extends Activity implements OnClickListener {
 						String model = Build.MODEL;
 						sourceText = model.startsWith(manufacturer) ?
 								model
-							  : manufacturer + " " + model;
+								: manufacturer + " " + model;
 					}
 					EditText source = (EditText) findViewById(R.id.uploadphoto_source);
 					source.setText(sourceText);
-					
+
 					EditText description = (EditText) findViewById(R.id.uploadphoto_description);
 					InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 					inputManager.showSoftInput(description, 0);
 				} else {
 					setContentView(R.layout.error_white);
-					
+
 					TextView message1 = (TextView) findViewById(R.id.error_text1);
 					message1.setText(R.string.uploadphoto_error_unknown_image_1);
-					
+
 					TextView message2 = (TextView) findViewById(R.id.error_text2);
 					message2.setText(R.string.uploadphoto_error_unknown_image_2);
 				}
 			}
 		}
 	}
-	
+
 	private void calculateInSampleSize(BitmapFactory.Options options) {
 		final int reqSize = DisplayHelper.dpToPx(65);
 		int inSampleSize = 1;
@@ -159,7 +159,7 @@ public class UploadPhotoActivity extends Activity implements OnClickListener {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if(!blockBack) {
 			if(menu.size() == 0)
-				getMenuInflater().inflate(R.menu.uploadphoto, menu);
+				getSupportMenuInflater().inflate(R.menu.uploadphoto, menu);
 
 			return true;
 		}
@@ -168,75 +168,74 @@ public class UploadPhotoActivity extends Activity implements OnClickListener {
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 		case android.R.id.home:
 			doBackFunction();
 			break;
 		case R.id.uploadphoto_menu_send:
 			blockBack = true;
-			
+
 			EditText author = (EditText) findViewById(R.id.uploadphoto_author);
 			EditText source = (EditText) findViewById(R.id.uploadphoto_source);
 			Editor edit = preferences.edit();
 			edit.putString(AUTHOR_NAME, author.getText().toString().trim());
 			edit.putString(SOURCE_NAME, source.getText().toString().trim());
 			edit.commit();
-			
+
 			final RelativeLayout loadingLayout = (RelativeLayout) findViewById(R.id.uploadphoto_view_loading);
 			final ScrollView contentLayout = (ScrollView) findViewById(R.id.uploadphoto_view_form);
-			
+
 			InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 			inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-			
-			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-				invalidateOptionsMenu();
-			
+
+			supportInvalidateOptionsMenu();
+
 			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
 				loadingLayout.setVisibility(View.VISIBLE);
 				loadingLayout.setAlpha(0);
 				loadingLayout.animate().setDuration(1000).alpha(1);
-				
+
 				contentLayout.animate().setDuration(1000)
-					.alpha(0)
-					.setListener(new AnimatorListenerAdapter() {
-						@Override
-						public void onAnimationEnd(Animator animation) {
-							contentLayout.setVisibility(View.GONE);
-						}
-					});
+				.alpha(0)
+				.setListener(new AnimatorListenerAdapter() {
+					@Override
+					public void onAnimationEnd(Animator animation) {
+						contentLayout.setVisibility(View.GONE);
+					}
+				});
 			} else {
 				loadingLayout.setVisibility(View.VISIBLE);
 				contentLayout.setVisibility(View.GONE);
 			}
-			
+
 			String[] licenses = getResources().getStringArray(R.array.uploadphoto_license_ids);
-			
+
 			EditText description = (EditText) findViewById(R.id.uploadphoto_description);
 			Spinner license = (Spinner) findViewById(R.id.uploadphoto_license);
-			
+
 			Picture picture = new Picture();
 			picture.setDesc(description.getText().toString().trim());
 			picture.setLicense(String.valueOf(licenses[(int) license.getSelectedItemId()]));
 			picture.setAuthor(author.getText().toString().trim());
 			picture.setSource(source.getText().toString().trim());
-			
+
 			try {
 				Uri intentData = getIntent().getData();
-				
+
 				AssetFileDescriptor asset = getContentResolver().openAssetFileDescriptor(intentData, "r");
-				
+
 				String mime = null;
 				if(intentData.getScheme().equalsIgnoreCase("file")) {
 					mime = URLConnection.guessContentTypeFromName(intentData.toString());
 				} else if(intentData.getScheme().equalsIgnoreCase("content")) {
 					mime = getContentResolver().getType(intentData);
 				}
-				
+
 				Bundle extras = getIntent().getExtras();
 				String slug = extras.getString(PROJECT_SLUG);
 				String lang = extras.getString(PROJECT_LANG);
-				
+
 				ProjectsUploadPhotoHandler handler = new ProjectsUploadPhotoHandler(this);
 				thread = new ProjectsUploadImageThread(handler, picture, mime, asset, slug, lang);
 				thread.start();
@@ -245,7 +244,7 @@ public class UploadPhotoActivity extends Activity implements OnClickListener {
 			}
 			break;
 		}
-		return super.onMenuItemSelected(featureId, item);
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override

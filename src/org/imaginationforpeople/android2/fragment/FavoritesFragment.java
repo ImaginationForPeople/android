@@ -7,6 +7,11 @@ import org.imaginationforpeople.android2.activity.ProjectViewActivity;
 import org.imaginationforpeople.android2.model.I4pProjectTranslation;
 import org.imaginationforpeople.android2.sqlite.FavoriteSqlite;
 
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -14,11 +19,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -28,7 +29,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class FavoritesFragment extends Fragment implements OnItemClickListener, OnClickListener {
+public class FavoritesFragment extends SherlockFragment implements OnItemClickListener, OnClickListener {
 	private FavoriteSqlite db;
 	private ArrayAdapter<I4pProjectTranslation> adapter;
 	

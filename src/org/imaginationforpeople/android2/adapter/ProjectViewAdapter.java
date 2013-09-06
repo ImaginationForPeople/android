@@ -8,34 +8,36 @@ import org.imaginationforpeople.android2.projectview.InfoProjectViewFragment;
 
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+import com.actionbarsherlock.app.SherlockFragment;
 
 public class ProjectViewAdapter extends FragmentStatePagerAdapter {
 	private static int[] fragmentsName = {
 		R.string.projectview_root_info,
 		R.string.projectview_root_gallery
 	};
-	private static Resources resources;
 
-	private Fragment[] fragments = {
-		new InfoProjectViewFragment(),
-		new GalleryProjectViewFragment()
-	};	
+	private final SherlockFragment[] fragments = {
+			new InfoProjectViewFragment(),
+			new GalleryProjectViewFragment()
+	};
+
+	private static Resources resources;
 
 	public ProjectViewAdapter(FragmentManager fm, I4pProjectTranslation project, Resources r) {
 		super(fm);
 		resources = r;
 		Bundle data = new Bundle();
 		data.putParcelable(DataHelper.PROJECT_VIEW_KEY, project);
-		for(Fragment fragment : fragments) {
+		for(SherlockFragment fragment : fragments) {
 			fragment.setArguments(data);
 		}
 	}
 
 	@Override
-	public Fragment getItem(int position) {
+	public SherlockFragment getItem(int position) {
 		return fragments[position];
 	}
 
@@ -43,9 +45,9 @@ public class ProjectViewAdapter extends FragmentStatePagerAdapter {
 	public int getCount() {
 		return fragments.length;
 	}
-	
+
 	@Override
-    public CharSequence getPageTitle(int position) {
-      return resources.getText(fragmentsName[position]);
-    }
+	public CharSequence getPageTitle(int position) {
+		return resources.getText(fragmentsName[position]);
+	}
 }

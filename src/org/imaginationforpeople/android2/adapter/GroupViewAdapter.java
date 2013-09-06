@@ -7,9 +7,10 @@ import org.imaginationforpeople.android2.groupview.ProjectsGroupViewFragment;
 import org.imaginationforpeople.android2.helper.DataHelper;
 import org.imaginationforpeople.android2.model.Group;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
@@ -19,7 +20,7 @@ public class GroupViewAdapter extends FragmentPagerAdapter {
 		R.string.groupview_root_projects,
 		R.string.groupview_root_members,
 	};
-	private static Fragment[] fragments = {
+	private static SherlockFragment[] fragments = {
 		new InfoGroupViewFragment(),
 		new ProjectsGroupViewFragment(),
 		new MembersGroupViewFragment(),
@@ -31,13 +32,13 @@ public class GroupViewAdapter extends FragmentPagerAdapter {
 		resources = r;
 		Bundle data = new Bundle();
 		data.putParcelable(DataHelper.GROUP_VIEW_KEY, group);
-		for(Fragment fragment : fragments) {
+		for(SherlockFragment fragment : fragments) {
 			fragment.setArguments(data);
 		}
 	}
 
 	@Override
-	public Fragment getItem(int position) {
+	public SherlockFragment getItem(int position) {
 		return fragments[position];
 	}
 

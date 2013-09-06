@@ -3,14 +3,15 @@ package org.imaginationforpeople.android2.fragment;
 import org.imaginationforpeople.android2.R;
 import org.imaginationforpeople.android2.helper.ErrorHelper;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class ErrorFragment extends Fragment {
+public class ErrorFragment extends SherlockFragment {
 	public final static String ERROR_CODE = "ERROR_CODE";
 	
 	@Override

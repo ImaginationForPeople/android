@@ -13,20 +13,21 @@ import org.imaginationforpeople.android2.thread.GroupsListThread;
 import org.imaginationforpeople.android2.thread.ProjectsCountryListThread;
 import org.imaginationforpeople.android2.thread.ProjectsListThread;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 import android.content.Context;
 import android.location.Geocoder;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class LoadingFragment extends Fragment {
+public class LoadingFragment extends SherlockFragment {
 	public interface UpdateLoadingScreenListener {
 		public void updateLoadingScreen();
 	}
@@ -131,7 +132,7 @@ public class LoadingFragment extends Fragment {
 		public void onLoadError(int errorCode) {
 			Bundle data = new Bundle();
 			data.putInt(ErrorFragment.ERROR_CODE, errorCode);
-			Fragment fragment = new ErrorFragment();
+			SherlockFragment fragment = new ErrorFragment();
 			fragment.setArguments(data);
 			FragmentManager fm = getFragmentManager();
 			fm.beginTransaction().replace(R.id.homepage_content, fragment).commit();

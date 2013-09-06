@@ -4,8 +4,9 @@ import org.imaginationforpeople.android2.R;
 import org.imaginationforpeople.android2.helper.DataHelper;
 import org.imaginationforpeople.android2.model.Group;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -16,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-public class InfoGroupViewFragment extends Fragment {
+public class InfoGroupViewFragment extends SherlockFragment {
 	private Group group;
 	
 	@Override

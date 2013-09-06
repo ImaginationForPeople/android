@@ -9,11 +9,12 @@ import org.imaginationforpeople.android2.model.Objective;
 import org.imaginationforpeople.android2.model.Question;
 import org.imaginationforpeople.android2.model.User;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,7 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-public class InfoProjectViewFragment extends Fragment implements OnClickListener {
+public class InfoProjectViewFragment extends SherlockFragment implements OnClickListener {
 	private I4pProjectTranslation project;
 	
 	@Override

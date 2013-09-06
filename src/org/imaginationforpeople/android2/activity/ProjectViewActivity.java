@@ -16,29 +16,26 @@ import org.imaginationforpeople.android2.model.I4pProjectTranslation;
 import org.imaginationforpeople.android2.sqlite.FavoriteSqlite;
 import org.imaginationforpeople.android2.thread.ProjectViewThread;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.Window;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.PageIndicator;
 import com.viewpagerindicator.TitlePageIndicator;
 
-public class ProjectViewActivity extends FragmentActivity implements OnClickListener {
+public class ProjectViewActivity extends SherlockFragmentActivity implements OnClickListener {
 	public final static int USE_CAMERA = 0;
 	public final static int SELECT_FILE = 1;
 
@@ -55,14 +52,13 @@ public class ProjectViewActivity extends FragmentActivity implements OnClickList
 	private I4pProjectTranslation project;
 	private Uri fileUri;
 
-	@TargetApi(14)
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if(displayMenu) {
 			// Inflate menu only if it hasn't been done before
 			if(menu.size() == 0) {
 				// Inflating the menu
-				MenuInflater inflater = getMenuInflater();
+				MenuInflater inflater = getSupportMenuInflater();
 				inflater.inflate(R.menu.projectview, menu);
 
 				// Creating share intent
@@ -123,16 +119,12 @@ public class ProjectViewActivity extends FragmentActivity implements OnClickList
 		return super.onOptionsItemSelected(item);
 	}
 
-	@TargetApi(11)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if(Build.VERSION.SDK_INT < 11)
-			requestWindowFeature(Window.FEATURE_NO_TITLE);
 		db = new FavoriteSqlite(this);
 
-		if(Build.VERSION.SDK_INT >= 11)
-			getActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		if(savedInstanceState != null && savedInstanceState.containsKey(DataHelper.PROJECT_VIEW_KEY)) {
 			project = savedInstanceState.getParcelable(DataHelper.PROJECT_VIEW_KEY);
@@ -160,12 +152,10 @@ public class ProjectViewActivity extends FragmentActivity implements OnClickList
 		project = p;
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void loadProject() {
 		if(permitLoading) {
 			displayMenu = false;
-			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-				invalidateOptionsMenu();
+			supportInvalidateOptionsMenu();
 
 			setContentView(R.layout.loading);
 			ProjectViewHandler handler = new ProjectViewHandler(this);
@@ -191,7 +181,6 @@ public class ProjectViewActivity extends FragmentActivity implements OnClickList
 		}
 	}
 
-	@TargetApi(11)
 	public void displayProject() {
 		if(updateParent) {
 			Intent resultData = new Intent();
@@ -205,9 +194,7 @@ public class ProjectViewActivity extends FragmentActivity implements OnClickList
 
 		setContentView(R.layout.view_root);
 		displayMenu = true;
-		if(Build.VERSION.SDK_INT >= 11)
-			invalidateOptionsMenu(); // Rebuild the menu
-
+		supportInvalidateOptionsMenu(); // Rebuild the menu
 		setTitle(project.getTitle());
 
 		ProjectViewAdapter adapter = new ProjectViewAdapter(getSupportFragmentManager(), project, getResources());
