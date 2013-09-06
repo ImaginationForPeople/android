@@ -16,14 +16,12 @@ import org.imaginationforpeople.android2.model.I4pProjectTranslation;
 import org.imaginationforpeople.android2.sqlite.FavoriteSqlite;
 import org.imaginationforpeople.android2.thread.ProjectViewThread;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -154,12 +152,10 @@ public class ProjectViewActivity extends SherlockFragmentActivity implements OnC
 		project = p;
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void loadProject() {
 		if(permitLoading) {
 			displayMenu = false;
-			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-				invalidateOptionsMenu();
+			supportInvalidateOptionsMenu();
 
 			setContentView(R.layout.loading);
 			ProjectViewHandler handler = new ProjectViewHandler(this);

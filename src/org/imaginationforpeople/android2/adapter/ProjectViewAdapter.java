@@ -19,9 +19,9 @@ public class ProjectViewAdapter extends FragmentStatePagerAdapter {
 		R.string.projectview_root_gallery
 	};
 
-	private static SherlockFragment[] fragments = {
-		new InfoProjectViewFragment(),
-		new GalleryProjectViewFragment()
+	private final SherlockFragment[] fragments = {
+			new InfoProjectViewFragment(),
+			new GalleryProjectViewFragment()
 	};
 
 	private static Resources resources;
