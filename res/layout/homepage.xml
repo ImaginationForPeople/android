@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-	<FrameLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:orientation="vertical"
-	    android:id="@+id/homepage_content" />
-	<ImageView
-        style="@style/homepage_shake_style"
-       	android:id="@+id/homepage_shake"
-        android:src="@drawable/shake_phone"
-        android:contentDescription="@string/homepage_shake_description" />
-	<com.darvds.ribbonmenu.RibbonMenuView
-        android:id="@+id/homepage_ribbon"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</FrameLayout>
+        android:layout_height="match_parent">
+        <FrameLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:id="@+id/homepage_content" />
+		<ImageView
+	        style="@style/homepage_shake_style"
+	       	android:id="@+id/homepage_shake"
+	        android:src="@drawable/shake_phone"
+	        android:contentDescription="@string/homepage_shake_description" />
+    </FrameLayout>
+	<ListView
+        android:id="@+id/left_drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:background="#111"/>
+</android.support.v4.widget.DrawerLayout>
