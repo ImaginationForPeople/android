@@ -41,7 +41,6 @@
   <string name="projectslist_loading">Chargement des projets…</string>
   <string name="projectslist_item_image_description">Image du projet</string>
   <!--ProjectView keys-->
-  <string name="projectview_menu_video">Regarder la vidéo</string>
   <string name="projectview_menu_favorites_add">Ajouter aux favoris</string>
   <string name="projectview_menu_favorites_remove">Supprimer des favoris</string>
   <string name="projectview_menu_share">Partager le projet</string>
