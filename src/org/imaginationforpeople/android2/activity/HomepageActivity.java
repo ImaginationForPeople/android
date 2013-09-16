@@ -30,6 +30,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.AdapterView;
@@ -125,6 +126,7 @@ OnNavigationListener, OnItemClickListener {
 		drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerContent = (ListView) findViewById(R.id.left_drawer);
 
+		drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 		drawerContent.setAdapter(new DrawerAdapter(this));
 		drawerContent.setOnItemClickListener(this);
 
