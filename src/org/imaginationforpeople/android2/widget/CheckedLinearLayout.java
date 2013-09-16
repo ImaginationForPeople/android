@@ -1,4 +1,4 @@
-package org.imaginationforpeople.android2.layout;
+package org.imaginationforpeople.android2.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

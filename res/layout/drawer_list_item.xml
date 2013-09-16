@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.imaginationforpeople.android2.layout.CheckedLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.imaginationforpeople.android2.widget.CheckedLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -20,4 +20,4 @@
         android:layout_width="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
     	android:textColor="#fff" />
-</org.imaginationforpeople.android2.layout.CheckedLinearLayout>
+</org.imaginationforpeople.android2.widget.CheckedLinearLayout>
