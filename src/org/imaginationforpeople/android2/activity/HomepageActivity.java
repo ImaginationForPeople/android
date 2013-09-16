@@ -3,6 +3,7 @@ package org.imaginationforpeople.android2.activity;
 import java.util.ArrayList;
 
 import org.imaginationforpeople.android2.R;
+import org.imaginationforpeople.android2.adapter.DrawerAdapter;
 import org.imaginationforpeople.android2.fragment.FavoritesFragment;
 import org.imaginationforpeople.android2.fragment.GroupListFragment;
 import org.imaginationforpeople.android2.fragment.LoadingFragment;
@@ -124,8 +125,7 @@ OnNavigationListener, OnItemClickListener {
 		drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerContent = (ListView) findViewById(R.id.left_drawer);
 
-		String[] drawerItems = getResources().getStringArray(R.array.drawer_items);
-		drawerContent.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, drawerItems));
+		drawerContent.setAdapter(new DrawerAdapter(this));
 		drawerContent.setOnItemClickListener(this);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
