@@ -67,14 +67,14 @@ OnNavigationListener, OnItemClickListener {
 	private DrawerLayout drawer;
 	private ListView drawerContent;
 	private ActionBarDrawerToggle drawerToggle;
-	private int activeDrawerItem = 0;
+	private int activeDrawerItem = DrawerAdapter.DRAWER_PROJECTS_ITEM;
 	private boolean isStopping = false;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
 		switch(activeDrawerItem) {
-		case 0:
+		case DrawerAdapter.DRAWER_PROJECTS_ITEM:
 			inflater.inflate(R.menu.projectslist, menu);
 
 			SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -149,10 +149,10 @@ OnNavigationListener, OnItemClickListener {
 			for(int i = 0; i < DataHelper.CONTENT_NUMBER; i++) {
 				projects.add(i, new ArrayList<I4pProjectTranslation>());
 			}
-			selectDrawerItem(0);
+			selectDrawerItem(DrawerAdapter.DRAWER_PROJECTS_ITEM);
 		}
 
-		if(drawerContent.getSelectedItemPosition() == 0) {
+		if(drawerContent.getSelectedItemPosition() == DrawerAdapter.DRAWER_PROJECTS_ITEM) {
 			initActionBarSpinner();
 			if(savedInstanceState != null && savedInstanceState.containsKey(STATE_KEY))
 				getSupportActionBar().setSelectedNavigationItem(savedInstanceState.getInt(STATE_KEY));
@@ -352,13 +352,13 @@ OnNavigationListener, OnItemClickListener {
 		SherlockFragment fragment;
 		FragmentManager fm = getSupportFragmentManager();
 		switch(position) {
-		case 0:
+		case DrawerAdapter.DRAWER_PROJECTS_ITEM:
 			initActionBarSpinner();
 			onNavigationItemSelected(0, getSupportActionBar().getSelectedNavigationIndex());
 
 			supportInvalidateOptionsMenu();
 			break;
-		case 1:
+		case DrawerAdapter.DRAWER_GROUPS_ITEM:
 			setTitle(R.string.app_groups);
 			getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 			supportInvalidateOptionsMenu();
@@ -376,7 +376,7 @@ OnNavigationListener, OnItemClickListener {
 				fm.beginTransaction().replace(R.id.homepage_content, fragment).commit();
 			}
 			break;
-		case 2:
+		case DrawerAdapter.DRAWER_FAVORITES_ITEM:
 			getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 			fragment = new FavoritesFragment();
 			fm.beginTransaction().replace(R.id.homepage_content, fragment).commit();
