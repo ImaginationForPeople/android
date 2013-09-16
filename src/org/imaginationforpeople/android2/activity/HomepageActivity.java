@@ -122,7 +122,7 @@ OnNavigationListener, OnItemClickListener {
 		preferences = getPreferences(Context.MODE_PRIVATE);
 		LanguageHelper.setSharedPreferences(preferences);
 
-		// -- Initializing ribbon menu
+		// -- Initializing navigation drawer
 		drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerContent = (ListView) findViewById(R.id.left_drawer);
 
