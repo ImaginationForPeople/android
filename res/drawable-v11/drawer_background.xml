@@ -8,4 +8,7 @@
 			    android:endColor="@color/i4p_1" />
 		</shape>
 	</item>
+	<item android:state_hovered="true" android:drawable="@color/i4p_4" />
+	<item android:state_focused="true" android:drawable="@color/i4p_4" />
+	<item android:state_pressed="true" android:drawable="@color/i4p_4" />
 </selector>
