@@ -19,11 +19,11 @@ import android.util.Log;
 
 public abstract class BaseListImageThread extends Thread {
 	protected boolean stop = false;
-	
+
 	public void requestStop() {
 		stop = true;
 	}
-	
+
 	private InputStream downloadImage(String url) {
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet();
@@ -32,6 +32,8 @@ public abstract class BaseListImageThread extends Thread {
 			httpGet.setURI(uri);
 			NetworkHelper.addBasicHttpAuth(httpGet);
 			httpGet.addHeader("Accept-Encoding", "gzip");
+			if(stop)
+				return null;
 			HttpResponse response = httpClient.execute(httpGet);
 			return response.getEntity().getContent();
 		} catch (URISyntaxException e) {
@@ -40,38 +42,41 @@ public abstract class BaseListImageThread extends Thread {
 		} catch (ClientProtocolException e) {
 			Log.e("Thumbnail", "Error with the HTTP request");
 			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			if(!stop)
+				e.printStackTrace();
 		} catch (IOException e) {
 			Log.e("Thumbnail", "General I/O error");
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	protected Bitmap downloadBitmap(String url) {
 		Bitmap bitmap;
 		for(int i=0; i<=4; i++) {
 			if(stop)
 				break;
-			
+
 			bitmap = BitmapFactory.decodeStream(downloadImage(url));
 			if(bitmap != null)
 				return bitmap;
 		}
-		
+
 		return null;
 	}
-	
+
 	protected Drawable downloadDrawable(String url) {
 		Drawable drawable;
 		for(int i=0; i<=4; i++) {
 			if(stop)
 				break;
-			
+
 			drawable = Drawable.createFromStream(downloadImage(url), null);
 			if(drawable != null)
 				return drawable;
 		}
-		
+
 		return null;
 	}
 }
