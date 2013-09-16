@@ -9,6 +9,15 @@
     <string name="close">Close</string>
     <string name="cant_be_undone">This action can\'t be undone!</string>
     
+    <!-- Navigaton drawer keys -->
+    <string-array name="drawer_items">
+        <item>Projects</item>
+        <item>Groups</item>
+        <item>Favorites</item>
+    </string-array>
+    <string name="drawer_close">Close drawer</string>
+    <string name="drawer_open">Open drawer</string>
+    
     <!-- Information keys -->
     <string name="information_description">Information:</string>
     
@@ -25,8 +34,6 @@
     <string name="homepage_menu_search">Search</string>
     <string name="homepage_menu_favorites">Favorites</string>
     <string name="homepage_menu_language">Change language</string>
-    <string name="homepage_menu_ribbon_close">Close ribbon</string>
-    <string name="homepage_menu_ribbon_open">Open ribbon</string>
     <string name="homepage_spinner_language_prompt">Choose a language</string>
     <string name="homepage_spinner_content_prompt">Select projects to display</string>
     <string-array name="homepage_spinner_languages">
@@ -45,11 +52,6 @@
         <item>Latest Projects</item>
         <item>In My Country</item>
     </string-array>
-    
-    <!-- Homepage ribbon keys -->
-    <string name="homepage_ribbon_projects">Projects</string>
-    <string name="homepage_ribbon_workgroups">Groups</string>
-    <string name="homepage_ribbon_favorites">Favorites</string>
     
     <!-- Shake dialog keys -->
     <string name="shake_dialog_title">Just shake it!</string>
