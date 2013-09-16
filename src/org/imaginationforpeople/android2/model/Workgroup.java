@@ -10,7 +10,7 @@ public class Workgroup {
 	private List<String> tags;
 	private List<I4pProjectTranslation> projects;
 	private List<User> subscribers;
-	
+
 	public String getName() {
 		return name;
 	}

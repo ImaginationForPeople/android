@@ -15,12 +15,12 @@ public class FavoriteSqlite extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "i4p.db";
 	private static final int DATABASE_VERSION = 1;
 	private static final String TABLE_NAME = "favorites";
-	private static final String TABLE_CREATE = 
+	private static final String TABLE_CREATE =
 			"CREATE TABLE " + TABLE_NAME + " ( " +
-			"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-			"language_code TEXT NOT NULL, " +
-			"slug TEXT NOT NULL," +
-			"title TEXT NOT NULL);";
+					"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+					"language_code TEXT NOT NULL, " +
+					"slug TEXT NOT NULL," +
+					"title TEXT NOT NULL);";
 
 	public FavoriteSqlite(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -36,7 +36,7 @@ public class FavoriteSqlite extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
 		onCreate(db);
 	}
-	
+
 	public void addFavorite(I4pProjectTranslation project) {
 		ContentValues values = new ContentValues();
 		values.put("language_code", project.getLanguageCode());
@@ -46,14 +46,14 @@ public class FavoriteSqlite extends SQLiteOpenHelper {
 		db.insert(TABLE_NAME, null, values);
 		db.close();
 	}
-	
+
 	public void removeFavorite(I4pProjectTranslation project) {
 		String[] data = {project.getLanguageCode(), project.getSlug()};
 		SQLiteDatabase db = getWritableDatabase();
 		db.delete(TABLE_NAME, "language_code = ? AND slug = ?", data);
 		db.close();
 	}
-	
+
 	public boolean isFavorite(I4pProjectTranslation project) {
 		String[] columns = {"id"};
 		String[] data = {project.getLanguageCode(), project.getSlug()};
@@ -63,7 +63,7 @@ public class FavoriteSqlite extends SQLiteOpenHelper {
 		db.close();
 		return isFavorite;
 	}
-	
+
 	public boolean hasFavorites() {
 		String[] columns = {"id"};
 		SQLiteDatabase db = getReadableDatabase();
@@ -72,12 +72,12 @@ public class FavoriteSqlite extends SQLiteOpenHelper {
 		db.close();
 		return hasFavorites;
 	}
-	
+
 	public List<I4pProjectTranslation> getFavorites() {
 		ArrayList<I4pProjectTranslation> projects = new ArrayList<I4pProjectTranslation>();
-		
+
 		String[] columns = {"language_code", "slug", "title"};
-		
+
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor c = db.query(TABLE_NAME, columns, null, null, null, null, null);
 		if(c.getCount() > 0) {
@@ -92,10 +92,10 @@ public class FavoriteSqlite extends SQLiteOpenHelper {
 			}
 		}
 		db.close();
-		
+
 		return projects;
 	}
-	
+
 	public void removeAllFavorites() {
 		SQLiteDatabase db = getWritableDatabase();
 		db.delete(TABLE_NAME, null, null);

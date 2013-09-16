@@ -16,40 +16,44 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class ProjectsGridAdapter extends BaseAdapter {
-	private Activity activity;
-	private List<I4pProjectTranslation> projects;
-	
+	private final Activity activity;
+	private final List<I4pProjectTranslation> projects;
+
 	public ProjectsGridAdapter(Activity a, List<I4pProjectTranslation> p) {
 		activity = a;
 		projects = p;
 	}
-	
+
 	public void addProject(I4pProjectTranslation p) {
 		projects.add(p);
 		notifyDataSetChanged();
 	}
-	
+
 	public void clearProjects() {
 		projects.clear();
 		notifyDataSetInvalidated();
 	}
-	
+
+	@Override
 	public int getCount() {
 		return projects.size();
 	}
 
+	@Override
 	public I4pProjectTranslation getItem(int position) {
 		return projects.get(position);
 	}
 
+	@Override
 	public long getItemId(int position) {
 		return projects.get(position).getId();
 	}
 
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if(convertView == null)
 			convertView = activity.getLayoutInflater().inflate(R.layout.projectslist_item, parent, false);
-		
+
 		I4pProjectTranslation project = getItem(position);
 		TextView projectTitle = (TextView) convertView.findViewById(R.id.projectslist_item_text);
 		ImageView projectImage = (ImageView) convertView.findViewById(R.id.projectslist_item_image);
@@ -72,10 +76,10 @@ public class ProjectsGridAdapter extends BaseAdapter {
 			projectImage.setImageResource(R.drawable.project_nophoto);
 			projectImage.setVisibility(View.VISIBLE);
 		}
-		
+
 		return convertView;
 	}
-	
+
 	public List<I4pProjectTranslation> getProjects() {
 		return projects;
 	}

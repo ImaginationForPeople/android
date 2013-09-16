@@ -3,17 +3,17 @@ package org.imaginationforpeople.android2.fragment;
 import org.imaginationforpeople.android2.R;
 import org.imaginationforpeople.android2.helper.ErrorHelper;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 public class ErrorFragment extends SherlockFragment {
 	public final static String ERROR_CODE = "ERROR_CODE";
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {

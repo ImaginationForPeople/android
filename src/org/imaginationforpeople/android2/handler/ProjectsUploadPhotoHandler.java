@@ -8,7 +8,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 public class ProjectsUploadPhotoHandler extends BaseHandler {
-	private UploadPhotoActivity activity;
+	private final UploadPhotoActivity activity;
 
 	public ProjectsUploadPhotoHandler(UploadPhotoActivity a) {
 		activity = a;

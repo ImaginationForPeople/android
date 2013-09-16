@@ -13,8 +13,6 @@ import org.imaginationforpeople.android2.thread.GroupsListThread;
 import org.imaginationforpeople.android2.thread.ProjectsCountryListThread;
 import org.imaginationforpeople.android2.thread.ProjectsListThread;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
 import android.content.Context;
 import android.location.Geocoder;
 import android.location.LocationListener;
@@ -27,25 +25,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 public class LoadingFragment extends SherlockFragment {
 	public interface UpdateLoadingScreenListener {
-		public void updateLoadingScreen();
+		void updateLoadingScreen();
 	}
 	public interface OnContentLoadedListener {
-		public void onContentLoaded(int contentType, Bundle bundle);
+		void onContentLoaded(int contentType, Bundle bundle);
 	}
 	public interface OnLoadErrorListener {
-		public void onLoadError(int errorCode);
+		void onLoadError(int errorCode);
 	}
 	public static final String TEXT_RESID = "TEXT_RESID";
 	public static final String CONTENT_TO_LOAD = "CONTENT_TO_LOAD";
-	
+
 	public static final int NOTHING_TO_LOAD = -1;
 	public static final int LOAD_BESTOF_PROJECTS = 0;
 	public static final int LOAD_LATEST_PROJECTS = 1;
 	public static final int LOAD_MYCOUNTRY_PROJECTS = 2;
 	public static final int LOAD_GROUPS = 3;
-	
+
 	private BaseGetJson thread;
 	private LocationManager mLocationManager;
 	private int contentToLoad;
@@ -65,7 +65,7 @@ public class LoadingFragment extends SherlockFragment {
 		text.setText(getArguments().getInt(TEXT_RESID));
 		return view;
 	}
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -78,17 +78,17 @@ public class LoadingFragment extends SherlockFragment {
 				providers.add(LocationManager.NETWORK_PROVIDER);
 			if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
 				providers.add(LocationManager.GPS_PROVIDER);
-			
+
 			if(providers.size() == 0) {
 				Message msg = new Message();
 				msg.arg1 = BaseHandler.STATUS_ERROR;
 				msg.arg2 = ErrorHelper.ERROR_LOCATION;
 				handler.sendMessage(msg);
 			}
-			
+
 			Geocoder mGeocoder = new Geocoder(getActivity());
 			thread = new ProjectsCountryListThread(handler, contentToLoad, mLocationManager, mGeocoder);
-			
+
 			for(String provider : providers)
 				mLocationManager.requestLocationUpdates(provider, 0, 0, (LocationListener) thread);
 			break;
@@ -104,30 +104,30 @@ public class LoadingFragment extends SherlockFragment {
 			break;
 		}
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
 		if(thread != null && contentToLoad == DataHelper.CONTENT_COUNTRY)
 			mLocationManager.removeUpdates((LocationListener) thread);
 	}
-	
+
 	@Override
 	public void onStop() {
 		if(thread != null && thread.isAlive())
 			thread.requestStop();
 		super.onStop();
 	}
-	
-	private UpdateLoadingScreenListener updateListener = new UpdateLoadingScreenListener() {
+
+	private final UpdateLoadingScreenListener updateListener = new UpdateLoadingScreenListener() {
 		@Override
 		public void updateLoadingScreen() {
 			TextView text = (TextView) getView().findViewById(R.id.loading_text);
 			text.setText(R.string.loading_projects);
 		}
 	};
-	
-	private OnLoadErrorListener errorListener = new OnLoadErrorListener() {
+
+	private final OnLoadErrorListener errorListener = new OnLoadErrorListener() {
 		@Override
 		public void onLoadError(int errorCode) {
 			Bundle data = new Bundle();

@@ -9,9 +9,9 @@ import org.imaginationforpeople.android2.model.User;
 import android.graphics.drawable.Drawable;
 
 public class UsersListImagesThread extends BaseListImageThread {
-	private ListImageHandler handler;
-	private List<User> users;
-	
+	private final ListImageHandler handler;
+	private final List<User> users;
+
 	public UsersListImagesThread(ListImageHandler h, List<User> u) {
 		handler = h;
 		users = u;
@@ -24,13 +24,13 @@ public class UsersListImagesThread extends BaseListImageThread {
 				Drawable drawable = downloadDrawable(user.getAvatarUrl());
 				if(stop)
 					return;
-				
+
 				if(drawable != null)
 					user.setAvatarDrawable(drawable);
 				else
 					// Unable to load drawable after 5 tries so deleting avatar
-				
-				handler.sendEmptyMessage(0);
+
+					handler.sendEmptyMessage(0);
 			}
 			if(stop)
 				return;

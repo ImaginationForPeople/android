@@ -2,7 +2,7 @@ package org.imaginationforpeople.android2.helper;
 
 public class ErrorHelper extends BaseHelper {
 	private ErrorHelper() {};
-	
+
 	public final static int ERROR_HTTP = 10;
 	public final static int ERROR_TIMEOUT = 11;
 	public final static int ERROR_JSON = 12;

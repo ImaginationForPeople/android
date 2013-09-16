@@ -25,28 +25,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ProjectViewThread extends BaseGetJson {
 	public ProjectViewThread(ProjectViewHandler h, int p) {
 		handler = h;
-		
+
 		if(p == DataHelper.PROJECT_RANDOM)
 			requestUri = UriHelper.getRandomProjectViewUri();
 		else
 			requestUri = UriHelper.getProjectViewUriById(p);
 	}
-	
+
 	public ProjectViewThread(ProjectViewHandler h, String lc, String s) {
 		handler = h;
-		
+
 		requestUri = UriHelper.getProjectViewUriBySlug(lc, s);
 	}
-	
+
 	@Override
 	protected I4pProjectTranslation parseJson(String json)
 			throws JSONException, JsonParseException, IOException {
 		JsonFactory factory = new JsonFactory();
 		ObjectMapper mapper = new ObjectMapper();
-		
+
 		JsonParser parser = factory.createJsonParser(json);
 		I4pProjectTranslation project = mapper.readValue(parser, I4pProjectTranslation.class);
-		
+
 		if(project.getProject().getPictures().size() > 0) {
 			for(Picture picture : project.getProject().getPictures()) {
 				if(isStopped())
@@ -74,7 +74,7 @@ public class ProjectViewThread extends BaseGetJson {
 				}
 			}
 		}
-		
+
 		if(project.getProject().getMembers().size() > 0) {
 			for(User member : project.getProject().getMembers()) {
 				if(isStopped())
@@ -91,10 +91,10 @@ public class ProjectViewThread extends BaseGetJson {
 				}
 			}
 		}
-		
+
 		return project;
 	}
-	
+
 	// We do nothing when this thread starts
 	@Override
 	protected void onStart() {}

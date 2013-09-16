@@ -22,9 +22,9 @@ public class I4pProjectTranslation implements Parcelable {
 	private I4pProject project;
 	private String themes;
 	private String title;
-	
+
 	public I4pProjectTranslation() {}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -91,42 +91,46 @@ public class I4pProjectTranslation implements Parcelable {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
+
 	//TODO: Overriding toString() method is a bad thing.
 	@Override
 	public String toString() {
 		return title;
 	}
-	
+
+	@Override
 	public int describeContents() {
 		return 0;
 	}
+	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeInt(id);
 		dest.writeStringArray(new String[] {
-			resourceUri,
-			slug,
-			languageCode,
-			aboutSection,
-			baseline,
-			calltoSection,
-			partnersSection,
-			themes,
-			title
+				resourceUri,
+				slug,
+				languageCode,
+				aboutSection,
+				baseline,
+				calltoSection,
+				partnersSection,
+				themes,
+				title
 		});
 		dest.writeParcelable(project, 0);
 	}
-	
+
 	public static final Parcelable.Creator<I4pProjectTranslation> CREATOR = new Parcelable.Creator<I4pProjectTranslation>() {
+		@Override
 		public I4pProjectTranslation createFromParcel(Parcel source) {
 			return new I4pProjectTranslation(source);
 		}
-		
+
+		@Override
 		public I4pProjectTranslation[] newArray(int size) {
 			return new I4pProjectTranslation[size];
 		}
 	};
-	
+
 	private I4pProjectTranslation(Parcel source) {
 		id = source.readInt();
 		String[] stringData = new String[9];

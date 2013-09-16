@@ -18,36 +18,40 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class UsersGridAdapter extends BaseAdapter {
-	private Activity activity;
-	private List<User> users;
+	private final Activity activity;
+	private final List<User> users;
 	private LayoutInflater inflater;
-	
+
 	public UsersGridAdapter(Activity a, List<User> u) {
 		activity = a;
 		users = u;
 	}
-	
+
+	@Override
 	public int getCount() {
 		return users.size();
 	}
 
+	@Override
 	public User getItem(int position) {
 		return users.get(position);
 	}
 
+	@Override
 	public long getItemId(int position) {
 		return 0;
 	}
 
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if(inflater == null) {
 			Context darkTheme = new ContextThemeWrapper(activity, R.style.AppThemeBlack);
 			inflater = (LayoutInflater) darkTheme.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		}
-		
+
 		if(convertView == null)
 			convertView = inflater.inflate(R.layout.userslist_item, parent, false);
-		
+
 		User user = getItem(position);
 		TextView userTitle = (TextView) convertView.findViewById(R.id.userslist_item_text);
 		ImageView userImage = (ImageView) convertView.findViewById(R.id.userslist_item_image);
@@ -69,7 +73,7 @@ public class UsersGridAdapter extends BaseAdapter {
 			userImage.setImageResource(R.drawable.user_nophoto);
 			userImage.setVisibility(View.VISIBLE);
 		}
-		
+
 		return convertView;
 	}
 }

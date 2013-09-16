@@ -7,9 +7,9 @@ public class Location implements Parcelable {
 	private int id;
 	private String address;
 	private String country;
-	
+
 	public Location() {}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -28,28 +28,32 @@ public class Location implements Parcelable {
 	public void setCountry(String country) {
 		this.country = country;
 	}
-	
+
+	@Override
 	public int describeContents() {
 		return 0;
 	}
+	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeInt(id);
 		dest.writeStringArray(new String[] {
-			address,
-			country
+				address,
+				country
 		});
 	}
-	
+
 	public static final Parcelable.Creator<Location> CREATOR = new Parcelable.Creator<Location>() {
+		@Override
 		public Location createFromParcel(Parcel source) {
 			return new Location(source);
 		}
-		
+
+		@Override
 		public Location[] newArray(int size) {
 			return new Location[size];
 		}
 	};
-	
+
 	private Location(Parcel source) {
 		id = source.readInt();
 		String[] stringData = new String[2];

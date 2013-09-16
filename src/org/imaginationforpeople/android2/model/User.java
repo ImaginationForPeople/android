@@ -21,9 +21,9 @@ public class User implements Parcelable {
 	@JsonProperty("avatar")
 	private String avatarUrl;
 	private Drawable avatarDrawable;
-	
+
 	public User() {}
-	
+
 	public String getFullname() {
 		return fullname;
 	}
@@ -69,28 +69,32 @@ public class User implements Parcelable {
 		}
 		this.avatarDrawable = avatarDrawable;
 	}
-	
+
+	@Override
 	public int describeContents() {
 		return 0;
 	}
+	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeStringArray(new String[] {
-			fullname,
-			username,
-			avatarUrl
+				fullname,
+				username,
+				avatarUrl
 		});
 	}
-	
+
 	public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+		@Override
 		public User createFromParcel(Parcel source) {
 			return new User(source);
 		}
-		
+
+		@Override
 		public User[] newArray(int size) {
 			return new User[size];
 		}
 	};
-	
+
 	private User(Parcel source) {
 		String[] stringData = new String[3];
 		source.readStringArray(stringData);

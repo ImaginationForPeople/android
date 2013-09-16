@@ -21,17 +21,17 @@ public class GroupsListThread extends BaseGetJson {
 		handler = h;
 		requestUri = UriHelper.getGroupsListUri();
 	}
-	
+
 	@Override
 	protected List<Group> parseJson(String json)
 			throws JSONException, JsonParseException, IOException {
 		ArrayList<Group> groups = new ArrayList<Group>();
-		
+
 		JsonFactory factory = new JsonFactory();
 		ObjectMapper mapper = new ObjectMapper();
-		
+
 		JSONArray jsonProjects = new JSONObject(json).getJSONArray("objects");
-		
+
 		int jsonLength = jsonProjects.length();
 		for(int i = 0; i < jsonLength; i++) {
 			if(isStopped())
@@ -40,10 +40,10 @@ public class GroupsListThread extends BaseGetJson {
 			Group group = mapper.readValue(parser, Group.class);
 			groups.add(group);
 		}
-		
+
 		return groups;
 	}
-	
+
 	// We do nothing when this thread starts
 	@Override
 	protected void onStart() throws IOException {}

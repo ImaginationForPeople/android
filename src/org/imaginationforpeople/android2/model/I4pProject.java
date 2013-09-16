@@ -21,9 +21,9 @@ public class I4pProject implements Parcelable {
 	private String status;
 	private ArrayList<Video> videos;
 	private String website;
-	
+
 	public I4pProject() {}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -90,16 +90,18 @@ public class I4pProject implements Parcelable {
 	public void setWebsite(String website) {
 		this.website = website;
 	}
-	
+
+	@Override
 	public int describeContents() {
 		return 0;
 	}
+	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeInt(id);
 		dest.writeBooleanArray(new boolean[] {bestOf});
 		dest.writeStringArray(new String[] {
-			status,
-			website
+				status,
+				website
 		});
 		dest.writeParcelable(location, 0);
 		Bundle data = new Bundle();
@@ -111,17 +113,19 @@ public class I4pProject implements Parcelable {
 		data.putParcelableArrayList("videos", videos);
 		dest.writeBundle(data);
 	}
-	
+
 	public static final Parcelable.Creator<I4pProject> CREATOR = new Parcelable.Creator<I4pProject>() {
+		@Override
 		public I4pProject createFromParcel(Parcel source) {
 			return new I4pProject(source);
 		}
-		
+
+		@Override
 		public I4pProject[] newArray(int size) {
 			return new I4pProject[size];
 		}
 	};
-	
+
 	private I4pProject(Parcel source) {
 		id = source.readInt();
 		boolean[] booleanData = new boolean[1];

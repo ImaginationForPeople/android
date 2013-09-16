@@ -17,15 +17,15 @@ import android.os.Message;
 
 public class ProjectsCountryListThread extends ProjectsListThread implements LocationListener {
 	private Location location;
-	private LocationManager manager;
-	private Geocoder geocoder;
-	
+	private final LocationManager manager;
+	private final Geocoder geocoder;
+
 	public ProjectsCountryListThread(ProjectsListHandler h, int l, LocationManager m, Geocoder g) {
 		super(h, l);
 		manager = m;
 		geocoder = g;
 	}
-	
+
 	@Override
 	protected void onStart() throws IOException {
 		List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
@@ -35,14 +35,18 @@ public class ProjectsCountryListThread extends ProjectsListThread implements Loc
 		msg.arg2 = BaseHandler.SPECIFIC_UPDATE;
 		handler.sendMessage(msg);
 	}
-	
+
+	@Override
 	public void onLocationChanged(Location loc) {
 		manager.removeUpdates(this);
 		location = loc;
-		start();                                          
+		start();
 	}
-	
+
+	@Override
 	public void onProviderDisabled(String provider) {}
+	@Override
 	public void onProviderEnabled(String provider) {}
+	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {}
 }

@@ -7,12 +7,12 @@ import org.imaginationforpeople.android2.groupview.ProjectsGroupViewFragment;
 import org.imaginationforpeople.android2.helper.DataHelper;
 import org.imaginationforpeople.android2.model.Group;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.actionbarsherlock.app.SherlockFragment;
 
 public class GroupViewAdapter extends FragmentPagerAdapter {
 	private static int[] fragmentsName = {
@@ -46,9 +46,9 @@ public class GroupViewAdapter extends FragmentPagerAdapter {
 	public int getCount() {
 		return fragments.length;
 	}
-	
+
 	@Override
-    public CharSequence getPageTitle(int position) {
-      return resources.getText(fragmentsName[position]);
-    }
+	public CharSequence getPageTitle(int position) {
+		return resources.getText(fragmentsName[position]);
+	}
 }

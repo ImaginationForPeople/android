@@ -15,40 +15,44 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class GroupsGridAdapter extends BaseAdapter {
-	private Activity activity;
-	private List<Group> groups;
-	
+	private final Activity activity;
+	private final List<Group> groups;
+
 	public GroupsGridAdapter(Activity a, List<Group> g) {
 		activity = a;
 		groups = g;
 	}
-	
+
 	public void addGroup(Group g) {
 		groups.add(g);
 		notifyDataSetChanged();
 	}
-	
+
 	public void clearProjects() {
 		groups.clear();
 		notifyDataSetInvalidated();
 	}
-	
+
+	@Override
 	public int getCount() {
 		return groups.size();
 	}
 
+	@Override
 	public Group getItem(int position) {
 		return groups.get(position);
 	}
 
+	@Override
 	public long getItemId(int position) {
 		return groups.get(position).getId();
 	}
 
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if(convertView == null)
 			convertView = activity.getLayoutInflater().inflate(R.layout.projectslist_item, parent, false);
-		
+
 		Group group = getItem(position);
 		TextView groupTitle = (TextView) convertView.findViewById(R.id.projectslist_item_text);
 		ImageView groupImage = (ImageView) convertView.findViewById(R.id.projectslist_item_image);
@@ -70,10 +74,10 @@ public class GroupsGridAdapter extends BaseAdapter {
 			groupImage.setImageResource(R.drawable.group_nophoto);
 			groupImage.setVisibility(View.VISIBLE);
 		}
-		
+
 		return convertView;
 	}
-	
+
 	public List<Group> getGroups() {
 		return groups;
 	}

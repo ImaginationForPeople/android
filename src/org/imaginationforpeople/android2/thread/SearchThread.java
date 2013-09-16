@@ -16,22 +16,22 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class SearchThread extends BaseGetJson {
-	private ArrayList<I4pProjectTranslation> projects;
-	
+	private final ArrayList<I4pProjectTranslation> projects;
+
 	public SearchThread(String search, ArrayList<I4pProjectTranslation> p, SearchHandler h) {
 		requestUri = UriHelper.getFullSearchUrl(search);
 		projects = p;
 		handler = h;
 	}
-	
+
 	@Override
 	protected List<I4pProjectTranslation> parseJson(String json)
 			throws JSONException, JsonParseException, IOException {
 		JsonFactory factory = new JsonFactory();
 		ObjectMapper mapper = new ObjectMapper();
-		
+
 		JSONArray jsonProjects = new JSONArray(json);
-		
+
 		int jsonLength = jsonProjects.length();
 		for(int i = 0; i < jsonLength; i++) {
 			if(isStopped())
@@ -40,11 +40,11 @@ public class SearchThread extends BaseGetJson {
 			I4pProjectTranslation project = mapper.readValue(parser, I4pProjectTranslation.class);
 			projects.add(project);
 		}
-		
+
 		return projects;
 	}
 
-    // We do nothing when this thread starts
-    @Override
-    protected void onStart() throws IOException {}
+	// We do nothing when this thread starts
+	@Override
+	protected void onStart() throws IOException {}
 }

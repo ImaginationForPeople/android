@@ -8,13 +8,13 @@ import java.util.ArrayList;
 
 import org.imaginationforpeople.android2.helper.DataHelper;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Group implements Parcelable {
 	private int id;
@@ -34,9 +34,9 @@ public class Group implements Parcelable {
 	private ArrayList<I4pProjectTranslation> projects;
 	private ArrayList<User> subscribers;
 	private ArrayList<String> tags;
-	
+
 	public Group() {}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -157,17 +157,17 @@ public class Group implements Parcelable {
 	public void setTags(ArrayList<String> tags) {
 		this.tags = tags;
 	}
-	
+
 	@Override
 	public int describeContents() {
 		return 0;
 	}
-	
+
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeInt(id);
 		dest.writeStringList(tags);
-		
+
 		String[] stringData = new String[] {
 				name,
 				description,
@@ -176,27 +176,29 @@ public class Group implements Parcelable {
 				imageUrl
 		};
 		dest.writeStringArray(stringData);
-		
+
 		Bundle data = new Bundle();
 		data.putParcelableArrayList("projects", projects);
 		data.putParcelableArrayList("subscribers", subscribers);
 		dest.writeBundle(data);
 	}
-	
+
 	public static final Parcelable.Creator<Group> CREATOR = new Parcelable.Creator<Group>() {
+		@Override
 		public Group createFromParcel(Parcel source) {
 			return new Group(source);
 		}
-		
+
+		@Override
 		public Group[] newArray(int size) {
 			return new Group[size];
 		}
 	};
-	
+
 	private Group(Parcel in) {
 		id = in.readInt();
 		in.readStringList(tags);
-		
+
 		String[] stringData = new String[5];
 		in.readStringArray(stringData);
 		name = stringData[0];
@@ -204,7 +206,7 @@ public class Group implements Parcelable {
 		slug = stringData[2];
 		language = stringData[3];
 		imageUrl = stringData[4];
-		
+
 		Bundle data = in.readBundle();
 		projects = data.getParcelableArrayList("projects");
 		subscribers = data.getParcelableArrayList("subscribers");

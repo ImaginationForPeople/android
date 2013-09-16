@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ProjectsListThread extends BaseGetJson {
 	public ProjectsListThread(ProjectsListHandler h, int l) {
 		handler = h;
-		
+
 		arg = l;
 		switch(arg) {
 		case DataHelper.CONTENT_BEST:
@@ -29,17 +29,17 @@ public class ProjectsListThread extends BaseGetJson {
 			requestUri = UriHelper.getLatestProjectsListUri();
 		}
 	}
-	
+
 	@Override
 	protected List<I4pProjectTranslation> parseJson(String json)
 			throws JSONException, JsonParseException, IOException {
 		ArrayList<I4pProjectTranslation> projects = new ArrayList<I4pProjectTranslation>();
-		
+
 		JsonFactory factory = new JsonFactory();
 		ObjectMapper mapper = new ObjectMapper();
-		
+
 		JSONArray jsonProjects = new JSONArray(json);
-		
+
 		int jsonLength = jsonProjects.length();
 		for(int i = 0; i < jsonLength; i++) {
 			if(isStopped())
@@ -48,10 +48,10 @@ public class ProjectsListThread extends BaseGetJson {
 			I4pProjectTranslation project = mapper.readValue(parser, I4pProjectTranslation.class);
 			projects.add(project);
 		}
-		
+
 		return projects;
 	}
-	
+
 	// We do nothing when this thread starts
 	@Override
 	protected void onStart() throws IOException {}

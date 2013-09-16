@@ -15,11 +15,11 @@ import android.util.Base64;
 import android.webkit.MimeTypeMap;
 
 public class ProjectsUploadImageThread extends BasePostJson {
-	private Picture picture;
-	private String mime;
-	private AssetFileDescriptor asset;
-	private String slug;
-	private String lang;
+	private final Picture picture;
+	private final String mime;
+	private final AssetFileDescriptor asset;
+	private final String slug;
+	private final String lang;
 
 	private String encodedImage;
 

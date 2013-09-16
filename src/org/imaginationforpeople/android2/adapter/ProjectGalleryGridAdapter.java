@@ -12,20 +12,22 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 public class ProjectGalleryGridAdapter extends BaseAdapter {
-	private Activity activity;
-	private I4pProject project;
-	private int size;
-	
+	private final Activity activity;
+	private final I4pProject project;
+	private final int size;
+
 	public ProjectGalleryGridAdapter(Activity a, I4pProject p, int s) {
 		activity = a;
 		project = p;
 		size = s;
 	}
-	
+
+	@Override
 	public int getCount() {
 		return project.getPictures().size() + project.getVideos().size();
 	}
 
+	@Override
 	public Bundle getItem(int position) {
 		Bundle data = new Bundle();
 		if(position < project.getPictures().size()) {
@@ -39,6 +41,7 @@ public class ProjectGalleryGridAdapter extends BaseAdapter {
 		return data;
 	}
 
+	@Override
 	public long getItemId(int position) {
 		if(position < project.getPictures().size())
 			return project.getPictures().get(position).getId();
@@ -46,11 +49,12 @@ public class ProjectGalleryGridAdapter extends BaseAdapter {
 			return project.getVideos().get(position - project.getPictures().size()).getId();
 	}
 
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if(convertView == null)
 			convertView = activity.getLayoutInflater().inflate(R.layout.projectview_gallery_item, null);
 		convertView.setMinimumHeight(size);
-		
+
 		Bundle data = getItem(position);
 		switch(data.getInt("type")) {
 		case DataHelper.PROJECT_GALLERY_GRID_TYPE_PICTURE:
@@ -60,7 +64,7 @@ public class ProjectGalleryGridAdapter extends BaseAdapter {
 			((ImageView) convertView).setImageResource(R.drawable.projectview_gallery_video);
 			break;
 		}
-		
+
 		return convertView;
 	}
 

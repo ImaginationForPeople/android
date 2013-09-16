@@ -7,12 +7,6 @@ import org.imaginationforpeople.android2.handler.SearchHandler;
 import org.imaginationforpeople.android2.model.I4pProjectTranslation;
 import org.imaginationforpeople.android2.thread.SearchThread;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.SearchView;
-
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +16,12 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
 
 public class SearchActivity extends SherlockActivity implements OnItemClickListener {
 	private ArrayList<I4pProjectTranslation> projects;
@@ -122,7 +122,7 @@ public class SearchActivity extends SherlockActivity implements OnItemClickListe
 		outState.putString("search", search);
 		outState.putParcelableArrayList("results", projects);
 	}
-	
+
 	public void displayResults() {
 		setContentView(R.layout.search);
 
@@ -133,6 +133,7 @@ public class SearchActivity extends SherlockActivity implements OnItemClickListe
 		list.setOnItemClickListener(this);
 	}
 
+	@Override
 	public void onItemClick(AdapterView<?> l, View v, int position, long id) {
 		I4pProjectTranslation project = projects.get(position);
 

@@ -7,11 +7,6 @@ import org.imaginationforpeople.android2.activity.ProjectViewActivity;
 import org.imaginationforpeople.android2.model.I4pProjectTranslation;
 import org.imaginationforpeople.android2.sqlite.FavoriteSqlite;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -29,16 +24,21 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
 public class FavoritesFragment extends SherlockFragment implements OnItemClickListener, OnClickListener {
 	private FavoriteSqlite db;
 	private ArrayAdapter<I4pProjectTranslation> adapter;
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.favorites, menu);
 	}
-	
+
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -58,7 +58,7 @@ public class FavoritesFragment extends SherlockFragment implements OnItemClickLi
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,7 +67,7 @@ public class FavoritesFragment extends SherlockFragment implements OnItemClickLi
 		db = new FavoriteSqlite(getActivity());
 		adapter = new ArrayAdapter<I4pProjectTranslation>(getActivity(), android.R.layout.simple_list_item_1, new ArrayList<I4pProjectTranslation>());
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -77,11 +77,11 @@ public class FavoritesFragment extends SherlockFragment implements OnItemClickLi
 		list.setOnItemClickListener(this);
 		return view;
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		if(db.getFavorites().size() == 0) {
 			noFavorites();
 		} else {
@@ -90,7 +90,7 @@ public class FavoritesFragment extends SherlockFragment implements OnItemClickLi
 				adapter.add(project);
 		}
 	}
-	
+
 	@Override
 	public void onItemClick(AdapterView<?> l, View v, int position, long id) {
 		I4pProjectTranslation project = adapter.getItem(position);
@@ -100,7 +100,7 @@ public class FavoritesFragment extends SherlockFragment implements OnItemClickLi
 		intent.putExtra("project_title", project.getTitle());
 		startActivity(intent);
 	}
-	
+
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		switch(which) {
@@ -112,7 +112,7 @@ public class FavoritesFragment extends SherlockFragment implements OnItemClickLi
 			break;
 		}
 	}
-	
+
 	private void noFavorites() {
 		ListView list = (ListView) getView().findViewById(R.id.favorites_list);
 		list.setVisibility(View.GONE);

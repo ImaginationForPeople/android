@@ -10,20 +10,20 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 
 public class SearchHandler extends BaseHandler implements OnCancelListener, OnClickListener {
-	private SearchActivity activity;
-	
+	private final SearchActivity activity;
+
 	public SearchHandler(SearchActivity ac) {
 		activity = ac;
 	}
-	
+
 	@Override
 	protected void onStart(int arg, Object obj) {}
-	
+
 	@Override
 	protected void onSuccess(int arg, Object obj) {
 		activity.displayResults();
 	}
-	
+
 	@Override
 	protected void onError(int arg, Object obj) {
 		AlertDialog alert = new AlertDialog.Builder(activity).create();
@@ -49,15 +49,17 @@ public class SearchHandler extends BaseHandler implements OnCancelListener, OnCl
 		alert.setButton(DialogInterface.BUTTON_NEUTRAL, activity.getResources().getText(R.string.close), this);
 		alert.show();
 	}
-	
+
+	@Override
 	public void onCancel(DialogInterface arg0) {
 		activity.finish();
 	}
 
+	@Override
 	public void onClick(DialogInterface arg0, int arg1) {
 		activity.finish();
 	}
 
-    @Override
-    protected void onSpecificEvent(int arg, Object obj) {}
+	@Override
+	protected void onSpecificEvent(int arg, Object obj) {}
 }

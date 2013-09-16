@@ -10,9 +10,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 public class FullImageProjectViewAdapter extends FragmentPagerAdapter {
-	private Fragment[] fragments;
-	private List<Picture> pictures;
-	
+	private final Fragment[] fragments;
+	private final List<Picture> pictures;
+
 	public FullImageProjectViewAdapter(FragmentManager fm, List<Picture> p) {
 		super(fm);
 		pictures = p;
@@ -24,10 +24,10 @@ public class FullImageProjectViewAdapter extends FragmentPagerAdapter {
 		if(fragments[position] == null) {
 			Bundle data = new Bundle();
 			data.putParcelable("picture", pictures.get(position));
-			
+
 			Fragment fragment = new FullImageProjectViewFragment();
 			fragment.setArguments(data);
-			
+
 			fragments[position] = fragment;
 		}
 		return fragments[position];

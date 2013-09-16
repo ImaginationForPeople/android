@@ -22,19 +22,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class GroupViewThread extends BaseGetJson {
 	public GroupViewThread(GroupViewHandler h, String s) {
 		handler = h;
-		
+
 		requestUri = UriHelper.getGroupViewUriBySlug(s);
 	}
-	
+
 	@Override
 	protected Group parseJson(String json)
 			throws JSONException, JsonParseException, IOException {
 		JsonFactory factory = new JsonFactory();
 		ObjectMapper mapper = new ObjectMapper();
-		
+
 		JsonParser parser = factory.createJsonParser(json);
 		Group group = mapper.readValue(parser, Group.class);
-		
+
 		if(group.getThumbUrl() != null) {
 			if(isStopped())
 				return null;
@@ -60,10 +60,10 @@ public class GroupViewThread extends BaseGetJson {
 				}
 			}
 		}
-		
+
 		return group;
 	}
-	
+
 	// We do nothing when this thread starts
 	@Override
 	protected void onStart() {}
