@@ -57,6 +57,10 @@
             android:label="@string/app_uploadphoto"
             android:theme="@style/AppThemeWhite" />
         <activity
+            android:name=".activity.CreateProjectActivity"
+            android:label="@string/app_createproject"
+            android:theme="@style/AppThemeWhite" />
+        <activity
             android:name=".activity.SearchActivity"
             android:theme="@style/AppThemeWhite"
             android:launchMode="singleTop">

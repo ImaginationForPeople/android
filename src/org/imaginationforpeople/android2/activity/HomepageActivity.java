@@ -110,6 +110,10 @@ OnNavigationListener, OnItemClickListener {
 		case R.id.homepage_lang:
 			languagesDialog.show();
 			break;
+		case R.id.homepage_add_project:
+			Intent intent = new Intent(this, CreateProjectActivity.class);
+			startActivity(intent);
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}

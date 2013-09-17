@@ -3,6 +3,7 @@
     <string name="app_name">Imagination for People</string>
     <string name="app_favorites">My favorites projects</string>
     <string name="app_groups">Groups</string>
+    <string name="app_createproject">Add a project</string>
     <string name="app_uploadphoto">Upload a photo</string>
     <string name="search_hint">Search projects</string>
     <string name="cancel">Cancel</string>
@@ -32,6 +33,7 @@
     <!-- Homepage keys -->
     <string name="homepage_shake_description">Shake it</string>
     <string name="homepage_menu_search">Search</string>
+    <string name="homepage_menu_addproject">Add a project</string>
     <string name="homepage_menu_favorites">Favorites</string>
     <string name="homepage_menu_language">Change language</string>
     <string name="homepage_spinner_language_prompt">Choose a language</string>
