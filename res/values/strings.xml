@@ -98,6 +98,22 @@
     <string name="projectview_gallery_slider_content_author">Author: %1$s</string>
     <string name="projectview_gallery_slider_content_source">Source: %1$s</string>
     
+    <!-- CreateProject keys -->
+    <string name="createproject_send">Send project</string>
+    <string name="createproject_title">Title</string>
+    <string name="createproject_title_empty">You have to set a title</string>
+    <string name="createproject_baseline">Baseline</string>
+    <string name="createproject_status">Status</string>
+    <string-array name="createproject_statuses">
+        <item>Concept</item>
+        <item>Starting</item>
+        <item>In development</item>
+        <item>Mature</item>
+    </string-array>
+    <string name="createproject_about_section">About section</string>
+    <string name="createproject_themes">Themes</string>
+    <string name="createproject_themes_hint">Separate themes with commas</string>
+    
     <!-- UploadPhoto keys -->
     <string name="uploadphoto_send">Send photo</string>
     <string name="uploadphoto_thumb_description">Image to upload</string>
