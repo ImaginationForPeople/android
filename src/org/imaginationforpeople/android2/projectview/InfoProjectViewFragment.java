@@ -65,7 +65,7 @@ public class InfoProjectViewFragment extends Fragment implements OnClickListener
 		}
 
 		if(project.getProject().getLocation() != null) {
-			if(!"".equals(project.getProject().getLocation().getCountry())) {
+			if(project.getProject().getLocation().getCountry() != null) {
 				int flag = getResources().getIdentifier("flag_"+project.getProject().getLocation().getCountry().toLowerCase(), "drawable", "org.imaginationforpeople.android2");
 				if(flag != 0) {
 					ImageView flagView = (ImageView) layout.findViewById(R.id.projectview_description_flag);
