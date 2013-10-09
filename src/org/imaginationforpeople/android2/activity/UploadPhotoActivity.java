@@ -50,6 +50,7 @@ public class UploadPhotoActivity extends SherlockActivity implements OnClickList
 
 	private SharedPreferences preferences;
 	private boolean blockBack = false;
+	private boolean showSubmit = true;
 	private static ProjectsUploadImageThread thread;
 
 	@Override
@@ -73,6 +74,7 @@ public class UploadPhotoActivity extends SherlockActivity implements OnClickList
 		} else {
 			if(!intentData.getScheme().equalsIgnoreCase("file")
 					&& !intentData.getScheme().equalsIgnoreCase("content")) {
+				showSubmit = false;
 				setContentView(R.layout.error_white);
 				TextView error1 = (TextView) findViewById(R.id.error_text1);
 				TextView error2 = (TextView) findViewById(R.id.error_text2);
@@ -130,6 +132,7 @@ public class UploadPhotoActivity extends SherlockActivity implements OnClickList
 					InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 					inputManager.showSoftInput(description, 0);
 				} else {
+					showSubmit = false;
 					setContentView(R.layout.error_white);
 
 					TextView message1 = (TextView) findViewById(R.id.error_text1);
@@ -156,8 +159,8 @@ public class UploadPhotoActivity extends SherlockActivity implements OnClickList
 	}
 
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		if(!blockBack) {
+	public boolean onCreateOptionsMenu(Menu menu) {
+		if(showSubmit) {
 			if(menu.size() == 0)
 				getSupportMenuInflater().inflate(R.menu.uploadphoto, menu);
 
@@ -175,6 +178,7 @@ public class UploadPhotoActivity extends SherlockActivity implements OnClickList
 			break;
 		case R.id.uploadphoto_menu_send:
 			blockBack = true;
+			showSubmit = false;
 
 			EditText author = (EditText) findViewById(R.id.uploadphoto_author);
 			EditText source = (EditText) findViewById(R.id.uploadphoto_source);
