@@ -13,7 +13,7 @@
   <!--Loading keys-->
   <string name="loading_location">En attente de votre emplacement</string>
   <string name="loading_projects">Chargement des projets</string>
-  <string name="loading_groups">Chargement des groupes :</string>
+  <string name="loading_groups">Chargement des groupes</string>
   <!--Homepage keys-->
   <string name="homepage_shake_description">Secouez-le</string>
   <string name="homepage_menu_search">Rechercher</string>
@@ -48,7 +48,6 @@
   <string name="shake_dialog_message">Secouez votre appareil juste un peu plus fort et nous vous montrerons un projet aléatoire.\nDécouvrir des nouveaux projets est maintenant amusant !</string>
   <string name="shake_dialog_checkbox">Ne plus m\'afficher ceci</string>
   <!--ProjectsList keys-->
-  <string name="projectslist_loading">Chargement des projets…</string>
   <string name="projectslist_item_image_description">Image du projet</string>
   <!--UsersList keys-->
   <string name="userslist_item_image_description">Image de l\'utilisateur</string>
