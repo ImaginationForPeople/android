@@ -113,6 +113,7 @@
     <string name="createproject_about_section">About section</string>
     <string name="createproject_themes">Themes</string>
     <string name="createproject_themes_hint">Separate themes with commas</string>
+    <string name="createproject_loading">Creating the project…</string>
     
     <!-- UploadPhoto keys -->
     <string name="uploadphoto_send">Send photo</string>

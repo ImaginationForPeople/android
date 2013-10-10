@@ -1,83 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="5dp">
-    <LinearLayout 
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout
+        android:id="@+id/createproject_view_loading"
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical">
-	    <TextView
-	        style="@style/colorTitle"
-	        android:text="@string/createproject_title"
-	        android:textColor="@color/i4p_1" />
-	    <View 
-	           style="@style/colorLine"
-	           android:background="@color/i4p_1" />
-	    <EditText
-	        android:id="@+id/createproject_title"
-	        android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:visibility="gone">
+	    <ProgressBar
+	        style="@style/Widget.Sherlock.ProgressBar"
+	        android:layout_width="50dp"
+	        android:layout_height="50dp"
+	        android:layout_centerHorizontal="true"
+	        android:layout_centerVertical="true"
+	        android:id="@+id/createproject_loading_animation" />
+	    <TextView 
+	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:background="@drawable/edit_text_i4p_1"
-	        android:inputType="textShortMessage" />
-	
-	    <TextView
-	        style="@style/colorTitle"
-	        android:text="@string/createproject_baseline"
-	        android:textColor="@color/i4p_1" />
-	    <View 
-	           style="@style/colorLine"
-	           android:background="@color/i4p_1" />
-	    <EditText
-	        android:id="@+id/createproject_baseline"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:background="@drawable/edit_text_i4p_1"
-	        android:inputType="textShortMessage" />
-	
-	    <TextView
-	        style="@style/colorTitle"
-	        android:text="@string/createproject_status"
-	        android:textColor="@color/i4p_2" />
-	    <View 
-	           style="@style/colorLine"
-	           android:background="@color/i4p_2" />
-	    <Spinner
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:id="@+id/createproject_status"
-	            android:entries="@array/createproject_statuses" />
-	
-	    <TextView
-	        style="@style/colorTitle"
-	        android:text="@string/createproject_about_section"
-	        android:textColor="@color/i4p_3" />
-	    <View 
-	           style="@style/colorLine"
-	           android:background="@color/i4p_3" />
-	    <EditText
-	        android:id="@+id/createproject_about_section"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:background="@drawable/edit_text_i4p_3"
-	        android:inputType="textMultiLine"
-	        android:minLines="3"
-	        android:maxLines="10" />
-	    
-	    <TextView
-	        style="@style/colorTitle"
-	        android:text="@string/createproject_themes"
-	        android:textColor="@color/i4p_4" />
-	    <View
-	        style="@style/colorLine"
-	        android:background="@color/i4p_4" />
-	    <EditText
-	        android:id="@+id/createproject_themes"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:background="@drawable/edit_text_i4p_4"
-	        android:hint="@string/createproject_themes_hint"
-	        android:inputType="textCapWords"
-	        android:maxLines="1" />
-	</LinearLayout>
-</ScrollView>
+	        android:layout_centerHorizontal="true"
+	        android:layout_below="@id/createproject_loading_animation"
+	        android:text="@string/createproject_loading" />
+	</RelativeLayout>
+
+	<ScrollView
+	    android:id="@+id/createproject_view_form"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_margin="5dp">
+	    <LinearLayout 
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="vertical">
+		    <TextView
+		        style="@style/colorTitle"
+		        android:text="@string/createproject_title"
+		        android:textColor="@color/i4p_1" />
+		    <View 
+		           style="@style/colorLine"
+		           android:background="@color/i4p_1" />
+		    <EditText
+		        android:id="@+id/createproject_title"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:background="@drawable/edit_text_i4p_1"
+		        android:inputType="textShortMessage" />
+		
+		    <TextView
+		        style="@style/colorTitle"
+		        android:text="@string/createproject_baseline"
+		        android:textColor="@color/i4p_1" />
+		    <View 
+		           style="@style/colorLine"
+		           android:background="@color/i4p_1" />
+		    <EditText
+		        android:id="@+id/createproject_baseline"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:background="@drawable/edit_text_i4p_1"
+		        android:inputType="textShortMessage" />
+		
+		    <TextView
+		        style="@style/colorTitle"
+		        android:text="@string/createproject_status"
+		        android:textColor="@color/i4p_2" />
+		    <View 
+		           style="@style/colorLine"
+		           android:background="@color/i4p_2" />
+		    <Spinner
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:id="@+id/createproject_status"
+		            android:entries="@array/createproject_statuses" />
+		
+		    <TextView
+		        style="@style/colorTitle"
+		        android:text="@string/createproject_about_section"
+		        android:textColor="@color/i4p_3" />
+		    <View 
+		           style="@style/colorLine"
+		           android:background="@color/i4p_3" />
+		    <EditText
+		        android:id="@+id/createproject_about_section"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:background="@drawable/edit_text_i4p_3"
+		        android:inputType="textMultiLine"
+		        android:minLines="3"
+		        android:maxLines="10" />
+		    
+		    <TextView
+		        style="@style/colorTitle"
+		        android:text="@string/createproject_themes"
+		        android:textColor="@color/i4p_4" />
+		    <View
+		        style="@style/colorLine"
+		        android:background="@color/i4p_4" />
+		    <EditText
+		        android:id="@+id/createproject_themes"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:background="@drawable/edit_text_i4p_4"
+		        android:hint="@string/createproject_themes_hint"
+		        android:inputType="textCapWords"
+		        android:maxLines="1" />
+		</LinearLayout>
+	</ScrollView>
+</merge>
