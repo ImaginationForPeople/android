@@ -63,7 +63,7 @@ public class UriHelper extends BaseHelper {
 	}
 
 	public static String getGroupsListUri() {
-		return ConfigHelper.API_BASE_URL + "/workgroup/?format=json";
+		return ConfigHelper.API_BASE_URL + "/workgroup/?format=json&limit=50";
 	}
 
 	public static String getGroupViewUriBySlug(String slug) {

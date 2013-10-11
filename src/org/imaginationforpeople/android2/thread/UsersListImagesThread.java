@@ -29,8 +29,9 @@ public class UsersListImagesThread extends BaseListImageThread {
 					user.setAvatarDrawable(drawable);
 				else
 					// Unable to load drawable after 5 tries so deleting avatar
+					user.setAvatarUrl("");
 
-					handler.sendEmptyMessage(0);
+				handler.sendEmptyMessage(0);
 			}
 			if(stop)
 				return;

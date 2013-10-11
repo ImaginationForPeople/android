@@ -8,6 +8,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.imaginationforpeople.android2.helper.UriHelper;
 import org.imaginationforpeople.android2.model.I4pProjectTranslation;
@@ -77,7 +78,7 @@ public class SearchProvider extends ContentProvider {
 			JsonFactory factory = new JsonFactory();
 			ObjectMapper mapper = new ObjectMapper();
 
-			JSONArray jsonProjects = new JSONArray(EntityUtils.toString(response.getEntity()));
+			JSONArray jsonProjects = new JSONArray(EntityUtils.toString(response.getEntity(), HTTP.UTF_8));
 
 			int jsonLength = jsonProjects.length();
 			for(int i = 0; i < jsonLength; i++) {

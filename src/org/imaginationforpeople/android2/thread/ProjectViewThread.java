@@ -3,6 +3,7 @@ package org.imaginationforpeople.android2.thread;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 import org.imaginationforpeople.android2.handler.ProjectViewHandler;
 import org.imaginationforpeople.android2.helper.DataHelper;
@@ -47,32 +48,57 @@ public class ProjectViewThread extends BaseGetJson {
 		JsonParser parser = factory.createJsonParser(json);
 		I4pProjectTranslation project = mapper.readValue(parser, I4pProjectTranslation.class);
 
-		if(project.getProject().getPictures().size() > 0) {
-			for(Picture picture : project.getProject().getPictures()) {
+		ArrayList<Picture> pictures = project.getProject().getPictures();
+		ArrayList<Picture> unloadablePictures = new ArrayList<Picture>();
+		if(pictures.size() > 0) {
+			for(Picture picture : pictures) {
 				if(isStopped())
 					return null;
 				URI uri;
 				if(!DataHelper.checkThumbFile(picture.getThumbUrl())) {
-					try {
-						uri = new URI(picture.getThumbUrl());
-						Bitmap bitmap = BitmapFactory.decodeStream(download(uri));
-						picture.setThumbBitmap(bitmap);
-					} catch (URISyntaxException e) {
-						Log.w("Thumbnail", "Unable to load URI " + picture.getThumbUrl());
-						e.printStackTrace();
+					for(int i = 0; i<5; i++) {
+						if(isStopped())
+							return null;
+						try {
+							uri = new URI(picture.getThumbUrl());
+							Bitmap bitmap = BitmapFactory.decodeStream(download(uri));
+							if(bitmap != null) {
+								picture.setThumbBitmap(bitmap);
+								break;
+							}
+						} catch (URISyntaxException e) {
+							Log.w("Thumbnail", "Unable to load URI " + picture.getThumbUrl());
+							e.printStackTrace();
+						}
 					}
+					if(picture.getThumbBitmap() == null)
+						unloadablePictures.add(picture);
 				}
-				if(!DataHelper.checkImageFile(picture.getImageUrl())) {
-					try {
-						uri = new URI(picture.getImageUrl());
-						Bitmap bitmap = BitmapFactory.decodeStream(download(uri));
-						picture.setImageBitmap(bitmap);
-					} catch (URISyntaxException e) {
-						Log.w("Thumbnail", "Unable to load URI " + picture.getImageUrl());
-						e.printStackTrace();
+				if(picture.getThumbBitmap() != null
+						&& !DataHelper.checkImageFile(picture.getImageUrl())) {
+					for(int i = 0; i<5; i++) {
+						if(isStopped())
+							return null;
+						try {
+							uri = new URI(picture.getImageUrl());
+							Bitmap bitmap = BitmapFactory.decodeStream(download(uri));
+							if(bitmap != null) {
+								picture.setImageBitmap(bitmap);
+								break;
+							}
+						} catch (URISyntaxException e) {
+							Log.w("Thumbnail", "Unable to load URI " + picture.getImageUrl());
+							e.printStackTrace();
+						}
 					}
+					if(picture.getImageBitmap() == null)
+						unloadablePictures.add(picture);
 				}
 			}
+			if(isStopped())
+				return null;
+			for(Picture picture : unloadablePictures)
+				pictures.remove(picture);
 		}
 
 		if(project.getProject().getMembers().size() > 0) {
@@ -80,13 +106,20 @@ public class ProjectViewThread extends BaseGetJson {
 				if(isStopped())
 					return null;
 				if(!DataHelper.checkAvatarFile(member.getAvatarUrl())) {
-					try {
-						URI uri = new URI(member.getAvatarUrl());
-						Drawable drawable = Drawable.createFromStream(download(uri), null);
-						member.setAvatarDrawable(drawable);
-					} catch (URISyntaxException e) {
-						Log.w("Thumbnail", "Unable to load URI " + member.getAvatarUrl());
-						e.printStackTrace();
+					for(int i = 0; i<5; i++) {
+						if(isStopped())
+							return null;
+						try {
+							URI uri = new URI(member.getAvatarUrl());
+							Drawable drawable = Drawable.createFromStream(download(uri), null);
+							if(drawable != null) {
+								member.setAvatarDrawable(drawable);
+								break;
+							}
+						} catch (URISyntaxException e) {
+							Log.w("Thumbnail", "Unable to load URI " + member.getAvatarUrl());
+							e.printStackTrace();
+						}
 					}
 				}
 			}

@@ -65,9 +65,10 @@ public class InfoProjectViewFragment extends SherlockFragment implements OnClick
 			status.setContentDescription(getResources().getString(R.string.projectview_description_status_end));
 		}
 
+
 		if(project.getProject().getLocation() != null
-				&& !"".equals(project.getProject().getLocation().getCountry())) {
-			int flag = getResources().getIdentifier("flag_"+project.getProject().getLocation().getCountry().toLowerCase(), "drawable", "org.imaginationforpeople.android");
+				&& project.getProject().getLocation().getCountry() != null) {
+			int flag = getResources().getIdentifier("flag_"+project.getProject().getLocation().getCountry().toLowerCase(), "drawable", "org.imaginationforpeople.android2");
 			if(flag != 0) {
 				ImageView flagView = (ImageView) layout.findViewById(R.id.projectview_description_flag);
 				flagView.setImageResource(flag);

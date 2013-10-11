@@ -59,7 +59,6 @@
     <string name="shake_dialog_checkbox">Never show me this again</string>
     
     <!-- ProjectsList keys -->
-    <string name="projectslist_loading">Loading projects…</string>
     <string name="projectslist_item_image_description">Project image</string>
     
     <!-- UsersList keys -->
@@ -129,7 +128,7 @@
     <string name="groupview_description_image_description">Group image</string>
     <string name="groupview_description_themes">THEMES</string>
     <string name="groupview_description_about">ABOUT THE GROUP</string>
-    <string name="groupview_projects_noprojects">There is not any related projects in this group</string>
+    <string name="groupview_projects_noprojects">There are no related projects in this group</string>
     <string name="groupview_subscribers_nosubscribers">Nobody has subscribed to this group</string>
     
     <!-- Favorites keys -->
