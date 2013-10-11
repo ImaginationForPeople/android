@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.imaginationforpeople.android2"
-    android:versionCode="2013011501"
-    android:versionName="1.0">
+    android:versionCode="2013101101"
+    android:versionName="1.1">
 
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="15" />
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -36,12 +36,21 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.GroupViewActivity"
+            android:theme="@style/AppThemeWhite">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="http"
+                    android:host="imaginationforpeople.org"
+                    android:pathPattern="/.*/group/.*/" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".projectview.FullImageProjectViewActivity"
             android:label="@string/app_name" />
-        <activity
-            android:name=".activity.FavoritesActivity"
-            android:label="@string/app_favorites"
-            android:theme="@style/AppThemeWhite" />
         <activity
             android:name=".activity.SearchActivity"
             android:theme="@style/AppThemeWhite"

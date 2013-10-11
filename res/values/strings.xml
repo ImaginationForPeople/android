@@ -2,20 +2,27 @@
     <!-- General keys -->
     <string name="app_name">Imagination for People</string>
     <string name="app_favorites">My favorites projects</string>
+    <string name="app_groups">Groups</string>
     <string name="search_hint">Search projects</string>
     <string name="cancel">Cancel</string>
     <string name="close">Close</string>
     <string name="cant_be_undone">This action can\'t be undone!</string>
     
+    <!-- Information keys -->
+    <string name="information_description">Information:</string>
+    
     <!-- Loading keys -->
     <string name="loading_location">Waiting for your location</string>
     <string name="loading_projects">Loading projects</string>
+    <string name="loading_groups">Loading groups</string>
     
     <!-- Homepage keys -->
     <string name="homepage_shake_description">Shake it</string>
     <string name="homepage_menu_search">Search</string>
     <string name="homepage_menu_favorites">Favorites</string>
     <string name="homepage_menu_language">Change language</string>
+    <string name="homepage_menu_ribbon_close">Close ribbon</string>
+    <string name="homepage_menu_ribbon_open">Open ribbon</string>
     <string name="homepage_spinner_language_prompt">Choose a language</string>
     <string name="homepage_spinner_content_prompt">Select projects to display</string>
     <string-array name="homepage_spinner_languages">
@@ -35,14 +42,21 @@
         <item>In My Country</item>
     </string-array>
     
+    <!-- Homepage ribbon keys -->
+    <string name="homepage_ribbon_projects">Projects</string>
+    <string name="homepage_ribbon_workgroups">Groups</string>
+    <string name="homepage_ribbon_favorites">Favorites</string>
+    
     <!-- Shake dialog keys -->
     <string name="shake_dialog_title">Just shake it!</string>
     <string name="shake_dialog_message">Shake your device just a bit stronger and we\'ll show you a random project.\nDiscovery of new projects is now fun!</string>
     <string name="shake_dialog_checkbox">Never show me this again</string>
     
     <!-- ProjectsList keys -->
-    <string name="projectslist_loading">Loading projects…</string>
     <string name="projectslist_item_image_description">Project image</string>
+    
+    <!-- UsersList keys -->
+    <string name="userslist_item_image_description">User avatar</string>
     
     <!-- ProjectView keys -->
     <string name="projectview_menu_video">Watch video</string>
@@ -69,6 +83,18 @@
     <string name="projectview_gallery_slider_content_description">Description: %1$s</string>
     <string name="projectview_gallery_slider_content_author">Author: %1$s</string>
     <string name="projectview_gallery_slider_content_source">Source: %1$s</string>
+    
+    <!-- GroupView keys -->
+    <string name="groupview_menu_share">Share group</string>
+    <string name="groupview_menu_share_dialog">Share group with…</string>
+    <string name="groupview_root_info">INFORMATION</string>
+    <string name="groupview_root_projects">PROJECTS</string>
+    <string name="groupview_root_members">MEMBERS</string>
+    <string name="groupview_description_image_description">Group image</string>
+    <string name="groupview_description_themes">THEMES</string>
+    <string name="groupview_description_about">ABOUT THE GROUP</string>
+    <string name="groupview_projects_noprojects">There are no related projects in this group</string>
+    <string name="groupview_subscribers_nosubscribers">Nobody has subscribed to this group</string>
     
     <!-- Favorites keys -->
     <string name="favorites_menu_remove_all">Remove all favorites</string>

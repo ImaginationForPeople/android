@@ -1,14 +1,13 @@
 package org.imaginationforpeople.android2.handler;
 
-import org.imaginationforpeople.android2.adapter.ProjectsGridAdapter;
-
 import android.os.Handler;
 import android.os.Message;
+import android.widget.BaseAdapter;
 
-public class ProjectsListImageHandler extends Handler {
-	private ProjectsGridAdapter adapter;
+public class ListImageHandler extends Handler {
+	private BaseAdapter adapter;
 	
-	public ProjectsListImageHandler(ProjectsGridAdapter a) {
+	public ListImageHandler(BaseAdapter a) {
 		adapter = a;
 	}
 	

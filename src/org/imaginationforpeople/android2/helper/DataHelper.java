@@ -21,10 +21,13 @@ public class DataHelper extends BaseHelper {
 	public static final String BEST_PROJECTS_KEY = "bestProjects";
 	public static final String LATEST_PROJECTS_KEY = "latestProjects";
 	public static final String PROJECT_VIEW_KEY = "project";
+	public static final String GROUP_VIEW_KEY = "group";
 	
 	public static final String FILE_PREFIX_PROJECT_THUMB = "projectThumb_";
 	public static final String FILE_PREFIX_PROJECT_IMAGE = "projectImage_";
 	public static final String FILE_PREFIX_USER_AVATAR = "avatar_";
+	public static final String FILE_PREFIX_GROUP_IMAGE = "groupImage_";
+	public static final String FILE_PREFIX_GROUP_THUMB = "groupThumb_";
 	
 	public static final int PROJECT_GALLERY_GRID_TYPE_PICTURE = 1000;
 	public static final int PROJECT_GALLERY_GRID_TYPE_VIDEO = 1001;
@@ -73,12 +76,22 @@ public class DataHelper extends BaseHelper {
 		return checkFile(url, FILE_PREFIX_USER_AVATAR);
 	}
 	
+	public static boolean checkGroupFile(String url) {
+		return checkFile(url, FILE_PREFIX_GROUP_IMAGE);
+	}
+	
+	public static boolean checkGroupThumbFile(String url) {
+		return checkFile(url, FILE_PREFIX_GROUP_THUMB);
+	}
+	
 	public static void removeOldFiles() {
-		long oneday = new Date().getTime() - 86400; // One day
-		for(String path : getContext().fileList()) {
-			File file = new File(getContext().getFilesDir(), path);
-			if(file.lastModified() < oneday) {
-				getContext().deleteFile(path);
+		if(getContext().fileList() != null) {
+			long oneday = new Date().getTime() - 86400; // One day
+			for(String path : getContext().fileList()) {
+				File file = new File(getContext().getFilesDir(), path);
+				if(file.lastModified() < oneday) {
+					getContext().deleteFile(path);
+				}
 			}
 		}
 	}

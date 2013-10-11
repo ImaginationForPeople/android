@@ -12,10 +12,9 @@
         android:icon="@android:drawable/ic_menu_slideshow"
         android:showAsAction="never" />
     <item
-        android:id="@+id/homepage_favorites"
-        android:title="@string/homepage_menu_favorites"
-        android:icon="@drawable/ic_menu_star"
-        android:showAsAction="ifRoom" />
+        android:id="@+id/homepage_ribbon_button"
+        android:icon="@drawable/ic_menu_ribbon"
+        android:showAsAction="never" />
     <item
         android:id="@+id/homepage_lang"
         android:title="@string/homepage_menu_language"
