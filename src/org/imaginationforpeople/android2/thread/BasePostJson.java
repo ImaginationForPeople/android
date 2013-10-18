@@ -13,7 +13,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.imaginationforpeople.android2.handler.BaseHandler;
 import org.imaginationforpeople.android2.helper.ErrorHelper;
 import org.imaginationforpeople.android2.helper.NetworkHelper;
@@ -64,8 +63,7 @@ public abstract class BasePostJson extends Thread {
 
 			Message msg = handler.obtainMessage();
 			msg.arg1 = BaseHandler.STATUS_SUCCESS;
-			msg.arg2 = response.getStatusLine().getStatusCode();
-			msg.obj = EntityUtils.toString(response.getEntity());
+			msg.obj = response;
 			if(stop)
 				return;
 			handler.sendMessage(msg);

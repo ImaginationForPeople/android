@@ -1,5 +1,6 @@
 package org.imaginationforpeople.android2.handler;
 
+import org.apache.http.HttpResponse;
 import org.imaginationforpeople.android2.R;
 import org.imaginationforpeople.android2.activity.UploadPhotoActivity;
 
@@ -16,7 +17,8 @@ public class ProjectsUploadPhotoHandler extends BaseHandler {
 
 	@Override
 	protected void onSuccess(int arg, Object obj) {
-		if(arg == 201) {
+		HttpResponse response = (HttpResponse) obj;
+		if(response.getStatusLine().getStatusCode() == 201) {
 			activity.setResult(Activity.RESULT_OK);
 			activity.finish();
 		} else {
