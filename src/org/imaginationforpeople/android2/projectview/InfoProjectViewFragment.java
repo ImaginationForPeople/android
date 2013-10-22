@@ -66,6 +66,7 @@ public class InfoProjectViewFragment extends SherlockFragment implements OnClick
 		}
 
 		if(project.getProject().getLocation() != null
+				&& project.getProject().getLocation().getCountry() != null
 				&& !"".equals(project.getProject().getLocation().getCountry())) {
 			int flag = getResources().getIdentifier("flag_"+project.getProject().getLocation().getCountry().toLowerCase(), "drawable", "org.imaginationforpeople.android");
 			if(flag != 0) {

@@ -32,6 +32,10 @@ public class UriHelper extends BaseHelper {
 		return ConfigHelper.API_BASE_URL + "/project/" + language_code + "/" + slug;
 	}
 
+	public static String getCreateProjectUri() {
+		return ConfigHelper.API_BASE_URL + "/project/new/";
+	}
+
 	public static String getPictureUploadUri() {
 		return ConfigHelper.API_BASE_URL + "/picture/";
 	}

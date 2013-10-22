@@ -32,6 +32,11 @@ public class ProjectViewThread extends BaseGetJson {
 			requestUri = UriHelper.getProjectViewUriById(p);
 	}
 
+	public ProjectViewThread(ProjectViewHandler h, String url) {
+		handler = h;
+		requestUri = url;
+	}
+
 	public ProjectViewThread(ProjectViewHandler h, String lc, String s) {
 		handler = h;
 

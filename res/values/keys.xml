@@ -11,4 +11,11 @@
         <item>ru</item>
         <item>es</item>
     </string-array>
+    
+    <string-array name="createproject_statuses_keys">
+        <item>IDEA</item>
+        <item>BEGIN</item>
+        <item>WIP</item>
+        <item>END</item>
+    </string-array>
 </resources>

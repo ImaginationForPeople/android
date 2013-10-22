@@ -83,7 +83,8 @@ public class ProjectViewActivity extends SherlockFragmentActivity implements OnC
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 		case android.R.id.home:
-			if(getIntent().getData() != null) {
+			if(getIntent().getData() != null
+			&& !"api".equals(getIntent().getData().getPathSegments().get(0))) {
 				Intent intent = new Intent(this, HomepageActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 				startActivity(intent);
@@ -160,20 +161,22 @@ public class ProjectViewActivity extends SherlockFragmentActivity implements OnC
 			setContentView(R.layout.loading);
 			ProjectViewHandler handler = new ProjectViewHandler(this);
 
+			Bundle extras = getIntent().getExtras();
+
+			if(extras != null && extras.containsKey("project_title"))
+				setTitle(extras.getString("project_title"));
+
 			Uri data = getIntent().getData();
 			if(data != null) {
 				List<String> path = data.getPathSegments();
-				thread = new ProjectViewThread(handler, path.get(0), path.get(2));
-			} else {
-				Bundle extras = getIntent().getExtras();
-
-				if(extras.containsKey("project_title"))
-					setTitle(extras.getString("project_title"));
-
-				if(extras.containsKey("project_id")) // Mostly used if we want a random project
-					thread = new ProjectViewThread(handler, extras.getInt("project_id"));
+				if("api".equals(path.get(0)))
+					thread = new ProjectViewThread(handler, data.toString());
 				else
-					thread = new ProjectViewThread(handler, extras.getString("project_lang"), extras.getString("project_slug"));
+					thread = new ProjectViewThread(handler, path.get(0), path.get(2));
+			} else if(extras.containsKey("project_id")) { // Mostly used if we want a random project
+				thread = new ProjectViewThread(handler, extras.getInt("project_id"));
+			} else {
+				thread = new ProjectViewThread(handler, extras.getString("project_lang"), extras.getString("project_slug"));
 			}
 
 			thread.start();
