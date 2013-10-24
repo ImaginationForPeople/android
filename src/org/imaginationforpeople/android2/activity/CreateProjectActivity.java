@@ -9,7 +9,10 @@ import org.imaginationforpeople.android2.thread.CreateProjectThread;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -23,17 +26,34 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-public class CreateProjectActivity extends SherlockActivity {
+public class CreateProjectActivity extends SherlockActivity implements OnClickListener {
+	private static CreateProjectThread thread;
+	private I4pProjectTranslation projectTranslation;
+	private boolean blockBack = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		setContentView(R.layout.createproject);
+
+		if(thread != null && thread.isAlive()) {
+			projectTranslation = savedInstanceState.getParcelable("project");
+			CreateProjectHandler handler = new CreateProjectHandler(this);
+			thread.setHandler(handler);
+			blockBack = true;
+
+			final RelativeLayout loadingLayout = (RelativeLayout) findViewById(R.id.createproject_view_loading);
+			final ScrollView contentLayout = (ScrollView) findViewById(R.id.createproject_view_form);
+			loadingLayout.setVisibility(View.VISIBLE);
+			contentLayout.setVisibility(View.GONE);
+		}
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.createproject, menu);
+		if(thread == null || !thread.isAlive())
+			getSupportMenuInflater().inflate(R.menu.createproject, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -42,7 +62,7 @@ public class CreateProjectActivity extends SherlockActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 		case android.R.id.home:
-			finish();
+			doBackFunction();
 			break;
 		case R.id.createproject_menu_send:
 			EditText title = (EditText) findViewById(R.id.createproject_title);
@@ -50,6 +70,9 @@ public class CreateProjectActivity extends SherlockActivity {
 				title.setError(getResources().getString(R.string.createproject_title_empty));
 				title.requestFocus();
 			} else {
+				supportInvalidateOptionsMenu();
+				blockBack = true;
+
 				InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 
@@ -74,7 +97,7 @@ public class CreateProjectActivity extends SherlockActivity {
 					contentLayout.setVisibility(View.GONE);
 				}
 
-				I4pProjectTranslation projectTranslation = new I4pProjectTranslation();
+				projectTranslation = new I4pProjectTranslation();
 				I4pProject project = new I4pProject();
 
 				projectTranslation.setTitle(title.getText().toString());
@@ -95,11 +118,48 @@ public class CreateProjectActivity extends SherlockActivity {
 				projectTranslation.setProject(project);
 
 				CreateProjectHandler handler = new CreateProjectHandler(this);
-				CreateProjectThread thread = new CreateProjectThread(handler, projectTranslation);
+				thread = new CreateProjectThread(handler, projectTranslation);
 				thread.start();
 			}
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putParcelable("project", projectTranslation);
+		super.onSaveInstanceState(outState);
+	}
+
+	@Override
+	public void onBackPressed() {
+		doBackFunction();
+	}
+
+	private void doBackFunction() {
+		if(blockBack) {
+			AlertDialog dialog = new AlertDialog.Builder(this).create();
+			dialog.setTitle(R.string.createproject_cancel_title);
+			dialog.setMessage(getResources().getString(R.string.createproject_cancel_message));
+			dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getString(android.R.string.cancel), this);
+			dialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getString(android.R.string.ok), this);
+			dialog.show();
+		} else {
+			if(thread != null && thread.isAlive())
+				thread.requestStop();
+			finish();
+		}
+	}
+
+	@Override
+	public void onClick(DialogInterface dialog, int which) {
+		switch(which) {
+		case DialogInterface.BUTTON_POSITIVE:
+			if(thread != null)
+				thread.requestStop();
+			finish();
+			break;
+		}
 	}
 }
