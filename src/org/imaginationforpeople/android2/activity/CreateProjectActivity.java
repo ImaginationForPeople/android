@@ -15,6 +15,8 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -47,6 +49,20 @@ public class CreateProjectActivity extends SherlockActivity implements OnClickLi
 			final ScrollView contentLayout = (ScrollView) findViewById(R.id.createproject_view_form);
 			loadingLayout.setVisibility(View.VISIBLE);
 			contentLayout.setVisibility(View.GONE);
+		} else {
+			final EditText title = (EditText) findViewById(R.id.createproject_title);
+			title.addTextChangedListener(new TextWatcher() {
+				@Override
+				public void onTextChanged(CharSequence s, int start, int before, int count) {
+					if(!"".equals(s.toString()))
+						title.setError(null);
+				}
+
+				@Override
+				public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+				@Override
+				public void afterTextChanged(Editable s) {}
+			});
 		}
 	}
 
