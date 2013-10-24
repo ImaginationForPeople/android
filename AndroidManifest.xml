@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.imaginationforpeople.android2"
-    android:versionCode="2013052801"
-    android:versionName="1.2α">
+    android:versionCode="2013102401"
+    android:versionName="1.2β">
 
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="15" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
