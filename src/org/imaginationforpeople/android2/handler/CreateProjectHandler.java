@@ -5,6 +5,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.imaginationforpeople.android2.R;
 import org.imaginationforpeople.android2.activity.ProjectViewActivity;
+import org.imaginationforpeople.android2.model.I4pProjectTranslation;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,9 +15,11 @@ import android.widget.TextView;
 
 public class CreateProjectHandler extends BaseHandler {
 	private final Activity activity;
+	private final I4pProjectTranslation project;
 
-	public CreateProjectHandler(Activity a) {
+	public CreateProjectHandler(Activity a, I4pProjectTranslation p) {
 		activity = a;
+		project = p;
 	}
 
 	@Override
@@ -28,6 +31,7 @@ public class CreateProjectHandler extends BaseHandler {
 				Uri projectUri = Uri.parse(header.getValue());
 				Intent intent = new Intent(activity, ProjectViewActivity.class);
 				intent.setData(projectUri);
+				intent.putExtra("project_title", project.getTitle());
 				activity.startActivity(intent);
 				activity.finish();
 			} else {

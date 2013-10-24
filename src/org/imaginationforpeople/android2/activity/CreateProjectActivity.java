@@ -39,7 +39,7 @@ public class CreateProjectActivity extends SherlockActivity implements OnClickLi
 
 		if(thread != null && thread.isAlive()) {
 			projectTranslation = savedInstanceState.getParcelable("project");
-			CreateProjectHandler handler = new CreateProjectHandler(this);
+			CreateProjectHandler handler = new CreateProjectHandler(this, projectTranslation);
 			thread.setHandler(handler);
 			blockBack = true;
 
@@ -117,7 +117,7 @@ public class CreateProjectActivity extends SherlockActivity implements OnClickLi
 
 				projectTranslation.setProject(project);
 
-				CreateProjectHandler handler = new CreateProjectHandler(this);
+				CreateProjectHandler handler = new CreateProjectHandler(this, projectTranslation);
 				thread = new CreateProjectThread(handler, projectTranslation);
 				thread.start();
 			}
