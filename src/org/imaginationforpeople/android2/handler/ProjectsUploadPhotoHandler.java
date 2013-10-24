@@ -23,7 +23,6 @@ public class ProjectsUploadPhotoHandler extends BaseHandler {
 			activity.finish();
 		} else {
 			Log.e("error", "Server doesn't return '201 CREATED'");
-			Log.e("return", (String) obj);
 			onError(arg, obj);
 		}
 	}
