@@ -4,23 +4,32 @@
   <string name="app_name">Imagination for People</string>
   <string name="app_favorites">Mes projets favoris</string>
   <string name="app_groups">Groupes</string>
+  <string name="app_uploadphoto">Envoyer une photo</string>
   <string name="search_hint">Rechercher des projets</string>
   <string name="cancel">Annuler</string>
   <string name="close">Fermer</string>
   <string name="cant_be_undone">Cette action ne peut être annulée !</string>
+  <!--Navigaton drawer keys-->
+  <string-array name="drawer_items">
+    <item>Projets</item>
+    <item>Groupes</item>
+    <item>Favoris</item>
+  </string-array>
+  <string name="drawer_close">Fermer le menu coulissant</string>
+  <string name="drawer_open">Ouvrir le menu coulissant</string>
   <!--Information keys-->
   <string name="information_description">Information :</string>
   <!--Loading keys-->
   <string name="loading_location">En attente de votre emplacement</string>
   <string name="loading_projects">Chargement des projets</string>
   <string name="loading_groups">Chargement des groupes</string>
+  <!--Error keys-->
+  <string name="error_image">Une erreur s\'est produite !</string>
   <!--Homepage keys-->
   <string name="homepage_shake_description">Secouez-le</string>
   <string name="homepage_menu_search">Rechercher</string>
   <string name="homepage_menu_favorites">Favoris</string>
   <string name="homepage_menu_language">Changer la langue</string>
-  <string name="homepage_menu_ribbon_close">Fermer le ruban</string>
-  <string name="homepage_menu_ribbon_open">Ouvrir le ruban</string>
   <string name="homepage_spinner_language_prompt">Choisissez une langue</string>
   <string name="homepage_spinner_content_prompt">Sélectionnez les projets à afficher</string>
   <string-array name="homepage_spinner_languages">
@@ -39,10 +48,6 @@
     <item>Derniers projets</item>
     <item>Dans mon pays</item>
   </string-array>
-  <!--Homepage ribbon keys-->
-  <string name="homepage_ribbon_projects">Projets</string>
-  <string name="homepage_ribbon_workgroups">Groupes</string>
-  <string name="homepage_ribbon_favorites">Favoris</string>
   <!--Shake dialog keys-->
   <string name="shake_dialog_title">Secouez-le, tout simplement !</string>
   <string name="shake_dialog_message">Secouez votre appareil juste un peu plus fort et nous vous montrerons un projet aléatoire.\nDécouvrir des nouveaux projets est maintenant amusant !</string>
@@ -52,12 +57,18 @@
   <!--UsersList keys-->
   <string name="userslist_item_image_description">Image de l\'utilisateur</string>
   <!--ProjectView keys-->
+  <string name="projectview_menu_addphoto">Ajouter une photo</string>
   <string name="projectview_menu_favorites_add">Ajouter aux favoris</string>
   <string name="projectview_menu_favorites_remove">Supprimer des favoris</string>
   <string name="projectview_menu_share">Partager le projet</string>
   <string name="projectview_menu_share_dialog">Partager le projet avec…</string>
   <string name="projectview_toast_favorites_add">%1$s ajouté aux favoris</string>
   <string name="projectview_toast_favorites_remove">%1$s supprimé des favoris</string>
+  <string name="projectview_dialog_addphoto_title">Ajouter une photo au projet…</string>
+  <string-array name="projectview_dialog_addphoto_items">
+    <item>En utilisant l\'appareil photo</item>
+    <item>En sélectionnant un fichier</item>
+  </string-array>
   <string name="projectview_root_info">INFORMATIONS</string>
   <string name="projectview_root_gallery">GALERIE</string>
   <string name="projectview_description_image_description">Image du projet</string>
@@ -75,6 +86,29 @@
   <string name="projectview_gallery_slider_content_description">Description : %1$s</string>
   <string name="projectview_gallery_slider_content_author">Auteur : %1$s</string>
   <string name="projectview_gallery_slider_content_source">Source : %1$s</string>
+  <!--UploadPhoto keys-->
+  <string name="uploadphoto_send">Envoyer la photo</string>
+  <string name="uploadphoto_thumb_description">Image à envoyer</string>
+  <string name="uploadphoto_description">Description de la photo</string>
+  <string name="uploadphoto_license_title">Licence de la photo</string>
+  <string-array name="uploadphoto_license_content">
+    <item>CC BY-SA 2.0</item>
+    <item>CC BY-SA 3.0 (recommandé)</item>
+    <item>Copyright (à éviter)</item>
+    <item>FreeArt</item>
+    <item>GNU Free License</item>
+    <item>Domaine public</item>
+    <item>Attention - Licence inconnue</item>
+  </string-array>
+  <string name="uploadphoto_author">Auteur</string>
+  <string name="uploadphoto_source">Source de la photo</string>
+  <string name="uploadphoto_error_unknown_image_1">Nous ne pouvons pas trouver l\'image que vous venez de sélectionner</string>
+  <string name="uploadphoto_error_unknown_image_2">Essayez encore et vérifiez que vous avez sélectionné une image</string>
+  <string name="uploadphoto_error_unsupported_application_1">Application non supportée</string>
+  <string name="uploadphoto_error_unsupported_application_2">L\'application que vous avez tenté d\'utiliser pour envoyer une image n\'est pas supportée. Veuillez envoyer un rapport de bogue avec le nom de l\'application utilisée.</string>
+  <string name="uploadphoto_loading">Envoi de la photo au serveur…</string>
+  <string name="uploadphoto_cancel_title">Annuler l\'envoi de la photo ?</string>
+  <string name="uploadphoto_cancel_message">Votre photo ne sera pas disponible en ligne !</string>
   <!--GroupView keys-->
   <string name="groupview_menu_share">Partager le groupe</string>
   <string name="groupview_menu_share_dialog">Partager le groupe avec…</string>

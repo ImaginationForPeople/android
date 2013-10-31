@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.imaginationforpeople.android2"
-    android:versionCode="2013102401"
+    android:versionCode="2013103101"
     android:versionName="1.2β">
 
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="15" />
