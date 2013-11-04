@@ -10,6 +10,7 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.imaginationforpeople.android2.helper.NetworkHelper;
 import org.imaginationforpeople.android2.helper.UriHelper;
 import org.imaginationforpeople.android2.model.I4pProjectTranslation;
 import org.json.JSONArray;
@@ -69,6 +70,7 @@ public class SearchProvider extends ContentProvider {
 		HttpClient httpClient = new DefaultHttpClient(basicHttpParams);
 
 		HttpGet httpGet = new HttpGet();
+		NetworkHelper.addBasicHttpAuth(httpGet);
 		httpGet.setHeader("Accept", "application/json");
 		try {
 			URI uri = new URI(UriHelper.getQuickSearchUrl(query));
