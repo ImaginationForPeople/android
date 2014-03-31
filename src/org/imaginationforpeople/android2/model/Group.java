@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Group implements Parcelable {
@@ -27,9 +28,11 @@ public class Group implements Parcelable {
 	private String resourceUri;
 	@JsonProperty("image")
 	private String imageUrl;
+	@JsonIgnore
 	private Bitmap imageBitmap;
 	@JsonProperty("thumb")
 	private String thumbUrl;
+	@JsonIgnore
 	private Bitmap thumbBitmap;
 	private ArrayList<I4pProjectTranslation> projects;
 	private ArrayList<User> subscribers;

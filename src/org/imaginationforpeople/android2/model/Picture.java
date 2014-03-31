@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Picture implements Parcelable {
@@ -23,9 +24,11 @@ public class Picture implements Parcelable {
 	private String source;
 	@JsonProperty("thumb")
 	private String thumbUrl;
+	@JsonIgnore
 	private Bitmap thumbBitmap;
 	@JsonProperty("url")
 	private String imageUrl;
+	@JsonIgnore
 	private Bitmap imageBitmap;
 
 	public Picture() {}

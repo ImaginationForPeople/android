@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class User implements Parcelable {
@@ -20,6 +21,7 @@ public class User implements Parcelable {
 	private String username;
 	@JsonProperty("avatar")
 	private String avatarUrl;
+	@JsonIgnore
 	private Drawable avatarDrawable;
 
 	public User() {}
